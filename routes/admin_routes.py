@@ -287,77 +287,73 @@ Incorrect password
 
 
 
-        session[
-            "temp_admin_otp"
-        ] = generated_otp
+        admin_minutes = int(admin_time)
 
+expiry_time = datetime.utcnow() + timedelta(
+minutes=admin_minutes
+)
 
+session[
+"admin_verified"
+] = True
 
-        session[
-            "temp_admin_otp_expiry"
-        ] = otp_expiry.isoformat()
+session[
+"admin_id"
+] = admin_user.user_id
 
+session[
+"admin_username"
+] = admin_user.username
 
+session[
+"admin_role"
+] = admin_user.admin_role
 
-        email_sent = send_email(
+session[
+"admin_expiry"
+] = expiry_time.isoformat()
 
-            receiver_email="admin.rmbakes@gmail.com",
+session[
+"admin_minutes"
+] = admin_minutes
 
-            subject="RM Bakes Admin OTP Verification",
+admin_user.admin_last_login = datetime.utcnow()
 
-            body=f"""
+db.session.commit()
 
-RM Bakes Administrative Security
+create_admin_notification(
 
-Your OTP is:
+title="Admin Login",
 
-{generated_otp}
+message=f"""
 
-This OTP expires in 5 minutes.
+Administrator:
+{admin_user.username}
 
-"""
+successfully logged into
+RM Bakes Control Center.
 
-        )
+""",
 
+notification_type="admin_login"
 
+)
 
-        if not email_sent:
+flash(
 
-            flash(
+"Admin login successful 🔥",
 
-                "Failed to send OTP email",
+"success"
 
-                "danger"
+)
 
-            )
+return redirect(
 
-            return redirect(
+url_for(
+    "admin.admin_dashboard"
+)
 
-                url_for(
-                    "admin.admin_login"
-                )
-
-            )
-
-
-
-        flash(
-
-            "OTP sent successfully 📩",
-
-            "success"
-
-        )
-
-
-
-        return redirect(
-
-            url_for(
-                "admin.verify_admin_otp"
-            )
-
-        )
+)
 
 
 
