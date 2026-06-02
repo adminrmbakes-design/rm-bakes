@@ -289,39 +289,39 @@ Incorrect password
 
         admin_minutes = int(admin_time)
 
-expiry_time = datetime.utcnow() + timedelta(
+        expiry_time = datetime.utcnow() + timedelta(
 minutes=admin_minutes
 )
 
-session[
+        session[
 "admin_verified"
 ] = True
 
-session[
+        session[
 "admin_id"
 ] = admin_user.user_id
 
-session[
+        session[
 "admin_username"
 ] = admin_user.username
 
-session[
+        session[
 "admin_role"
 ] = admin_user.admin_role
 
-session[
+        session[
 "admin_expiry"
 ] = expiry_time.isoformat()
 
-session[
+        session[
 "admin_minutes"
 ] = admin_minutes
 
-admin_user.admin_last_login = datetime.utcnow()
+        admin_user.admin_last_login = datetime.utcnow()
 
-db.session.commit()
+        db.session.commit()
 
-create_admin_notification(
+        create_admin_notification(
 
 title="Admin Login",
 
@@ -347,7 +347,7 @@ flash(
 
 )
 
-return redirect(
+        return redirect(
 
 url_for(
     "admin.admin_dashboard"
@@ -356,12 +356,6 @@ url_for(
 )
 
 
-
-    return render_template(
-
-        "admin/admin_login.html"
-
-    )
 
 
 
