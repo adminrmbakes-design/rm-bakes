@@ -7,15 +7,15 @@ RESEND_API_KEY = os.getenv(
 
 def send_email(
 
-receiver_email,
-subject,
-body
+    receiver_email,
+    subject,
+    body
 
-):
+    ):
 
-try:
+    try:
 
-    response = requests.post(
+        response = requests.post(
 
         "https://api.resend.com/emails",
 
@@ -27,9 +27,9 @@ try:
             "Content-Type":
             "application/json"
 
-        },
+         },
 
-        json={
+       json={
 
             "from":
             "RM Bakes <onboarding@resend.dev>",
@@ -43,20 +43,19 @@ try:
             "text":
             body
 
-        }
+            }
 
-    )
+     )
 
-    print(
+      print(
         response.text
-    )
+        )
 
-    return response.status_code == 200
+      return response.status_code == 200
 
-except Exception as error:
+      except Exception as error:
 
-    print(
+print(
         f"Email sending failed: {error}"
     )
-
-    return False
+return False
