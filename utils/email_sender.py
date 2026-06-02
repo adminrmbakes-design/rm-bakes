@@ -20,15 +20,10 @@ SMTP_PORT = 587
 # AUTH GMAIL
 # =========================================
 
-EMAIL_ADDRESS = "auth.rmbakes@gmail.com"
+import os
 
-
-
-# IMPORTANT:
-# Use Gmail App Password
-# NOT normal Gmail password
-
-EMAIL_PASSWORD = "myagkwqpcvefjsps"
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 
 
