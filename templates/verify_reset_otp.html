@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes • Verify OTP
+
+    </title>
+
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+
+            box-sizing:border-box;
+
+        }
+
+
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            overflow:hidden;
+
+            font-family:'Inter', sans-serif;
+
+            background:
+
+                radial-gradient(
+
+                    circle at top,
+
+                    rgba(0,255,255,0.10),
+
+                    transparent 30%
+
+                ),
+
+                linear-gradient(
+
+                    135deg,
+
+                    #040404,
+                    #0c0c0c,
+                    #131313
+
+                );
+
+            position:relative;
+
+        }
+
+
+
+        /* GRID */
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+
+                    rgba(255,255,255,0.03) 1px,
+
+                    transparent 1px
+
+                ),
+
+                linear-gradient(
+
+                    90deg,
+
+                    rgba(255,255,255,0.03) 1px,
+
+                    transparent 1px
+
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.15;
+
+            pointer-events:none;
+
+        }
+
+
+
+        /* CARD */
+
+        .otp-card{
+
+            width:92%;
+            max-width:540px;
+
+            padding:42px;
+
+            border-radius:34px;
+
+            background:
+
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(24px);
+
+            box-shadow:
+
+                0 0 45px rgba(0,255,255,0.08);
+
+            position:relative;
+
+            z-index:2;
+
+        }
+
+
+
+        /* CLOSE */
+
+        .close-btn{
+
+            position:absolute;
+
+            top:20px;
+            right:20px;
+
+            width:42px;
+            height:42px;
+
+            border-radius:50%;
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            text-decoration:none;
+
+            background:
+                rgba(255,77,109,0.14);
+
+            color:#ff4d6d;
+
+            border:
+                1px solid rgba(255,77,109,0.22);
+
+            font-size:1.4rem;
+
+            font-weight:700;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .close-btn:hover{
+
+            transform:
+                rotate(90deg)
+                scale(1.08);
+
+        }
+
+
+
+        /* TITLE */
+
+        .logo{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:2rem;
+
+            letter-spacing:2px;
+
+            color:white;
+
+            margin-bottom:16px;
+
+        }
+
+
+
+        .subtitle{
+
+            color:rgba(255,255,255,0.65);
+
+            line-height:1.8;
+
+            margin-bottom:34px;
+
+        }
+
+
+
+        /* FLASH */
+
+        .flash-container{
+
+            margin-bottom:24px;
+
+        }
+
+
+
+        .flash{
+
+            padding:16px 18px;
+
+            border-radius:18px;
+
+            margin-bottom:12px;
+
+            line-height:1.6;
+
+            font-size:0.94rem;
+
+        }
+
+
+
+        .flash.success{
+
+            background:
+                rgba(0,255,170,0.12);
+
+            color:#00ffaa;
+
+        }
+
+
+
+        .flash.danger{
+
+            background:
+                rgba(255,77,109,0.12);
+
+            color:#ff758f;
+
+        }
+
+
+
+        .flash.info{
+
+            background:
+                rgba(0,200,255,0.12);
+
+            color:#55dfff;
+
+        }
+
+
+
+        /* FORM */
+
+        .otp-form{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:26px;
+
+        }
+
+
+
+        .otp-group{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+
+
+        .otp-group label{
+
+            color:white;
+
+            font-weight:600;
+
+        }
+
+
+
+        .otp-input{
+
+            border:none;
+
+            outline:none;
+
+            width:100%;
+
+            padding:20px;
+
+            border-radius:22px;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-size:1.4rem;
+
+            text-align:center;
+
+            letter-spacing:12px;
+
+            font-weight:700;
+
+        }
+
+
+
+        .otp-input::placeholder{
+
+            color:rgba(255,255,255,0.3);
+
+            letter-spacing:6px;
+
+        }
+
+
+
+        /* BUTTON */
+
+        .verify-btn{
+
+            border:none;
+
+            outline:none;
+
+            padding:18px;
+
+            border-radius:22px;
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #00f0ff,
+                    #00ffbf
+
+                );
+
+            color:black;
+
+            font-size:1rem;
+
+            font-weight:800;
+
+            cursor:pointer;
+
+            transition:0.35s ease;
+
+        }
+
+
+
+        .verify-btn:hover{
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+
+                0 0 35px rgba(0,255,191,0.25);
+
+        }
+
+
+
+        /* TIMER */
+
+        .timer{
+
+            text-align:center;
+
+            margin-top:24px;
+
+            color:rgba(255,255,255,0.6);
+
+            font-size:0.95rem;
+
+        }
+
+
+
+        /* RESEND */
+
+        .resend-section{
+
+            text-align:center;
+
+            margin-top:22px;
+
+        }
+
+
+
+        .resend-link{
+
+            color:#00ffbf;
+
+            text-decoration:none;
+
+            font-weight:700;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .resend-link:hover{
+
+            opacity:0.75;
+
+        }
+
+
+
+        /* MOBILE */
+
+        @media(max-width:768px){
+
+            .otp-card{
+
+                padding:30px 24px;
+
+            }
+
+
+
+            .logo{
+
+                font-size:1.7rem;
+
+            }
+
+
+
+            .otp-input{
+
+                font-size:1.2rem;
+
+                letter-spacing:8px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- OTP CARD -->
+
+    <div class="otp-card">
+
+
+
+        <!-- CLOSE -->
+
+        <a
+            href="{{ url_for('password_reset.forgot_password') }}"
+            class="close-btn"
+        >
+
+            ×
+
+        </a>
+
+
+
+        <!-- TITLE -->
+
+        <h1 class="logo">
+
+            RM BAKES
+
+        </h1>
+
+
+
+        <p class="subtitle">
+
+            Enter the 6-digit OTP sent to your Gmail 📩  
+            This OTP expires in 5 minutes 😭🔥
+
+        </p>
+
+
+
+        <!-- FLASH -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash {{ category }}">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+
+        <!-- FORM -->
+
+        <form
+            method="POST"
+            class="otp-form"
+        >
+
+            <div class="otp-group">
+
+                <label>
+
+                    Verification OTP
+
+                </label>
+
+                <input
+                    type="text"
+                    name="otp"
+                    maxlength="6"
+                    placeholder="• • • • • •"
+                    class="otp-input"
+                    required
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="verify-btn"
+            >
+
+                ✅ Verify OTP
+
+            </button>
+
+        </form>
+
+
+
+        <!-- TIMER -->
+
+        <div class="timer">
+
+            ⏳ OTP valid for 5 minutes
+
+        </div>
+
+
+
+        <!-- RESEND -->
+
+        <div class="resend-section">
+
+            Didn't receive OTP?
+
+            <a
+                href="{{ url_for('password_reset.resend_reset_otp') }}"
+                class="resend-link"
+            >
+
+                Resend OTP
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dessert Studio | RM Bakes</title>
+
+
+
+    <!-- Google Fonts -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+
+        body {
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(255, 183, 77, 0.18),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(255, 215, 128, 0.10),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    145deg,
+                    #0f0a06,
+                    #140d08,
+                    #1b120d
+                );
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            color: #fff6e9;
+
+            font-family: "Poppins", sans-serif;
+
+            position: relative;
+
+        }
+
+
+
+        /* =====================================
+           FLOATING GLOW ORBS
+        ===================================== */
+
+        .glow {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+
+            z-index: 0;
+
+            animation: floatGlow 10s infinite ease-in-out;
+
+        }
+
+
+
+        .glow1 {
+
+            width: 250px;
+
+            height: 250px;
+
+            background: rgba(255, 183, 77, 0.12);
+
+            top: -80px;
+
+            left: -80px;
+
+        }
+
+
+
+        .glow2 {
+
+            width: 300px;
+
+            height: 300px;
+
+            background: rgba(255, 200, 120, 0.08);
+
+            bottom: -120px;
+
+            right: -100px;
+
+            animation-delay: 3s;
+
+        }
+
+
+
+        @keyframes floatGlow {
+
+            0% {
+
+                transform: translateY(0px);
+
+            }
+
+            50% {
+
+                transform: translateY(30px);
+
+            }
+
+            100% {
+
+                transform: translateY(0px);
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           TOP BAR
+        ===================================== */
+
+        .top-bar {
+
+            width: 100%;
+
+            padding: 22px 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            position: relative;
+
+            z-index: 10;
+
+        }
+
+
+
+        .back-btn {
+
+            width: 54px;
+
+            height: 54px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.06);
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 24px;
+
+            backdrop-filter: blur(10px);
+
+            transition: 0.3s ease;
+
+        }
+
+
+
+        .back-btn:hover {
+
+            transform: scale(1.08);
+
+            background: rgba(255, 183, 77, 0.18);
+
+        }
+    
+        .my-orders-btn{
+
+            text-decoration:none;
+
+            padding:14px 22px;
+
+            border-radius:18px;
+
+            background:
+
+                rgba(255,255,255,0.06);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-size:14px;
+
+            font-weight:600;
+
+            backdrop-filter:blur(12px);
+
+            transition:0.35s ease;
+
+        }
+
+
+
+        .my-orders-btn:hover{
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(255,212,126,0.45);
+
+            color:#ffd47e;
+
+            box-shadow:
+                0 0 24px rgba(255,212,126,0.12);
+
+        }
+
+
+
+        /* =====================================
+           HERO
+        ===================================== */
+
+        .hero {
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+
+            padding: 10px 24px 40px;
+
+        }
+
+
+
+        .hero h1 {
+
+            font-family: "Orbitron", sans-serif;
+
+            font-size: 48px;
+
+            line-height: 1.05;
+
+            color: #fff5df;
+
+            text-shadow:
+                0 0 25px rgba(255, 183, 77, 0.20);
+
+            margin-bottom: 18px;
+
+        }
+
+
+
+        .hero h1 span {
+
+            color: #f6c453;
+
+        }
+
+
+
+        .hero p {
+
+            max-width: 750px;
+
+            margin: auto;
+
+            color: rgba(255,255,255,0.75);
+
+            line-height: 1.8;
+
+            font-size: 16px;
+
+        }
+
+
+
+        .hero .quote {
+
+            margin-top: 24px;
+
+            font-family: "Playfair Display", serif;
+
+            color: #ffd47e;
+
+            font-size: 20px;
+
+            opacity: 0.9;
+
+        }
+
+
+
+        /* =====================================
+           MAIN CONTAINER
+        ===================================== */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 850px;
+
+            margin: auto;
+
+            padding: 0 20px 60px;
+
+            position: relative;
+
+            z-index: 2;
+
+        }
+
+
+
+        /* =====================================
+           FORM CARD
+        ===================================== */
+
+        .form-card {
+
+            background: rgba(255,255,255,0.04);
+
+            border: 1px solid rgba(255,255,255,0.07);
+
+            border-radius: 36px;
+
+            padding: 36px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+
+                0 0 50px rgba(255, 183, 77, 0.05),
+
+                inset 0 0 40px rgba(255,255,255,0.02);
+
+        }
+
+
+
+        .section-title {
+
+            font-family: "Playfair Display", serif;
+
+            font-size: 32px;
+
+            color: #ffd47e;
+
+            margin-bottom: 30px;
+
+        }
+
+
+
+        /* =====================================
+           INPUT GROUP
+        ===================================== */
+
+        .input-group {
+
+            margin-bottom: 24px;
+
+        }
+
+
+
+        .input-group label {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            font-size: 15px;
+
+            color: rgba(255,255,255,0.88);
+
+        }
+
+
+
+        .input-group input,
+
+        .input-group textarea,
+
+        .input-group select {
+
+            width: 100%;
+
+            padding: 18px 20px;
+
+            border-radius: 18px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            background: rgba(255,255,255,0.04);
+
+            color: white;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.3s ease;
+
+            font-family: "Poppins", sans-serif;
+
+        }
+
+
+
+        .input-group textarea {
+
+            resize: vertical;
+
+            min-height: 140px;
+
+        }
+
+
+
+        .input-group input:focus,
+
+        .input-group textarea:focus,
+
+        .input-group select:focus {
+
+            border-color: rgba(255, 196, 83, 0.7);
+
+            box-shadow:
+
+                0 0 0 4px rgba(255, 196, 83, 0.12);
+
+            transform: translateY(-1px);
+
+        }
+
+
+
+        /* =====================================
+           TWO COLUMN GRID
+        ===================================== */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+
+        /* =====================================
+           FILE UPLOAD
+        ===================================== */
+
+        .upload-box {
+
+            border: 2px dashed rgba(255, 212, 126, 0.35);
+
+            border-radius: 24px;
+
+            padding: 35px 20px;
+
+            text-align: center;
+
+            transition: 0.3s ease;
+
+            background: rgba(255,255,255,0.02);
+
+        }
+
+
+
+        .upload-box:hover {
+
+            background: rgba(255, 196, 83, 0.04);
+
+            border-color: rgba(255, 212, 126, 0.65);
+
+        }
+
+
+
+        .upload-box input {
+
+            margin-top: 16px;
+
+        }
+
+
+
+        .upload-preview {
+
+            margin-top: 22px;
+
+            display: none;
+
+            animation: fadeIn 0.5s ease;
+
+        }
+
+
+
+        .upload-preview img {
+
+            width: 100%;
+
+            max-height: 280px;
+
+            object-fit: cover;
+
+            border-radius: 20px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+        }
+
+
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(10px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           BUTTON
+        ===================================== */
+
+        .submit-btn {
+
+            width: 100%;
+
+            border: none;
+
+            outline: none;
+
+            padding: 20px;
+
+            border-radius: 24px;
+
+            margin-top: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f6c453,
+                    #ffb347
+                );
+
+            color: #241200;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.35s ease;
+
+            box-shadow:
+
+                0 10px 35px rgba(255, 183, 77, 0.28);
+
+        }
+
+
+
+        .submit-btn:hover {
+
+            transform: translateY(-4px) scale(1.01);
+
+            box-shadow:
+
+                0 18px 40px rgba(255, 183, 77, 0.34);
+
+        }
+
+
+
+        /* =====================================
+           FLASH MESSAGE
+        ===================================== */
+
+        .flash {
+
+            background: rgba(255, 183, 77, 0.12);
+
+            border: 1px solid rgba(255, 183, 77, 0.25);
+
+            color: #ffd47e;
+
+            padding: 18px;
+
+            border-radius: 18px;
+
+            margin-bottom: 24px;
+
+            text-align: center;
+
+        }
+
+
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media(max-width: 768px) {
+
+            .hero h1 {
+
+                font-size: 34px;
+
+            }
+
+
+
+            .grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+
+            .form-card {
+
+                padding: 24px;
+
+                border-radius: 28px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- GLOW EFFECTS -->
+
+    <div class="glow glow1"></div>
+
+    <div class="glow glow2"></div>
+
+
+
+    <!-- TOP BAR -->
+
+    <div class="top-bar">
+
+    <a
+        href="{{ url_for('main.home') }}"
+        class="back-btn"
+    >
+
+        ←
+
+    </a>
+
+
+
+    <a
+        href="{{ url_for('custom_order.my_custom_orders') }}"
+        class="my-orders-btn"
+    >
+
+        View My Dessert Studio ✨
+
+    </a>
+
+</div>
+
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+
+            Dessert <span>Studio</span>
+
+        </h1>
+
+
+
+        <p>
+
+            Not interested in ordinary desserts?
+
+            Create something deeply personal,
+            handcrafted and emotionally memorable.
+
+            From dream cakes to artistic kunafa creations —
+            RM Bakes transforms your imagination
+            into sweetness.
+        </p>
+
+
+
+        <div class="quote">
+
+            “Every custom dessert tells a story.”
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+
+        <div class="form-card">
+
+
+
+            <h2 class="section-title">
+
+                Design Your Dream Dessert ✨
+
+            </h2>
+
+
+
+            <!-- FLASH -->
+
+            {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="flash">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+
+            <!-- FORM -->
+
+            <form
+
+    action="{{ url_for('custom_order.submit_custom_order') }}"
+
+    method="POST"
+
+    enctype="multipart/form-data"
+
+    onsubmit="return confirmDessertSubmission()"
+
+>
+
+
+
+                <!-- GRID -->
+
+                <div class="grid">
+
+
+
+                    <div class="input-group">
+
+                        <label>Dessert Category</label>
+
+                        <select name="dessert_category" required>
+
+                            <option value="">Select</option>
+
+                            <option>Cake</option>
+
+                            <option>Kunafa</option>
+
+                            <option>Brownie</option>
+
+                            <option>Cupcake</option>
+
+                            <option>Cheesecake</option>
+
+                            <option>Cookies</option>
+
+                            <option>Chocolate Box</option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label>Flavor</label>
+
+                        <input
+                            type="text"
+                            name="flavor"
+                            placeholder="Chocolate Truffle"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label>Quantity</label>
+
+                        <input
+                            type="text"
+                            name="quantity"
+                            placeholder="1kg / 12 pcs"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label>Occasion</label>
+
+                        <input
+                            type="text"
+                            name="occasion"
+                            placeholder="Birthday / Wedding"
+                        >
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label>Delivery Date</label>
+
+                        <input
+                            type="date"
+                            name="delivery_date"
+                        >
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label>Estimated Budget</label>
+
+                        <input
+                            type="number"
+                            name="budget"
+                            placeholder="₹1500"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- UPLOAD -->
+
+                <div class="input-group">
+
+                    <label>Inspiration Image</label>
+
+
+
+                    <div class="upload-box">
+
+                        <p>
+
+                            Upload inspiration images,
+                            sketches or references ✨
+
+                        </p>
+
+
+
+                        <input
+                            type="file"
+                            name="inspiration_image"
+                            id="imageInput"
+                            accept="image/*"
+                        >
+
+
+
+                        <div class="upload-preview">
+
+                            <img
+                                id="previewImage"
+                                src=""
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="input-group">
+
+                    <label>Describe Your Dream Dessert</label>
+
+                    <textarea
+                        name="description"
+                        placeholder="Describe colors, design, layers, aesthetics, mood, toppings, themes..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- MESSAGE -->
+
+                <div class="input-group">
+
+                    <label>Custom Message on Dessert</label>
+
+                    <input
+                        type="text"
+                        name="custom_message"
+                        placeholder="Happy Birthday Nila ❤️"
+                    >
+
+                </div>
+
+
+
+                <!-- NOTES -->
+
+                <div class="input-group">
+
+                    <label>Special Notes</label>
+
+                    <textarea
+                        name="special_notes"
+                        placeholder="Allergies, eggless request, less sugar, delivery preferences..."
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+
+                    Submit Dessert Request ✨
+
+                </button>
+
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- IMAGE PREVIEW -->
+
+    <script>
+
+        const imageInput = document.getElementById(
+
+            "imageInput"
+
+        );
+
+
+
+        const previewContainer = document.querySelector(
+
+            ".upload-preview"
+
+        );
+
+
+
+        const previewImage = document.getElementById(
+
+            "previewImage"
+
+        );
+
+
+
+        imageInput.addEventListener(
+
+            "change",
+
+            function(event) {
+
+                const file = event.target.files[0];
+
+
+
+                if(file) {
+
+                    previewImage.src = URL.createObjectURL(file);
+
+                    previewContainer.style.display = "block";
+
+                }
+
+            }
+
+        );
+    
+    
+    function confirmDessertSubmission(){
+
+            return confirm(
+
+                "Are you sure you want to submit this dessert request? ✨"
+
+            );
+
+        }
+    
+
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- META -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes
+
+    </title>
+
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+
+
+    <!-- BOOTSTRAP -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+
+    <!-- FONT AWESOME -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+
+
+    <!-- CUSTOM CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style2.css') }}"
+    >
+
+</head>
+
+<body>
+    
+    
+<!-- =====================================
+     PAGE TRANSITION
+===================================== -->
+
+<div
+    class="page-transition"
+    id="pageTransition"
+></div>
+    
+    
+
+<!-- =====================================
+     FLOATING PARTICLES
+===================================== -->
+
+<div id="particles-container"></div>
+
+
+
+<!-- =====================================
+     THEME SWITCHER
+===================================== -->
+
+<button
+    class="theme-switcher-btn"
+    id="themeSwitcherBtn"
+>
+
+    🎨
+
+</button>
+
+
+
+<div
+    class="theme-panel"
+    id="themePanel"
+>
+
+    <button
+        class="theme-option"
+        data-theme="midnight"
+    >
+
+        ☕ Midnight Café
+
+    </button>
+
+
+
+    <button
+        class="theme-option"
+        data-theme="strawberry"
+    >
+
+        🍓 Strawberry Cream
+
+    </button>
+
+
+
+    <button
+        class="theme-option"
+        data-theme="chocolate"
+    >
+
+        🍫 Chocolate Noir
+
+    </button>
+
+
+
+    <button
+        class="theme-option"
+        data-theme="vanilla"
+    >
+
+        🍦 Vanilla Dream
+
+    </button>
+
+</div>
+    
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container">
+
+        <!-- LOGO -->
+
+        <a
+            href="{{ url_for('main.home') }}"
+            class="banner-link"
+        >
+
+            <img
+                src="{{ url_for('static', filename='uploads/banner.png') }}"
+                alt="RM Bakes Banner"
+                class="top-banner"
+            >
+
+        </a>
+
+
+
+        <!-- =====================================
+             BUTTERY MENU BUTTON
+        ====================================== -->
+
+        <button
+
+            class="navbar-toggler custom-menu-btn"
+
+            type="button"
+
+            data-bs-toggle="collapse"
+
+            data-bs-target="#navbarContent"
+
+            id="menuToggleBtn"
+
+        >
+
+            <div class="menu-line top-line"></div>
+
+            <div class="menu-line middle-line"></div>
+
+            <div class="menu-line bottom-line"></div>
+
+        </button>
+
+
+
+        <!-- NAV LINKS -->
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarContent"
+        >
+
+            <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+
+
+                <!-- HOME -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link nav-home-btn"
+                        href="{{ url_for('main.home') }}"
+                    >
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- MENU -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{{ url_for('product.products') }}"
+                    >
+
+                        Menu
+
+                    </a>
+
+                </li>
+
+
+
+                {% if current_user.is_authenticated %}
+
+
+
+                    <!-- CART -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{{ url_for('cart.cart') }}"
+                        >
+
+                            Cart 🛒
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- ORDERS -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{{ url_for('order.my_orders') }}"
+                        >
+
+                            Orders 📦
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- PROFILE -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link profile-link"
+                            href="{{ url_for('profile.profile') }}"
+                        >
+
+                            👤 {{ current_user.username }}
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- LOGOUT -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link nav-logout-btn"
+                            href="#"
+                            onclick="confirmLogout()"
+                        >
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
+
+
+                {% else %}
+
+
+
+                    <!-- LOGIN -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{{ url_for('auth.login') }}"
+                        >
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- REGISTER -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{{ url_for('auth.register') }}"
+                        >
+
+                            Register
+
+                        </a>
+
+                    </li>
+
+
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================
+     CAFE STRIP
+===================================== -->
+
+<div class="cafe-strip text-center">
+
+    Warm lights ✨
+    Soft music 🎵
+    Fresh desserts 🍰
+    Midnight comfort ☕
+
+</div>
+
+
+
+<!-- =====================================
+     TOASTS
+===================================== -->
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div
+                    class="toast align-items-center text-bg-dark border-0 show mb-2"
+                    role="alert"
+                >
+
+                    <div class="d-flex">
+
+                        <div class="toast-body">
+
+                            {{ message }}
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"
+                        ></button>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+</div>
+
+
+
+<!-- =====================================
+     MAIN CONTENT
+===================================== -->
+
+<div class="container mt-4">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
+
+
+
+<!-- =====================================
+     FLOATING NOTIFICATION BUTTON
+===================================== -->
+
+<a
+    href="{{ url_for('notification.notifications_page') }}"
+    class="floating-notification-btn"
+>
+
+    🔔
+
+    {% if unread_notifications_count > 0 %}
+
+        <span class="notification-badge">
+
+            {{ unread_notifications_count }}
+
+        </span>
+
+    {% endif %}
+
+</a>
+
+
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
+<footer class="rm-footer">
+
+    <div class="footer-glow"></div>
+
+
+
+    <div class="footer-brand">
+
+        <h2>
+
+            RM BAKES
+
+        </h2>
+
+
+
+        <p>
+
+            Warm lights ✨  
+            Soft music 🎵  
+            Fresh desserts 🍰  
+            Midnight comfort ☕
+
+        </p>
+
+    </div>
+
+
+
+    <!-- SOCIALS -->
+
+    <div class="footer-socials">
+
+        <a
+            href="https://facebook.com/"
+            target="_blank"
+            class="footer-icon"
+        >
+
+            <i class="fab fa-facebook-f"></i>
+
+        </a>
+
+
+
+        <a
+            href="https://www.instagram.com/rmcloudcakecreations?igsh=MTZ0Y3NtM3N5ejdy"
+            target="_blank"
+            class="footer-icon"
+        >
+
+            <i class="fab fa-instagram"></i>
+
+        </a>
+
+
+
+        <a
+            href="https://wa.me/+918147777938"
+            target="_blank"
+            class="footer-icon"
+        >
+
+            <i class="fab fa-whatsapp"></i>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- LINKS -->
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('main.about') }}">
+
+            About Us
+
+        </a>
+
+    </div>
+
+
+
+    <!-- COPYRIGHT -->
+
+    <div class="footer-copyright">
+
+        © 2026 RM Bakes • Crafted with warmth & sweetness 😭🔥
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================
+     STYLE
+===================================== -->
+
+<style>
+    
+/* =====================================
+   PAGE TRANSITION
+===================================== */
+
+.page-transition{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+
+        radial-gradient(
+
+            circle at center,
+
+            rgba(255,255,255,0.08),
+
+            rgba(0,0,0,0.75)
+
+        );
+
+    backdrop-filter:blur(12px);
+
+    z-index:999999;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:
+
+        opacity 0.9s ease;
+
+}
+
+
+
+/* ACTIVE */
+
+.page-transition.active{
+
+    opacity:1;
+
+}
+
+
+
+/* =====================================
+   PAGE ENTRY
+===================================== */
+
+body{
+
+    animation:
+
+        pageEntry 1.2s ease;
+
+}
+
+
+
+@keyframes pageEntry{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            scale(1.015);
+
+        filter:
+            blur(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            scale(1);
+
+        filter:
+            blur(0px);
+
+    }
+
+}
+    
+    
+    
+/* =====================================
+   FLOATING PARTICLES
+===================================== */
+
+#particles-container{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+}
+
+
+
+.particle{
+
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:
+
+        rgba(255,255,255,0.18);
+
+    animation:
+
+        floatParticle linear infinite;
+
+}
+
+
+
+@keyframes floatParticle{
+
+    from{
+
+        transform:
+            translateY(100vh)
+            scale(0.2);
+
+        opacity:0;
+
+    }
+
+    20%{
+
+        opacity:1;
+
+    }
+
+    to{
+
+        transform:
+            translateY(-120px)
+            scale(1);
+
+        opacity:0;
+
+    }
+
+}
+
+
+
+/* =====================================
+   THEME SWITCHER
+===================================== */
+
+.theme-switcher-btn{
+
+    position:fixed;
+
+    right:26px;
+
+    bottom:110px;
+
+    width:64px;
+    height:64px;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    z-index:9999;
+
+    font-size:1.6rem;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.18),
+            rgba(255,255,255,0.08)
+        );
+
+    backdrop-filter:blur(20px);
+
+    color:white;
+
+    transition:0.4s ease;
+
+    box-shadow:
+
+        0 0 25px rgba(255,255,255,0.08);
+
+}
+
+
+
+.theme-switcher-btn:hover{
+
+    transform:
+        rotate(20deg)
+        scale(1.08);
+
+}
+
+
+
+.theme-panel{
+
+    position:fixed;
+
+    right:24px;
+
+    bottom:190px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    z-index:9999;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:
+        translateY(20px);
+
+    transition:0.4s ease;
+
+}
+
+
+
+.theme-panel.active{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:
+        translateY(0px);
+
+}
+
+
+
+.theme-option{
+
+    border:none;
+
+    padding:14px 18px;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    color:white;
+
+    background:
+
+        rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:0.35s ease;
+
+}
+
+
+
+.theme-option:hover{
+
+    transform:
+        translateX(-6px);
+
+}
+
+
+
+/* =====================================
+   THEMES
+===================================== */
+
+body.theme-midnight{
+
+    background:
+        linear-gradient(
+            180deg,
+            #0f0f14,
+            #191621
+        );
+
+}
+
+
+
+body.theme-strawberry{
+
+    background:
+        linear-gradient(
+            180deg,
+            #2b0d18,
+            #4b1028
+        );
+
+}
+
+
+
+body.theme-chocolate{
+
+    background:
+        linear-gradient(
+            180deg,
+            #1b120d,
+            #2e1d14
+        );
+
+}
+
+
+
+body.theme-vanilla{
+
+    background:
+        linear-gradient(
+            180deg,
+            #2a241d,
+            #40352a
+        );
+
+}
+    
+
+/* =====================================
+   BUTTERY MENU BUTTON
+===================================== */
+
+.custom-menu-btn{
+
+    width:62px;
+    height:62px;
+
+    border:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:7px;
+
+    background:
+
+        rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:18px;
+
+    transition:0.45s ease;
+
+    box-shadow:
+
+        0 0 20px rgba(255,255,255,0.08);
+
+}
+
+
+
+.custom-menu-btn:hover{
+
+    transform:
+        scale(1.05);
+
+}
+
+
+
+.menu-line{
+
+    width:30px;
+    height:3px;
+
+    border-radius:999px;
+
+    background:white;
+
+    transition:0.45s ease;
+
+}
+
+
+
+/* ACTIVE */
+
+.custom-menu-btn.active .top-line{
+
+    transform:
+        translateY(10px)
+        rotate(45deg);
+
+}
+
+
+
+.custom-menu-btn.active .middle-line{
+
+    opacity:0;
+
+    transform:scaleX(0);
+
+}
+
+
+
+.custom-menu-btn.active .bottom-line{
+
+    transform:
+        translateY(-10px)
+        rotate(-45deg);
+
+}
+
+
+
+/* =====================================
+   FLOATING NOTIFICATION
+===================================== */
+
+.floating-notification-btn{
+
+    position:fixed;
+
+    bottom:28px;
+    right:28px;
+
+    width:64px;
+    height:64px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    font-size:1.7rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.18),
+            rgba(255,255,255,0.08)
+        );
+
+    backdrop-filter:blur(20px);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+
+        0 0 25px rgba(255,255,255,0.08),
+
+        0 0 60px rgba(255,105,180,0.12);
+
+    z-index:9999;
+
+    transition:0.35s ease;
+
+    animation:
+        floatBell 3s ease-in-out infinite;
+
+}
+
+
+
+.floating-notification-btn:hover{
+
+    transform:
+        translateY(-6px)
+        scale(1.08);
+
+}
+
+
+
+/* BADGE */
+
+.notification-badge{
+
+    position:absolute;
+
+    top:-4px;
+    right:-2px;
+
+    min-width:24px;
+    height:24px;
+
+    padding:0 6px;
+
+    border-radius:999px;
+
+    background:#ff4d6d;
+
+    color:white;
+
+    font-size:0.78rem;
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+
+
+/* =====================================
+   FOOTER
+===================================== */
+
+.rm-footer{
+
+    position:relative;
+
+    margin-top:120px;
+
+    padding:
+        80px 20px 50px;
+
+    overflow:hidden;
+
+    background:
+
+        linear-gradient(
+
+            180deg,
+
+            rgba(255,255,255,0.02),
+
+            rgba(255,255,255,0.04)
+
+        );
+
+    border-top:
+        1px solid rgba(255,255,255,0.06);
+
+    text-align:center;
+
+}
+
+
+
+/* FOOTER GLOW */
+
+.footer-glow{
+
+    position:absolute;
+
+    top:-120px;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:420px;
+    height:420px;
+
+    background:
+
+        radial-gradient(
+
+            circle,
+
+            rgba(255,180,0,0.12),
+
+            transparent 70%
+
+        );
+
+}
+
+
+
+/* SOCIALS */
+
+.footer-socials{
+
+    margin-top:34px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:22px;
+
+}
+
+
+
+/* ICON */
+
+.footer-icon{
+
+    width:72px;
+    height:72px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    background:
+
+        rgba(0,0,0,0.65);
+
+    transition:0.35s ease;
+
+}
+
+
+
+.footer-icon i{
+
+    color:white;
+
+    font-size:1.8rem;
+
+}
+
+
+
+.footer-icon:hover{
+
+    transform:
+        translateY(-8px)
+        scale(1.08);
+
+}
+
+
+
+/* FLOATING ANIMATION */
+
+@keyframes floatBell{
+
+    0%{
+
+        transform:
+            translateY(0px);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-8px);
+
+    }
+
+    100%{
+
+        transform:
+            translateY(0px);
+
+    }
+
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .custom-menu-btn{
+
+        width:56px;
+        height:56px;
+
+    }
+
+
+
+    .menu-line{
+
+        width:28px;
+
+    }
+
+
+
+    .floating-notification-btn{
+
+        width:58px;
+        height:58px;
+
+        font-size:1.5rem;
+
+        bottom:22px;
+        right:20px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<script>
+
+function confirmLogout(){
+
+    const confirmAction = confirm(
+
+        "Logout from RM Bakes? 😭"
+
+    );
+
+    if(confirmAction){
+
+        window.location.href =
+
+            "{{ url_for('auth.logout') }}";
+    }
+}
+
+
+
+/* =====================================
+   BUTTERY MENU ANIMATION
+===================================== */
+
+const menuToggleBtn =
+
+    document.getElementById(
+        "menuToggleBtn"
+    );
+
+
+
+const navbarContent =
+
+    document.getElementById(
+        "navbarContent"
+    );
+
+
+
+navbarContent.addEventListener(
+
+    "show.bs.collapse",
+
+    () => {
+
+        menuToggleBtn.classList.add(
+            "active"
+        );
+
+    }
+
+);
+
+
+
+navbarContent.addEventListener(
+
+    "hide.bs.collapse",
+
+    () => {
+
+        menuToggleBtn.classList.remove(
+            "active"
+        );
+
+    }
+
+);
+    
+    
+/* =====================================
+   PARTICLES ENGINE
+===================================== */
+
+const particlesContainer =
+
+    document.getElementById(
+        "particles-container"
+    );
+
+
+
+function createParticle(){
+
+    const particle =
+        document.createElement(
+            "div"
+        );
+
+
+
+    particle.className =
+        "particle";
+
+
+
+    particle.style.left =
+        Math.random() * 100 + "vw";
+
+
+
+    particle.style.animationDuration =
+        6 + Math.random() * 8 + "s";
+
+
+
+    particle.style.width =
+        4 + Math.random() * 10 + "px";
+
+
+
+    particle.style.height =
+        particle.style.width;
+
+
+
+    particlesContainer.appendChild(
+        particle
+    );
+
+
+
+    setTimeout(() => {
+
+        particle.remove();
+
+    }, 14000);
+
+}
+
+
+
+setInterval(
+
+    createParticle,
+
+    280
+
+);
+
+
+
+/* =====================================
+   THEME SWITCHER
+===================================== */
+
+const themeSwitcherBtn =
+
+    document.getElementById(
+        "themeSwitcherBtn"
+    );
+
+
+
+const themePanel =
+
+    document.getElementById(
+        "themePanel"
+    );
+
+
+
+themeSwitcherBtn.addEventListener(
+
+    "click",
+
+    () => {
+
+        themePanel.classList.toggle(
+            "active"
+        );
+
+    }
+
+);
+
+
+
+const savedTheme =
+
+    localStorage.getItem(
+        "rm_theme"
+    ) || "midnight";
+
+
+
+document.body.classList.add(
+    `theme-${savedTheme}`
+);
+
+
+
+document
+.querySelectorAll(".theme-option")
+.forEach(button => {
+
+    button.addEventListener(
+
+        "click",
+
+        () => {
+
+            const theme =
+                button.dataset.theme;
+
+
+
+            document.body.className =
+
+                document.body.className
+                .replace(
+
+                    /theme-\w+/g,
+
+                    ""
+
+                );
+
+
+
+            document.body.classList.add(
+                `theme-${theme}`
+            );
+
+
+
+            localStorage.setItem(
+
+                "rm_theme",
+
+                theme
+
+            );
+
+        }
+
+    );
+
+});
+    
+    
+/* =====================================
+   PAGE TRANSITIONS
+===================================== */
+
+const transitionOverlay =
+
+    document.getElementById(
+        "pageTransition"
+    );
+
+
+
+document
+.querySelectorAll("a")
+.forEach(link => {
+
+    const href =
+        link.getAttribute("href");
+
+
+
+    if(
+
+        href &&
+
+        !href.startsWith("#") &&
+
+        !link.hasAttribute(
+            "target"
+        )
+
+    ){
+
+        link.addEventListener(
+
+            "click",
+
+            event => {
+
+                event.preventDefault();
+
+
+
+                transitionOverlay.classList.add(
+                    "active"
+                );
+
+
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        href;
+
+                }, 700);
+
+            }
+
+        );
+
+    }
+
+});
+    
+
+</script>
+
+
+
+<!-- BOOTSTRAP -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+
+<!-- CUSTOM JS -->
+
+<script
+    src="{{ url_for('static', filename='js/script.js') }}"
+></script>
+
+</body>
+
+</html>

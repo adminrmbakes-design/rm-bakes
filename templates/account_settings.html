@@ -1,0 +1,703 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phase2-page">
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-avatar-large">
+
+            🔐
+
+        </div>
+
+        <h1 class="glow-title">
+
+            Account Settings
+
+        </h1>
+
+        <p class="glow-subtitle">
+
+            Manage your RM Bakes account,
+            security and recovery settings safely.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         SETTINGS GRID
+    ====================================== -->
+
+    <div class="account-settings-grid">
+
+
+
+        <!-- =====================================
+             CHANGE PASSWORD
+        ====================================== -->
+
+        <div class="glass-card settings-card">
+
+            <h2 class="section-title">
+
+                🔑 Change Password
+
+            </h2>
+
+
+
+            <p class="glow-subtitle mb-4">
+
+                Update your account password securely.
+                Strong passwords protect your desserts 😭🔥
+
+            </p>
+
+
+
+            <!-- CURRENT PASSWORD -->
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="currentPassword"
+                    class="premium-input"
+                    placeholder="Current Password"
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password-btn"
+                    data-target="currentPassword"
+                >
+
+                    👁
+
+                </button>
+
+            </div>
+
+
+
+            <!-- NEW PASSWORD -->
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    class="premium-input"
+                    placeholder="New Password"
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password-btn"
+                    data-target="newPassword"
+                >
+
+                    👁
+
+                </button>
+
+            </div>
+
+
+
+            <!-- CONFIRM -->
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    class="premium-input"
+                    placeholder="Confirm New Password"
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password-btn"
+                    data-target="confirmPassword"
+                >
+
+                    👁
+
+                </button>
+
+            </div>
+
+
+
+            <!-- RULES -->
+
+            <div class="password-rules">
+
+                <div class="rules-title">
+
+                    Password Rules
+
+                </div>
+
+
+
+                <div class="rules-list">
+
+                    <div>
+
+                        • Minimum 8 characters
+
+                    </div>
+
+
+
+                    <div>
+
+                        • One uppercase letter
+
+                    </div>
+
+
+
+                    <div>
+
+                        • One lowercase letter
+
+                    </div>
+
+
+
+                    <div>
+
+                        • One number
+
+                    </div>
+
+
+
+                    <div>
+
+                        • One special character
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button
+                class="premium-btn"
+                id="changePasswordBtn"
+            >
+
+                Update Password 🔐
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             FORGOT PASSWORD
+        ====================================== -->
+
+        <div class="glass-card settings-card">
+
+            <h2 class="section-title">
+
+                📧 Forgot Password
+
+            </h2>
+
+
+
+            <p class="glow-subtitle mb-4">
+
+                Forgot your password?
+                Recover your account securely
+                using Gmail OTP verification.
+
+            </p>
+
+
+
+            <button
+                class="premium-btn green-btn"
+                id="forgotPasswordBtn"
+            >
+
+                Recover Using Gmail OTP ✨
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             DELETE ACCOUNT
+        ====================================== -->
+
+        <div class="glass-card settings-card">
+
+            <h2 class="section-title">
+
+                ⚠️ Delete Account
+
+            </h2>
+
+
+
+            <p class="glow-subtitle mb-4">
+
+                Your account will be soft deleted.
+                You can recover it later using Gmail OTP verification.
+
+            </p>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="deletePassword"
+                    class="premium-input"
+                    placeholder="Enter Password to Confirm"
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password-btn"
+                    data-target="deletePassword"
+                >
+
+                    👁
+
+                </button>
+
+            </div>
+
+
+
+            <!-- DELETE -->
+
+            <button
+                class="premium-btn red-btn"
+                id="deleteAccountBtn"
+            >
+
+                Delete My Account 😭
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     ACCOUNT SETTINGS JS
+===================================== -->
+
+<script>
+
+
+
+// ========================================
+// TOAST
+// ========================================
+
+function showToast(message){
+
+    const toast =
+        document.createElement("div");
+
+
+
+    toast.className =
+        "custom-toast";
+
+
+
+    toast.innerText =
+        message;
+
+
+
+    document.body.appendChild(
+        toast
+    );
+
+
+
+    setTimeout(() => {
+
+        toast.classList.add(
+            "show"
+        );
+
+    }, 100);
+
+
+
+    setTimeout(() => {
+
+        toast.classList.remove(
+            "show"
+        );
+
+
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 2400);
+
+}
+
+
+
+// ========================================
+// PASSWORD TOGGLE
+// ========================================
+
+document
+    .querySelectorAll(
+        ".toggle-password-btn"
+    )
+
+    .forEach(button => {
+
+        button.addEventListener(
+
+            "click",
+
+            () => {
+
+                const targetId =
+                    button.dataset.target;
+
+
+
+                const input =
+                    document.getElementById(
+                        targetId
+                    );
+
+
+
+                if(!input){
+
+                    return;
+
+                }
+
+
+
+                if(input.type === "password"){
+
+                    input.type = "text";
+
+                    button.innerText = "🙈";
+
+                }
+
+                else{
+
+                    input.type = "password";
+
+                    button.innerText = "👁";
+
+                }
+
+            }
+
+        );
+
+    });
+
+
+
+// ========================================
+// CHANGE PASSWORD
+// ========================================
+
+const changePasswordBtn =
+    document.getElementById(
+        "changePasswordBtn"
+    );
+
+
+
+changePasswordBtn.addEventListener(
+
+    "click",
+
+    async () => {
+
+        const currentPassword =
+            document.getElementById(
+                "currentPassword"
+            ).value;
+
+
+
+        const newPassword =
+            document.getElementById(
+                "newPassword"
+            ).value;
+
+
+
+        const confirmPassword =
+            document.getElementById(
+                "confirmPassword"
+            ).value;
+
+
+
+        try{
+
+            const response =
+                await fetch(
+
+                    "/profile/change-password",
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                current_password:
+                                    currentPassword,
+
+                                new_password:
+                                    newPassword,
+
+                                confirm_password:
+                                    confirmPassword
+
+                            })
+
+                    }
+
+                );
+
+
+
+            const data =
+                await response.json();
+
+
+
+            showToast(
+                data.message
+            );
+
+
+
+            if(data.success){
+
+                document.getElementById(
+                    "currentPassword"
+                ).value = "";
+
+
+
+                document.getElementById(
+                    "newPassword"
+                ).value = "";
+
+
+
+                document.getElementById(
+                    "confirmPassword"
+                ).value = "";
+
+            }
+
+        }
+
+        catch(error){
+
+            console.log(error);
+
+            showToast(
+                "Server connection failed 😭"
+            );
+
+        }
+
+    }
+
+);
+
+
+
+// ========================================
+// FORGOT PASSWORD
+// ========================================
+
+const forgotPasswordBtn =
+    document.getElementById(
+        "forgotPasswordBtn"
+    );
+
+
+
+forgotPasswordBtn.addEventListener(
+
+    "click",
+
+    () => {
+
+        window.location.href =
+            "/forgot-password";
+
+    }
+
+);
+
+
+
+// ========================================
+// DELETE ACCOUNT
+// ========================================
+
+const deleteAccountBtn =
+    document.getElementById(
+        "deleteAccountBtn"
+    );
+
+
+
+deleteAccountBtn.addEventListener(
+
+    "click",
+
+    async () => {
+
+        const confirmation = confirm(
+
+            "Are you sure you want to delete your account? 😭"
+
+        );
+
+
+
+        if(!confirmation){
+
+            return;
+
+        }
+
+
+
+        try{
+
+            const response =
+                await fetch(
+
+                    "/profile/delete-account",
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                password:
+                                    document.getElementById(
+                                        "deletePassword"
+                                    ).value
+
+                            })
+
+                    }
+
+                );
+
+
+
+            const data =
+                await response.json();
+
+
+
+            showToast(
+                data.message
+            );
+
+
+
+            if(data.success){
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        data.redirect;
+
+                }, 1200);
+
+            }
+
+        }
+
+        catch(error){
+
+            console.log(error);
+
+            showToast(
+                "Server connection failed 😭"
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

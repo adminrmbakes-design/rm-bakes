@@ -1,0 +1,1299 @@
+{% extends "base.html" %}
+
+{% block title %}Products | RM Bakes{% endblock %}
+
+{% block content %}
+
+<section class="products-page">
+
+    <!-- HERO -->
+
+    <div class="products-hero">
+
+        <div class="hero-badge">
+            Luxury Café Experience ✨
+        </div>
+
+        <h1>
+            Desserts,
+Coffee Air &
+Midnight Peace ☕
+        </h1>
+
+        <p>
+            A cozy little world of cakes,
+warm lights and sweet comfort
+after a long tiring day.
+        </p>
+
+    </div>
+
+
+
+    <!-- SEARCH -->
+
+    <div class="search-section">
+
+        <div class="search-wrapper">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search cakes, brownies, cheesecakes..."
+    >
+
+</div>
+
+<div
+    class="clear-search-wrap"
+    id="clearSearchWrap"
+    style="display:none;">
+
+    <button
+        type="button"
+        id="clearSearchBtn">
+
+        ✖ Clear Search
+
+    </button>
+
+</div>
+
+        <button id="searchBtn">
+
+            Search 🔎
+
+        </button>
+
+    </div>
+
+
+
+    <!-- CATEGORY FILTERS -->
+
+    <div class="category-tabs">
+
+        {% for category in categories %}
+
+        <button
+            class="category-btn {% if loop.first %}active{% endif %}"
+            data-category="{{ category|trim|lower }}">
+
+            {% if category == 'all' %}
+                ✨ All
+
+            {% elif category == 'Cakes' %}
+                🎂 Cakes
+
+            {% elif category == 'Jar Cakes' %}
+                🫙 Jar Cakes
+
+            {% elif category == 'Brownies' %}
+                🍫 Brownies
+
+            {% elif category == 'Brookies' %}
+                🍪 Brookies
+
+            {% elif category == 'Blondies' %}
+                🧈 Blondies
+
+            {% elif category == 'Cheese Cakes' %}
+                🍰 Cheese Cakes
+
+            {% elif category == 'RM Signature Cakes' %}
+                👑 Signature Cakes
+
+            {% elif category == 'Burnt Basque Cheese Cakes' %}
+                🔥 Basque Cakes
+
+            {% elif category == 'RM Special Brownies' %}
+                ⭐ Special Brownies
+
+            {% elif category == 'Cookies' %}
+                🍪 Cookies
+
+            {% else %}
+                🍴 {{ category }}
+
+            {% endif %}
+
+        </button>
+
+        {% endfor %}
+
+    </div>
+
+
+
+    <!-- CATEGORY HEADING -->
+
+    <div class="category-heading">
+
+        <h2 id="categoryTitle">
+
+            🍰 All Sweet Collection
+
+        </h2>
+
+        <p id="categoryDescription">
+
+            Every dessert crafted with warmth,
+            chocolate and midnight café vibes.
+
+        </p>
+
+    </div>
+
+<!-- =====================================
+     SKELETON LOADERS
+===================================== -->
+
+<div
+    class="skeleton-grid"
+    id="skeletonGrid"
+>
+
+    {% for i in range(8) %}
+
+    <div class="skeleton-card">
+
+        <div class="skeleton-image shimmer"></div>
+
+        <div class="skeleton-line shimmer"></div>
+
+        <div
+            class="skeleton-line short shimmer"
+        ></div>
+
+        <div
+            class="skeleton-line tiny shimmer"
+        ></div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+    <!-- PRODUCTS -->
+
+    <div class="products-grid" id="productsGrid" style="display:none;">
+
+        {% for product in product_list %}
+
+        <div
+            class="product-card"
+            data-product-id="{{ product.product_id }}"
+            data-category="{{ product.product_category|trim|lower }}"
+            data-name="{{ product.product_name|lower }}">
+
+            <img
+                src="{{ url_for('static', filename='uploads/' + product.product_image) }}"
+                alt="{{ product.product_name }}"
+                class="product-image"
+            >
+
+            <div class="product-info">
+
+                <span class="product-tag">
+
+                    {{ product.product_category }}
+
+                </span>
+
+                <h3>
+
+                    {{ product.product_name }}
+
+                </h3>
+
+                <p>
+
+                    {{ product.product_description }}
+
+                </p>
+
+                <div class="product-price">
+
+                    ₹{{ product.product_price }}
+
+                </div>
+
+                <div class="product-unit">
+
+                    {{ product.product_unit }}
+
+                </div>
+
+                <div class="product-buttons">
+
+                    <a
+                        href="{{ url_for('product.product_details', product_id=product.product_id) }}"
+                        class="view-btn">
+
+                        View ✨
+
+                    </a>
+
+                    <button
+                        class="cart-btn add-to-cart-btn"
+                        data-product-id="{{ product.product_id }}"
+                        data-product-name="{{ product.product_name }}">
+
+                        Add to Cart 🛒
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+
+    <!-- NO RESULTS -->
+
+    <div
+        class="no-results"
+        id="noResults"
+        style="display:none;">
+
+        <div class="sad-emoji">
+
+            😭
+
+        </div>
+
+        <h2>
+
+            Sorry, no results found
+
+        </h2>
+
+        <p>
+
+            We couldn't find desserts matching your search.
+
+        </p>
+
+    </div>
+    
+    
+    <!-- =====================================
+     FLOATING FAVOURITES BUTTON
+====================================== -->
+
+<button
+
+    class="floating-favourite-btn"
+
+    id="floatingFavouriteBtn"
+
+>
+
+    ❤️
+
+    <span id="favouriteCount">
+
+        {{ favourite_ids|length }}
+
+    </span>
+
+</button>
+    
+<!-- =====================================
+     TEMP FLOATING CART
+===================================== -->
+
+<div
+    class="floating-cart-receiver"
+    id="floatingCartReceiver"
+>
+
+    🛒
+
+</div>  
+
+</section>
+
+
+<style>
+
+
+/* =====================================
+   FLOATING CART RECEIVER
+===================================== */
+
+.floating-cart-receiver{
+
+    position:fixed;
+
+    top:24px;
+
+    right:24px;
+
+    width:78px;
+    height:78px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:2rem;
+
+    z-index:99999;
+
+    opacity:0;
+
+    transform:
+        scale(0.5)
+        translateY(-30px);
+
+    pointer-events:none;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.18),
+            rgba(255,255,255,0.08)
+        );
+
+    backdrop-filter:blur(20px);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+
+        0 0 30px rgba(255,255,255,0.12),
+
+        0 0 60px rgba(255,0,120,0.12);
+
+    transition:0.45s ease;
+
+}
+
+
+
+.floating-cart-receiver.show{
+
+    opacity:1;
+
+    transform:
+        scale(1)
+        translateY(0px);
+
+}
+
+
+
+.floating-cart-receiver.pulse{
+
+    animation:
+        cartPulse 0.7s ease;
+
+}
+
+
+
+@keyframes cartPulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.18);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* =====================================
+   SKELETON LOADER
+===================================== */
+
+.skeleton-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
+    gap:28px;
+
+    margin-bottom:40px;
+
+}
+
+
+
+.skeleton-card{
+
+    padding:18px;
+
+    border-radius:28px;
+
+    background:
+
+        rgba(255,255,255,0.04);
+
+    backdrop-filter:blur(20px);
+
+}
+
+
+
+.skeleton-image{
+
+    width:100%;
+    height:220px;
+
+    border-radius:22px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.skeleton-line{
+
+    width:100%;
+    height:18px;
+
+    border-radius:999px;
+
+    margin-bottom:14px;
+
+}
+
+
+
+.skeleton-line.short{
+
+    width:70%;
+
+}
+
+
+
+.skeleton-line.tiny{
+
+    width:40%;
+
+}
+
+
+
+.shimmer{
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            rgba(255,255,255,0.04),
+
+            rgba(255,255,255,0.12),
+
+            rgba(255,255,255,0.04)
+
+        );
+
+    background-size:200% 100%;
+
+    animation:
+
+        shimmerMove 1.6s infinite linear;
+
+}
+
+
+
+@keyframes shimmerMove{
+
+    from{
+
+        background-position:
+            200% 0;
+
+    }
+
+    to{
+
+        background-position:
+            -200% 0;
+
+    }
+
+}
+
+
+
+.floating-favourite-btn{
+
+    position:fixed;
+
+    bottom:24px;
+
+    left:24px;
+
+    width:74px;
+
+    height:74px;
+
+    border:none;
+
+    border-radius:50%;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    z-index:9999;
+
+    color:white;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff004c,
+            #ff66a3
+        );
+
+    box-shadow:
+
+        0 0 30px rgba(255,0,120,0.45);
+
+    transition:0.4s ease;
+
+    backdrop-filter:blur(20px);
+
+    animation:
+
+        favouritePulse 2.5s infinite;
+
+}
+
+
+
+.floating-favourite-btn:hover{
+
+    transform:
+        scale(1.08)
+        rotate(-8deg);
+
+}
+
+
+
+.floating-favourite-btn.active{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff004c,
+            #ff99bb
+        );
+
+}
+
+
+
+#favouriteCount{
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-2px;
+
+    width:26px;
+
+    height:26px;
+
+    border-radius:50%;
+
+    background:white;
+
+    color:#ff0055;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+
+@keyframes favouritePulse{
+
+    0%{
+
+        box-shadow:
+
+            0 0 0 rgba(255,0,120,0.45);
+
+    }
+
+    50%{
+
+        box-shadow:
+
+            0 0 35px rgba(255,0,120,0.75);
+
+    }
+
+    100%{
+
+        box-shadow:
+
+            0 0 0 rgba(255,0,120,0.45);
+
+    }
+
+}
+
+</style>
+
+
+
+<script>
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const searchBtn =
+    document.getElementById("searchBtn");
+
+const clearSearchBtn =
+    document.getElementById("clearSearchBtn");
+
+const clearSearchWrap =
+    document.getElementById("clearSearchWrap");
+
+const productCards =
+    document.querySelectorAll(".product-card");
+
+const noResults =
+    document.getElementById("noResults");
+
+const categoryButtons =
+    document.querySelectorAll(".category-btn");
+
+const categoryTitle =
+    document.getElementById("categoryTitle");
+
+const categoryDescription =
+    document.getElementById("categoryDescription");
+
+let currentCategory = "all";
+
+let favouritesOnly = false;
+
+
+
+// =========================
+// TOAST
+// =========================
+
+function showToast(message){
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        "custom-toast";
+
+    toast.innerText =
+        message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.classList.add("show");
+
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 2200);
+
+}
+
+
+const favouriteIds =
+
+    {{ favourite_ids|tojson }};
+
+const floatingFavouriteBtn =
+
+    document.getElementById(
+        "floatingFavouriteBtn"
+    );
+
+
+
+floatingFavouriteBtn.addEventListener(
+
+    "click",
+
+    () => {
+
+        favouritesOnly =
+            !favouritesOnly;
+
+
+
+        floatingFavouriteBtn.classList.toggle(
+            "active"
+        );
+
+
+
+        filterProducts();
+
+
+
+        if(favouritesOnly){
+
+            showToast(
+                "Showing favourites ❤️"
+            );
+
+        }else{
+
+            showToast(
+                "Showing all desserts ✨"
+            );
+
+        }
+
+    }
+
+);
+
+
+
+// =========================
+// FILTER PRODUCTS
+// =========================
+
+function filterProducts(){
+
+    const searchValue =
+        searchInput.value
+        .toLowerCase()
+        .trim();
+
+    let visibleCount = 0;
+
+    productCards.forEach(card => {
+
+        const productName =
+            card.dataset.name || "";
+
+        const productCategory =
+            card.dataset.category || "";
+        
+        const productId =
+    parseInt(
+        card.dataset.productId
+    );
+
+
+
+const isFavourite =
+
+    favouriteIds.includes(
+        productId
+    );
+
+        const matchesSearch =
+            productName.includes(searchValue);
+
+        const matchesCategory =
+            currentCategory === "all" ||
+            productCategory === currentCategory;
+        
+        const matchesFavourite =
+
+    !favouritesOnly ||
+
+    isFavourite;
+
+        if(
+
+    matchesSearch &&
+
+    matchesCategory &&
+
+    matchesFavourite
+
+){
+
+            card.style.display = "flex";
+
+            visibleCount++;
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    noResults.style.display =
+        visibleCount === 0
+        ? "flex"
+        : "none";
+
+}
+
+
+
+// =========================
+// SEARCH
+// =========================
+
+searchBtn.addEventListener("click", () => {
+
+    filterProducts();
+
+    if(searchInput.value.trim() !== ""){
+
+        showToast(
+            `Showing "${searchInput.value}" 🔎`
+        );
+
+    }
+
+});
+
+
+
+searchInput.addEventListener(
+    "keyup",
+    () => {
+
+        filterProducts();
+
+        if(searchInput.value.trim() !== ""){
+
+            clearSearchWrap.style.display = "flex";
+
+        }else{
+
+            clearSearchWrap.style.display = "none";
+
+        }
+
+    }
+);
+
+
+
+// =========================
+// CLEAR SEARCH
+// =========================
+
+clearSearchBtn.addEventListener(
+    "click",
+    () => {
+
+        searchInput.value = "";
+        
+        clearSearchWrap.style.display = "none";
+
+        filterProducts();
+
+        showToast(
+            "Search cleared ✨"
+        );
+
+    }
+);
+
+
+
+// =========================
+// CATEGORY FILTER
+// =========================
+
+categoryButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        categoryButtons.forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+        button.classList.add("active");
+
+        currentCategory =
+            button.dataset.category;
+
+        filterProducts();
+
+        const buttonText =
+            button.innerText.trim();
+
+        categoryTitle.innerText =
+            buttonText;
+
+        showToast(
+            `Showing ${buttonText}`
+        );
+
+    });
+
+});
+
+/* =====================================
+   FLOATING FLY TO CART
+===================================== */
+
+function flyToCart(
+    productCard
+){
+
+    const floatingCart =
+
+        document.getElementById(
+            "floatingCartReceiver"
+        );
+
+
+
+    // =========================
+    // SHOW FLOATING CART
+    // =========================
+
+    floatingCart.classList.add(
+        "show"
+    );
+
+
+
+    setTimeout(() => {
+
+        floatingCart.classList.remove(
+            "show"
+        );
+
+    }, 2200);
+
+
+
+    const image =
+
+        productCard.querySelector(
+            ".product-image"
+        );
+
+
+
+    const flyingImage =
+        image.cloneNode(true);
+
+
+
+    const imageRect =
+        image.getBoundingClientRect();
+
+
+
+    const cartRect =
+        floatingCart.getBoundingClientRect();
+
+
+
+    flyingImage.style.position =
+        "fixed";
+
+
+
+    flyingImage.style.left =
+        imageRect.left + "px";
+
+
+
+    flyingImage.style.top =
+        imageRect.top + "px";
+
+
+
+    flyingImage.style.width =
+        imageRect.width + "px";
+
+
+
+    flyingImage.style.height =
+        imageRect.height + "px";
+
+
+
+    flyingImage.style.borderRadius =
+        "20px";
+
+
+
+    flyingImage.style.zIndex =
+        "999999";
+
+
+
+    flyingImage.style.pointerEvents =
+        "none";
+
+
+
+    flyingImage.style.transition =
+
+        "all 2.2s cubic-bezier(0.22, 1, 0.36, 1)";
+
+
+
+    document.body.appendChild(
+        flyingImage
+    );
+
+
+
+    setTimeout(() => {
+
+        flyingImage.style.left =
+            cartRect.left + 18 + "px";
+
+
+
+        flyingImage.style.top =
+            cartRect.top + 18 + "px";
+
+
+
+        flyingImage.style.width =
+            "24px";
+
+
+
+        flyingImage.style.height =
+            "24px";
+
+
+
+        flyingImage.style.opacity =
+            "0";
+
+
+
+        flyingImage.style.transform =
+
+            "scale(0.2) rotate(720deg)";
+
+
+
+        floatingCart.classList.add(
+            "pulse"
+        );
+
+    }, 40);
+
+
+
+    setTimeout(() => {
+
+        flyingImage.remove();
+
+
+
+        floatingCart.classList.remove(
+            "pulse"
+        );
+
+    }, 2400);
+
+}
+
+// =========================
+// ADD TO CART
+// =========================
+
+document
+.querySelectorAll(".add-to-cart-btn")
+.forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const productId =
+            button.dataset.productId;
+
+        const productName =
+            button.dataset.productName;
+
+        try{
+
+            const response =
+                await fetch(
+                    `/add_to_cart/${productId}`,
+                    {
+                        method: "POST",
+                        headers:{
+                            "X-Requested-With":"XMLHttpRequest"
+                        }
+                    }
+                );
+
+
+
+            // =========================
+            // USER NOT LOGGED IN
+            // =========================
+
+            if(response.redirected){
+
+                showToast(
+                    "Login to add items in cart 🔐"
+                );
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "/login";
+
+                }, 1200);
+
+                return;
+            }
+
+
+
+            const data =
+                await response.json();
+
+
+
+            // =========================
+            // SUCCESS
+            // =========================
+
+            if(data.success){
+                
+                const productCard =
+
+    button.closest(
+        ".product-card"
+    );
+
+
+
+flyToCart(
+    productCard
+);
+
+                showToast(
+                    `${productName} added to cart 🛒`
+                );
+
+            }else{
+
+                showToast(
+                    data.message ||
+                    "Unable to add item 😭"
+                );
+
+            }
+
+        }catch(error){
+
+            console.log(error);
+
+            showToast(
+                "Server connection failed 😭"
+            );
+
+        }
+
+    });
+
+});
+
+
+
+// =========================
+// INITIAL LOAD
+// =========================
+
+filterProducts();
+
+/* =====================================
+   SKELETON LOADING
+===================================== */
+
+setTimeout(() => {
+
+    document.getElementById(
+        "skeletonGrid"
+    ).style.display = "none";
+
+
+
+    document.getElementById(
+        "productsGrid"
+    ).style.display = "grid";
+
+
+
+    filterProducts();
+
+}, 3100);
+
+
+
+</script>
+
+{% endblock %}

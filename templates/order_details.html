@@ -1,0 +1,1271 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phase2-page">
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-avatar-large">
+
+            🍰
+
+        </div>
+
+        <h1 class="glow-title">
+
+            Order Details
+
+        </h1>
+
+        <p class="glow-subtitle">
+
+            Sweetness is being prepared with care ✨
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         ORDER CARD
+    ====================================== -->
+
+    <div class="glass-card section-card">
+
+        <!-- =================================
+             TOP
+        ================================== -->
+
+        <div class="order-top">
+
+            <div>
+
+                <div class="order-id">
+
+    #{{ order.order_number }}
+
+</div>
+
+
+
+{% if order.is_custom_order %}
+
+<div
+
+    style="
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+        margin-top:14px;
+        padding:10px 16px;
+        border-radius:16px;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,180,0,0.18),
+                rgba(255,120,0,0.14)
+            );
+        border:
+            1px solid rgba(255,180,0,0.22);
+        color:#ffd67d;
+        font-size:0.76rem;
+        font-weight:800;
+        letter-spacing:1px;
+        text-transform:uppercase;
+    "
+
+>
+
+    ✨ Dessert Studio Production
+
+</div>
+
+{% endif %}
+
+
+
+                <div
+                    style="
+                        color:rgba(255,255,255,0.65);
+                        margin-top:8px;
+                    "
+                >
+
+                    Ordered on
+                    {{ order.ordered_at.strftime("%d %b %Y • %I:%M %p") }}
+
+                </div>
+
+            </div>
+
+
+
+            <div>
+
+                <div
+                    class="
+                        status-badge
+                        status-{{ order.order_status }}
+                    "
+                >
+
+                    {{ order.order_status.replace("_", " ").title() }}
+
+                </div>
+
+            </div>
+
+        </div>
+        
+        
+        {% if order.is_custom_order %}
+
+<div
+
+    class="glass-card"
+
+    style="
+        padding:24px;
+        margin-top:24px;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,180,0,0.05),
+                rgba(255,120,0,0.04)
+            );
+        border:
+            1px solid rgba(255,180,0,0.08);
+    "
+
+>
+
+    <h2 class="section-title">
+
+        ✨ Dessert Studio Creation
+
+    </h2>
+
+
+
+    {% if order.custom_inspiration_image %}
+
+    <img
+
+        src="{{ url_for('static', filename=order.custom_inspiration_image) }}"
+
+        style="
+            width:100%;
+            max-height:340px;
+            object-fit:cover;
+            border-radius:24px;
+            margin-top:18px;
+            margin-bottom:22px;
+        "
+
+    >
+
+    {% endif %}
+
+
+
+    <div
+        style="
+            color:white;
+            line-height:2;
+        "
+    >
+
+        <div>
+
+            <strong>Request Code:</strong>
+            {{ order.custom_request_code }}
+
+        </div>
+
+
+
+        <div>
+
+            <strong>Dessert Category:</strong>
+            {{ order.custom_dessert_category }}
+
+        </div>
+
+
+
+        <div>
+
+            <strong>Flavor:</strong>
+            {{ order.custom_flavor }}
+
+        </div>
+
+
+
+        <div>
+
+            <strong>Quantity:</strong>
+            {{ order.custom_quantity }}
+
+        </div>
+
+
+
+        <div style="margin-top:18px;">
+
+            <strong>Dessert Vision:</strong>
+
+            <br><br>
+
+            {{ order.custom_description }}
+
+        </div>
+
+
+
+        {% if order.custom_message %}
+
+        <div style="margin-top:18px;">
+
+            <strong>Custom Message:</strong>
+
+            <br><br>
+
+            {{ order.custom_message }}
+
+        </div>
+
+        {% endif %}
+
+
+
+        {% if order.custom_special_notes %}
+
+        <div style="margin-top:18px;">
+
+            <strong>Special Notes:</strong>
+
+            <br><br>
+
+            {{ order.custom_special_notes }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+        
+        
+        
+        <!-- =================================
+     PRODUCTION TIMELINE
+================================== -->
+
+<div
+    class="glass-card"
+    style="
+        padding:24px;
+        margin-top:24px;
+    "
+>
+
+    <h2 class="section-title">
+
+        🔥 Production Journey
+
+    </h2>
+
+
+
+    {% set status_order = [
+
+        "queued",
+
+        "approved",
+
+        "preparing",
+
+        "baking",
+
+        "packaging",
+
+        "out_for_delivery",
+
+        "delivered"
+
+    ] %}
+
+
+
+    {% set current_index = status_order.index(order.order_status)
+
+        if order.order_status in status_order
+
+        else 0
+
+    %}
+
+
+
+    <div class="production-timeline">
+
+
+
+        <!-- QUEUED -->
+
+        <div class="timeline-step
+
+            {% if current_index > 0 %}
+                completed
+            {% elif current_index == 0 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                🧾
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Order Confirmed
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Your dessert entered RM Bakes production queue.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- APPROVED -->
+
+        <div class="timeline-step
+
+            {% if current_index > 1 %}
+                completed
+            {% elif current_index == 1 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                ✅
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Production Approved
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Ingredients, preparation and workflow finalized.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PREPARING -->
+
+        <div class="timeline-step
+
+            {% if current_index > 2 %}
+                completed
+            {% elif current_index == 2 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                👨‍🍳
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Dessert Preparation
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Your handcrafted dessert is now being prepared.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BAKING -->
+
+        <div class="timeline-step
+
+            {% if current_index > 3 %}
+                completed
+            {% elif current_index == 3 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                🔥
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Baking In Progress
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Fresh baking magic is happening right now.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PACKAGING -->
+
+        <div class="timeline-step
+
+            {% if current_index > 4 %}
+                completed
+            {% elif current_index == 4 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                📦
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Packaging
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Final finishing touches and secure packaging.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DELIVERY -->
+
+        <div class="timeline-step
+
+            {% if current_index > 5 %}
+                completed
+            {% elif current_index == 5 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                🛵
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Out For Delivery
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Your dessert is travelling toward your celebration.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DELIVERED -->
+
+        <div class="timeline-step
+
+            {% if current_index == 6 %}
+                active
+            {% endif %}
+        ">
+
+            <div class="timeline-icon">
+
+                🎉
+
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-title">
+
+                    Delivered
+
+                </div>
+
+                <div class="timeline-description">
+
+                    Dessert journey completed successfully ✨
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+        
+
+
+
+        <!-- =================================
+             DELIVERY DETAILS
+        ================================== -->
+
+        <div
+            class="glass-card"
+            style="
+                padding:24px;
+                margin-top:24px;
+            "
+        >
+
+            <h2 class="section-title">
+
+                📍 Delivery Details
+
+            </h2>
+
+
+
+            <div
+                style="
+                    color:white;
+                    line-height:1.9;
+                "
+            >
+
+                <div>
+
+                    <strong>Name:</strong>
+                    {{ order.full_name }}
+
+                </div>
+
+
+
+                <div>
+
+                    <strong>Phone:</strong>
+                    {{ order.phone_number }}
+
+                </div>
+
+
+
+                <div>
+
+                    <strong>Address:</strong>
+                    {{ order.delivery_address }}
+
+                </div>
+
+
+
+                {% if order.landmark %}
+
+                <div>
+
+                    <strong>Landmark:</strong>
+                    {{ order.landmark }}
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if order.city %}
+
+                <div>
+
+                    <strong>City:</strong>
+                    {{ order.city }}
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if order.pincode %}
+
+                <div>
+
+                    <strong>Pincode:</strong>
+                    {{ order.pincode }}
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div>
+
+                    <strong>Payment:</strong>
+                    {{ order.payment_method }}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GOOGLE MAPS -->
+
+            {% if order.google_maps_link %}
+
+            <a
+                href="{{ order.google_maps_link }}"
+                target="_blank"
+                class="premium-btn"
+                style="
+                    display:inline-block;
+                    margin-top:18px;
+                    text-decoration:none;
+                "
+            >
+
+                Open Google Maps 📍
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+       {% if not order.is_custom_order %}
+        <!-- =================================
+             PRODUCTS
+        ================================== -->
+
+        <div
+            style="
+                margin-top:30px;
+            "
+        >
+
+            <h2 class="section-title">
+
+                🍰 Ordered Items
+
+            </h2>
+
+
+
+            {% for item in order.products %}
+
+            <div class="checkout-item-card">
+
+                <!-- IMAGE -->
+
+                <div class="checkout-image-wrapper">
+
+                    {% if item.product_image %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + item.product_image) }}"
+                        class="checkout-product-image"
+                    >
+
+                    {% else %}
+
+                    <div class="checkout-empty-image">
+
+                        🍰
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- DETAILS -->
+
+                <div class="checkout-item-details">
+
+                    <h3 class="checkout-product-name">
+
+                        {{ item.product_name }}
+
+                    </h3>
+
+
+
+                    <div class="checkout-product-meta">
+
+                        ₹{{ item.product_price }}
+                        ×
+                        {{ item.product_quantity }}
+                        {{ item.product_unit }}
+
+                    </div>
+
+
+
+                    {% if item.note %}
+
+                    <div class="checkout-note">
+
+                        ✨ {{ item.note }}
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <div class="checkout-item-total">
+
+                        ₹{{ item.total_price }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+        
+        {% endif %}
+        
+        
+        
+
+        <!-- =================================
+             TOTALS
+        ================================== -->
+{% if not order.is_custom_order %}
+        
+        <div class="checkout-total-wrapper">
+
+            <div class="checkout-total-line">
+
+                <span>Subtotal</span>
+
+                <strong>
+
+                    ₹{{ order.subtotal }}
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-total-line">
+
+                <span>Delivery Fee</span>
+
+                <strong>
+
+                    ₹{{ order.delivery_fee }}
+
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-total-line">
+
+                <span>Grand Total</span>
+
+                <strong
+                    style="
+                        color:#79ffcb;
+                        font-size:1.28rem;
+                    "
+                >
+
+                    ₹{{ order.grand_total }}
+
+                </strong>
+
+            </div>
+
+        </div>
+        
+        
+        {% endif %}
+
+
+
+        <!-- =================================
+             ACTIONS
+        ================================== -->
+
+        
+        <div
+            style="
+                display:flex;
+                gap:16px;
+                flex-wrap:wrap;
+                margin-top:34px;
+            "
+        >
+
+            {% if not order.is_custom_order %}
+            
+            <!-- ORDER AGAIN -->
+
+            {% if not order.is_custom_order %}
+
+<button
+    class="premium-btn"
+    onclick="orderAgain({{ order.order_id }})"
+>
+
+    Order Again 🍰
+
+</button>
+
+{% endif %}
+            
+
+          {% endif %}
+
+            <!-- CANCEL -->
+
+            {% if order.order_status in ["queued", "approved"] %}
+
+            <button
+                class="premium-btn red-btn"
+                onclick="cancelOrder({{ order.order_id }})"
+            >
+
+                Cancel Order
+
+            </button>
+
+            {% endif %}
+
+
+
+            <!-- BACK -->
+
+            <a
+                href="{{ url_for('order.my_orders') }}"
+                class="premium-btn"
+                style="
+                    text-decoration:none;
+                "
+            >
+
+                Back to Orders
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    
+    <style>
+
+.production-timeline{
+
+    margin-top:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+
+.timeline-step{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:18px;
+
+    position:relative;
+
+}
+
+
+
+.timeline-step:not(:last-child)::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:17px;
+
+    top:42px;
+
+    width:2px;
+
+    height:calc(100% + 8px);
+
+    background:
+        rgba(255,255,255,0.08);
+
+}
+
+
+
+.timeline-icon{
+
+    width:36px;
+
+    height:36px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:1rem;
+
+    flex-shrink:0;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.timeline-step.active .timeline-icon{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #79ffcb,
+            #00e0ff
+        );
+
+    color:black;
+
+    font-weight:800;
+
+    box-shadow:
+        0 0 20px rgba(121,255,203,0.35);
+
+}
+
+
+
+.timeline-step.completed .timeline-icon{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ffd67d,
+            #ffb84d
+        );
+
+    color:black;
+
+    font-weight:800;
+
+}
+
+
+
+.timeline-content{
+
+    flex:1;
+
+}
+
+
+
+.timeline-title{
+
+    color:white;
+
+    font-weight:700;
+
+    margin-bottom:6px;
+
+}
+
+
+
+.timeline-description{
+
+    color:rgba(255,255,255,0.6);
+
+    line-height:1.7;
+
+    font-size:0.92rem;
+
+}
+
+</style>
+    
+
+<!-- =====================================
+     ORDER DETAILS JS
+===================================== -->
+
+<script>
+
+
+
+// ========================================
+// TOAST
+// ========================================
+
+function showToast(message){
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        "custom-toast";
+
+    toast.innerText =
+        message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.classList.add("show");
+
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 2400);
+
+}
+
+
+
+// ========================================
+// CANCEL ORDER
+// ========================================
+
+async function cancelOrder(orderId){
+    
+    
+    const confirmAction =
+    confirm(
+        "Are you sure you want to cancel this order? 😭"
+    );
+
+if(!confirmAction){
+
+    return;
+
+}
+
+    try{
+
+        const response =
+            await fetch(
+
+                `/cancel-order/${orderId}`,
+
+                {
+                    method:"POST"
+                }
+
+            );
+
+
+
+        const data =
+            await response.json();
+
+
+
+        showToast(
+            data.message
+        );
+
+
+
+        if(data.success){
+
+            setTimeout(() => {
+
+                location.reload();
+
+            }, 1200);
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showToast(
+            "Server connection failed 😭"
+        );
+
+    }
+
+}
+
+
+
+// ========================================
+// ORDER AGAIN
+// ========================================
+
+async function orderAgain(orderId){
+
+    try{
+
+        const response =
+            await fetch(
+
+                `/order-again/${orderId}`,
+
+                {
+                    method:"POST"
+                }
+
+            );
+
+
+
+        const data =
+            await response.json();
+
+
+
+        showToast(
+            data.message
+        );
+
+
+
+        if(data.success){
+
+            setTimeout(() => {
+
+                window.location.href =
+                    data.redirect;
+
+            }, 1200);
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showToast(
+            "Server connection failed 😭"
+        );
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

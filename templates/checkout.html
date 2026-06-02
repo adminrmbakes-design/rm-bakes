@@ -1,0 +1,695 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phase2-page">
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-avatar-large">
+            🍰
+        </div>
+
+        <h1 class="glow-title">
+            Checkout
+        </h1>
+
+        <p class="glow-subtitle">
+            One last step before sweetness
+            reaches your doorstep ✨
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         CHECKOUT CARD
+    ====================================== -->
+
+    <div class="glass-card section-card">
+
+        <h2 class="section-title">
+            🧾 Order Summary
+        </h2>
+
+
+
+        <!-- =================================
+             ITEMS
+        ================================== -->
+
+        {% for item in checkout_items %}
+
+        <div class="checkout-item-card">
+
+            <!-- IMAGE -->
+
+            <div class="checkout-image-wrapper">
+
+                {% if item.product_image %}
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + item.product_image) }}"
+                    class="checkout-product-image"
+                >
+
+                {% else %}
+
+                <div class="checkout-empty-image">
+                    🍰
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- DETAILS -->
+
+            <div class="checkout-item-details">
+
+                <h3 class="checkout-product-name">
+                    {{ item.product_name }}
+                </h3>
+
+
+
+                <div class="checkout-product-meta">
+
+                    ₹{{ item.product_price }}
+                    ×
+                    {{ item.product_quantity }}
+                    {{ item.product_unit }}
+
+                </div>
+
+
+
+                {% if item.note %}
+
+                <div class="checkout-note">
+
+                    ✨ Note:
+                    {{ item.note }}
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div class="checkout-item-total">
+
+                    ₹{{ item.total_price }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+
+        <!-- =================================
+             TOTALS
+        ================================== -->
+
+        <div class="checkout-total-wrapper">
+
+            <div class="checkout-total-line">
+
+                <span>Subtotal</span>
+
+                <strong>
+                    ₹{{ subtotal }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-total-line">
+
+                <span>Delivery Fee</span>
+
+                <strong>
+                    ₹{{ delivery_fee }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-total-line">
+
+                <span>Grand Total</span>
+
+                <strong
+                    style="
+                        color:#79ffcb;
+                        font-size:1.25rem;
+                    "
+                >
+
+                    ₹{{ grand_total }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             DELIVERY DETAILS
+        ================================== -->
+
+        <div
+            class="glass-card"
+            style="
+                padding:24px;
+                margin-top:28px;
+            "
+        >
+
+            <h2 class="section-title">
+                📍 Delivery Details
+            </h2>
+
+
+
+            {% if not current_user.full_name
+               or not current_user.phone_number
+               or not current_user.delivery_address %}
+
+            <div
+                style="
+                    padding:18px;
+                    border-radius:18px;
+                    background:rgba(255,80,80,0.08);
+                    border:1px solid rgba(255,80,80,0.12);
+                    color:#ff9b9b;
+                    margin-bottom:22px;
+                    line-height:1.7;
+                "
+            >
+
+                Your profile is incomplete 😭<br>
+                Please complete delivery details
+                before placing the order.
+
+            </div>
+
+            {% endif %}
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>👤 Full Name</span>
+
+                <strong>
+                    {{ current_user.full_name or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>📞 Phone Number</span>
+
+                <strong>
+                    {{ current_user.phone_number or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>🏠 Address</span>
+
+                <strong>
+                    {{ current_user.delivery_address or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>📍 Landmark</span>
+
+                <strong>
+                    {{ current_user.landmark or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>🌆 City</span>
+
+                <strong>
+                    {{ current_user.city or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>📮 Pincode</span>
+
+                <strong>
+                    {{ current_user.pincode or "Not Added" }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="checkout-profile-line">
+
+                <span>💳 Payment Method</span>
+
+                <strong>
+                    {{ current_user.preferred_payment_method or "Cash on Delivery" }}
+                </strong>
+
+            </div>
+
+
+
+            {% if current_user.google_maps_link %}
+
+            <a
+                href="{{ current_user.google_maps_link }}"
+                target="_blank"
+                class="premium-btn"
+                style="
+                    display:inline-block;
+                    margin-top:18px;
+                    text-decoration:none;
+                "
+            >
+
+                Open Google Maps 📍
+
+            </a>
+
+            {% endif %}
+
+
+
+            <!-- =================================
+                 ACTION BUTTONS
+            ================================== -->
+
+            <div
+                style="
+                    display:flex;
+                    gap:12px;
+                    flex-wrap:wrap;
+                    margin-top:18px;
+                "
+            >
+
+                <!-- EDIT PROFILE -->
+
+                <a
+                    href="{{ url_for('profile.profile') }}"
+                    class="premium-btn"
+                    style="
+                        text-decoration:none;
+                    "
+                >
+
+                    Edit Profile ✨
+
+                </a>
+
+
+
+                <!-- REFRESH -->
+
+                <button
+                    type="button"
+                    class="premium-btn"
+                    onclick="refreshCheckoutPage()"
+                >
+
+                    🔁
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             PLACE ORDER BUTTON
+        ================================== -->
+
+        <button
+            class="premium-btn"
+            id="placeOrderBtn"
+            style="
+                width:100%;
+                margin-top:28px;
+            "
+        >
+
+            Place Order ✨
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     ORDER OVERLAY
+===================================== -->
+
+<div
+    class="order-overlay"
+    id="orderOverlay"
+>
+
+    <video
+        class="order-video"
+        id="orderVideo"
+        muted
+        playsinline
+        preload="auto"
+        webkit-playsinline
+    >
+
+        <source
+            src="{{ url_for('static', filename='videos/order_place.mp4') }}"
+            type="video/mp4"
+        >
+
+    </video>
+
+</div>
+
+
+
+<!-- =====================================
+     CHECKOUT JS
+===================================== -->
+
+<script>
+
+
+
+// ========================================
+// TOAST
+// ========================================
+
+function showToast(message){
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        "custom-toast";
+
+    toast.innerText =
+        message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.classList.add("show");
+
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 2500);
+
+}
+
+
+
+// ========================================
+// REFRESH PAGE
+// ========================================
+
+function refreshCheckoutPage(){
+
+    showToast(
+        "Refreshed 🔁"
+    );
+
+
+
+    setTimeout(() => {
+
+        location.reload();
+
+    }, 600);
+
+}
+
+
+
+// ========================================
+// ELEMENTS
+// ========================================
+
+const placeOrderBtn =
+    document.getElementById(
+        "placeOrderBtn"
+    );
+
+
+
+const orderOverlay =
+    document.getElementById(
+        "orderOverlay"
+    );
+
+
+
+const orderVideo =
+    document.getElementById(
+        "orderVideo"
+    );
+
+
+
+// ========================================
+// PLACE ORDER
+// ========================================
+
+placeOrderBtn.addEventListener(
+    "click",
+    async () => {
+
+        try{
+
+            placeOrderBtn.disabled = true;
+
+            placeOrderBtn.innerText =
+                "Preparing Sweetness... ✨";
+
+
+
+            orderOverlay.classList.add(
+                "active"
+            );
+
+
+
+            const response =
+                await fetch(
+                    "/place-order",
+                    {
+                        method:"POST"
+                    }
+                );
+
+
+
+            const data =
+                await response.json();
+
+
+
+            if(data.success){
+
+                // ============================
+                // PLAY VIDEO
+                // ============================
+
+                orderVideo.currentTime = 0;
+
+
+
+                const playPromise =
+                    orderVideo.play();
+
+
+
+                if(playPromise !== undefined){
+
+                    playPromise.catch(error => {
+
+                        console.log(error);
+
+                    });
+
+                }
+
+
+
+                // ============================
+                // REDIRECT FUNCTION
+                // ============================
+
+                let redirected = false;
+
+
+
+                const redirectToOrders = () => {
+
+                    if(redirected){
+                        return;
+                    }
+
+
+
+                    redirected = true;
+
+
+
+                    window.location.href =
+                        data.redirect;
+
+                };
+
+
+
+                // ============================
+                // VIDEO END EVENT
+                // ============================
+
+                orderVideo.onended =
+                    redirectToOrders;
+
+
+
+                // ============================
+                // FALLBACK TIMER
+                // ============================
+
+                setTimeout(
+                    redirectToOrders,
+                    7000
+                );
+
+
+
+            }else{
+
+    orderOverlay.classList.remove(
+        "active"
+    );
+
+
+
+    placeOrderBtn.disabled = false;
+
+    placeOrderBtn.innerText =
+        "Place Order ✨";
+
+
+
+    showToast(
+        "Couldn't place order, Try again! 😭"
+    );
+
+
+
+    setTimeout(() => {
+
+        window.location.href =
+            "/cart";
+
+    }, 1800);
+
+}
+
+        }catch(error){
+
+            console.log(error);
+
+
+
+            orderOverlay.classList.remove(
+                "active"
+            );
+
+
+
+            placeOrderBtn.disabled = false;
+
+            placeOrderBtn.innerText =
+                "Place Order ✨";
+
+
+
+            showToast(
+    "Couldn't place order, Try again! 😭"
+);
+
+
+
+setTimeout(() => {
+
+    window.location.href =
+        "/cart";
+
+}, 1800);
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}

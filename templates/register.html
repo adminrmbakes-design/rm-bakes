@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phase2-page">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-5 col-md-7">
+
+                <div class="glass-card settings-card mt-5">
+
+                    <!-- =====================================
+                         HEADER
+                    ====================================== -->
+
+                    <div class="text-center mb-4">
+
+                        <div class="profile-avatar-large mb-4">
+
+                            🍰
+
+                        </div>
+
+                        <h1 class="glow-title">
+
+                            Create Account
+
+                        </h1>
+
+                        <p class="glow-subtitle">
+
+                            Join RM Bakes and step into
+                            a world of desserts,
+                            café vibes and midnight cravings ✨
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         REGISTER FORM
+                    ====================================== -->
+
+                    <form method="POST">
+
+                        <!-- USERNAME -->
+
+                        <input
+                            type="text"
+                            name="username"
+                            class="premium-input"
+                            placeholder="Username"
+                            required
+                        >
+
+
+
+                        <!-- EMAIL -->
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="premium-input"
+                            placeholder="Email Address"
+                            required
+                        >
+
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                class="premium-input"
+                                placeholder="Password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password-btn"
+                                onclick="togglePassword()"
+                            >
+
+                                👁
+
+                            </button>
+
+                        </div>
+
+
+
+                        <!-- PASSWORD RULES -->
+
+                        <div
+                            class="mb-4"
+                            style="
+                                color:rgba(255,255,255,0.65);
+                                font-size:0.92rem;
+                                line-height:1.8;
+                            "
+                        >
+
+                            Password must contain:
+                            <br>
+
+                            • letters 🔤
+                            <br>
+
+                            • numbers 🔢
+                            <br>
+
+                            • symbols ✨
+
+                        </div>
+
+
+
+                        <!-- REGISTER BUTTON -->
+
+                        <button
+                            type="submit"
+                            class="premium-btn w-100"
+                        >
+
+                            Create Account ✨
+
+                        </button>
+
+                    </form>
+
+
+
+                    <!-- =====================================
+                         LOGIN SWITCH
+                    ====================================== -->
+
+                    <div class="text-center mt-5">
+
+                        <p
+                            class="mb-3"
+                            style="
+                                color:rgba(255,255,255,0.7);
+                            "
+                        >
+
+                            Already have an account?
+
+                        </p>
+
+                        <a
+                            href="{{ url_for('auth.login') }}"
+                            class="premium-btn green-btn text-decoration-none d-inline-block"
+                        >
+
+                            Login Instead ☕
+
+                        </a>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         RECOVER ACCOUNT
+                    ====================================== -->
+
+                    <div class="text-center mt-4">
+
+                        <a
+                            href="#"
+                            id="recoverDeletedAccountBtn"
+                            class="text-decoration-none"
+                            style="
+                                color:#ff8c8c;
+                                font-weight:700;
+                            "
+                        >
+
+                            Recover Deleted Account ♻️
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     REGISTER JS
+===================================== -->
+
+<script>
+
+
+
+// ========================================
+// TOGGLE PASSWORD
+// ========================================
+
+function togglePassword(){
+
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
+
+
+
+    if(passwordInput.type === "password"){
+
+        passwordInput.type = "text";
+
+    }else{
+
+        passwordInput.type = "password";
+
+    }
+
+}
+
+
+
+// ========================================
+// RECOVER ACCOUNT PLACEHOLDER
+// ========================================
+
+const recoverDeletedAccountBtn =
+    document.getElementById(
+        "recoverDeletedAccountBtn"
+    );
+
+
+
+recoverDeletedAccountBtn.addEventListener(
+    "click",
+    () => {
+
+        alert(
+            "Deleted account recovery with Gmail OTP is coming soon 😭🔥"
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,1095 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="phase2-page">
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-avatar-large">
+
+            📦
+
+        </div>
+
+        <h1 class="glow-title">
+
+            My Orders
+
+        </h1>
+
+        <p class="glow-subtitle">
+
+            Every dessert carries a memory ✨
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         FILTER TABS
+    ====================================== -->
+
+    {% if orders %}
+
+    <div
+         class="orders-filter-tabs"
+         style="display:grid;
+                grid-template-columns:
+                repeat(2, 1fr);
+                gap:14px;"    
+         >
+
+        <button
+            class="orders-filter-btn active"
+            onclick="filterOrders('active')"
+            id="activeFilterBtn"
+        >
+
+            Active
+
+        </button>
+
+
+
+        <button
+            class="orders-filter-btn"
+            onclick="filterOrders('delivered')"
+            id="deliveredFilterBtn"
+        >
+
+            Delivered
+
+        </button>
+
+
+
+        <button
+            class="orders-filter-btn"
+            onclick="filterOrders('cancelled')"
+            id="cancelledFilterBtn"
+        >
+
+            Cancelled
+
+        </button>
+
+
+
+        <button
+            class="orders-filter-btn"
+            onclick="filterOrders('custom')"
+            id="customFilterBtn"
+        >
+
+            Custom ✨
+
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================
+         EMPTY STATES
+    ====================================== -->
+
+    <div
+        class="glass-card empty-state"
+        id="noActiveOrders"
+        style="display:none;"
+    >
+
+        <div class="empty-state-emoji">
+
+            📦
+
+        </div>
+
+        <h2>
+
+            No Active Orders
+
+        </h2>
+
+        <p>
+
+            No desserts are currently
+            being prepared 😭✨
+
+        </p>
+
+    </div>
+
+
+
+    <div
+        class="glass-card empty-state"
+        id="noDeliveredOrders"
+        style="display:none;"
+    >
+
+        <div class="empty-state-emoji">
+
+            🚚
+
+        </div>
+
+        <h2>
+
+            No Delivered Orders
+
+        </h2>
+
+        <p>
+
+            No completed deliveries yet 😭✨
+
+        </p>
+
+    </div>
+
+
+
+    <div
+        class="glass-card empty-state"
+        id="noCancelledOrders"
+        style="display:none;"
+    >
+
+        <div class="empty-state-emoji">
+
+            ❌
+
+        </div>
+
+        <h2>
+
+            No Cancelled Orders
+
+        </h2>
+
+        <p>
+
+            No cancelled desserts yet 😭✨
+
+        </p>
+
+    </div>
+
+
+
+    <div
+        class="glass-card empty-state"
+        id="noCustomOrders"
+        style="display:none;"
+    >
+
+        <div class="empty-state-emoji">
+
+            ✨
+
+        </div>
+
+        <h2>
+
+            No Dessert Studio Orders
+
+        </h2>
+
+        <p>
+
+            No custom dessert creations yet 😭✨
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================
+         NO ORDERS
+    ====================================== -->
+
+    {% if not orders %}
+
+    <div class="glass-card empty-state">
+
+        <div class="empty-state-emoji">
+
+            🍰
+
+        </div>
+
+        <h2>
+
+            No Orders Yet
+
+        </h2>
+
+        <p>
+
+            Your dessert journey hasn't started yet 😭✨
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================
+         ORDERS LOOP
+    ====================================== -->
+
+    {% for order in orders %}
+
+    <div
+        class="glass-card order-card"
+        data-status="{{ order.order_status }}"
+        data-order-type="{% if order.is_custom_order %}custom{% else %}menu{% endif %}"
+    >
+
+        <!-- =================================
+             TOP
+        ================================== -->
+
+        <div class="order-top">
+
+            <div>
+
+                <div class="order-id">
+
+                    #{{ order.order_number }}
+
+                </div>
+
+
+
+                {% if order.is_custom_order %}
+
+                <div
+                    style="
+                        display:inline-flex;
+                        align-items:center;
+                        gap:10px;
+                        margin-top:14px;
+                        padding:10px 16px;
+                        border-radius:16px;
+                        background:
+                            linear-gradient(
+                                135deg,
+                                rgba(255,180,0,0.18),
+                                rgba(255,120,0,0.14)
+                            );
+                        border:
+                            1px solid rgba(255,180,0,0.22);
+                        color:#ffd67d;
+                        font-size:0.76rem;
+                        font-weight:800;
+                        letter-spacing:1px;
+                        text-transform:uppercase;
+                    "
+                >
+
+                    ✨ Dessert Studio Creation
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div
+                    style="
+                        color:rgba(255,255,255,0.6);
+                        margin-top:8px;
+                    "
+                >
+
+                    {{ order.ordered_at.strftime("%d %b %Y • %I:%M %p") }}
+
+                </div>
+
+            </div>
+
+
+
+            <div>
+
+                <div
+                    class="
+                        status-badge
+                        status-{{ order.order_status }}
+                    "
+                >
+
+                    {{ order.order_status.replace("_", " ").title() }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             CUSTOM ORDER BLOCK
+        ================================== -->
+
+        {% if order.is_custom_order %}
+
+        <div
+            style="
+                margin-top:22px;
+                padding:22px;
+                border-radius:26px;
+                background:
+                    linear-gradient(
+                        135deg,
+                        rgba(255,180,0,0.05),
+                        rgba(255,120,0,0.04)
+                    );
+                border:
+                    1px solid rgba(255,180,0,0.08);
+            "
+        >
+
+            <div
+                style="
+                    font-weight:800;
+                    color:#ffd67d;
+                    margin-bottom:18px;
+                    letter-spacing:1px;
+                "
+            >
+
+                ✨ Crafted From Dessert Studio
+
+            </div>
+
+
+
+            {% if order.custom_inspiration_image %}
+
+            <img
+                src="{{ url_for('static', filename=order.custom_inspiration_image) }}"
+                style="
+                    width:100%;
+                    max-height:280px;
+                    object-fit:cover;
+                    border-radius:22px;
+                    margin-bottom:18px;
+                "
+            >
+
+            {% endif %}
+
+
+
+            <div
+                style="
+                    color:rgba(255,255,255,0.82);
+                    line-height:1.9;
+                "
+            >
+
+                <strong>Dessert:</strong>
+                {{ order.custom_dessert_category }}
+
+                <br><br>
+
+                <strong>Flavor:</strong>
+                {{ order.custom_flavor }}
+
+                <br><br>
+
+                <strong>Vision:</strong>
+                {{ order.custom_description }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================
+             MENU ITEMS PREVIEW
+        ================================== -->
+
+        {% if not order.is_custom_order %}
+
+        <div
+            style="
+                margin-top:20px;
+            "
+        >
+
+            {% for item in order.products[:2] %}
+
+            <div
+                style="
+                    display:flex;
+                    gap:16px;
+                    margin-bottom:18px;
+                    align-items:center;
+                "
+            >
+
+                <div
+                    style="
+                        width:72px;
+                        height:72px;
+                        border-radius:18px;
+                        overflow:hidden;
+                        flex-shrink:0;
+                        background:rgba(255,255,255,0.05);
+                    "
+                >
+
+                    {% if item.product_image %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + item.product_image) }}"
+                        style="
+                            width:100%;
+                            height:100%;
+                            object-fit:cover;
+                        "
+                    >
+
+                    {% else %}
+
+                    <div
+                        style="
+                            width:100%;
+                            height:100%;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:2rem;
+                        "
+                    >
+
+                        🍰
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <div
+                    style="
+                        flex:1;
+                    "
+                >
+
+                    <div
+                        style="
+                            color:white;
+                            font-weight:800;
+                            font-size:1.02rem;
+                        "
+                    >
+
+                        {{ item.product_name }}
+
+                    </div>
+
+
+
+                    <div
+                        style="
+                            color:rgba(255,255,255,0.65);
+                            margin-top:6px;
+                            font-size:0.92rem;
+                        "
+                    >
+
+                        ₹{{ item.product_price }}
+                        ×
+                        {{ item.product_quantity }}
+
+                    </div>
+
+
+
+                    {% if item.note %}
+
+                    <div class="checkout-note">
+
+                        ✨ {{ item.note }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================
+             BOTTOM
+        ================================== -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                flex-wrap:wrap;
+                gap:16px;
+                margin-top:28px;
+            "
+        >
+
+            <div class="order-price">
+
+                ₹{{ order.grand_total }}
+
+            </div>
+
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:14px;
+                    flex-wrap:wrap;
+                "
+            >
+
+                <a
+                    href="{{ url_for('order.order_details', order_id=order.order_id) }}"
+                    class="premium-btn"
+                    style="
+                        text-decoration:none;
+                    "
+                >
+
+                    View Details
+
+                </a>
+
+
+
+                {% if not order.is_custom_order %}
+
+<button
+    class="premium-btn"
+    onclick="orderAgain({{ order.order_id }})"
+>
+
+    Order Again 🍰
+
+</button>
+
+{% endif %}
+
+
+
+                {% if order.order_status in ["queued", "approved"] %}
+
+                <button
+                    class="premium-btn red-btn"
+                    onclick="cancelOrder({{ order.order_id }})"
+                >
+
+                    Cancel Order
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+
+<script>
+
+// ========================================
+// TOAST
+// ========================================
+
+function showToast(message){
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        "custom-toast";
+
+    toast.innerText =
+        message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.classList.add("show");
+
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 2400);
+
+}
+
+
+
+// ========================================
+// FILTER ORDERS
+// ========================================
+
+function filterOrders(type){
+
+    const cards =
+        document.querySelectorAll(
+            ".order-card"
+        );
+
+
+
+    const activeBtn =
+        document.getElementById(
+            "activeFilterBtn"
+        );
+
+
+
+    const deliveredBtn =
+        document.getElementById(
+            "deliveredFilterBtn"
+        );
+
+
+
+    const cancelledBtn =
+        document.getElementById(
+            "cancelledFilterBtn"
+        );
+
+
+
+    const customBtn =
+        document.getElementById(
+            "customFilterBtn"
+        );
+
+
+
+    const noActiveOrders =
+        document.getElementById(
+            "noActiveOrders"
+        );
+
+
+
+    const noDeliveredOrders =
+        document.getElementById(
+            "noDeliveredOrders"
+        );
+
+
+
+    const noCancelledOrders =
+        document.getElementById(
+            "noCancelledOrders"
+        );
+
+
+
+    const noCustomOrders =
+        document.getElementById(
+            "noCustomOrders"
+        );
+
+
+
+    activeBtn.classList.remove("active");
+
+    deliveredBtn.classList.remove("active");
+
+    cancelledBtn.classList.remove("active");
+
+    customBtn.classList.remove("active");
+
+
+
+    if(type === "active"){
+
+        activeBtn.classList.add("active");
+
+    }
+
+    else if(type === "delivered"){
+
+        deliveredBtn.classList.add("active");
+
+    }
+
+    else if(type === "cancelled"){
+
+        cancelledBtn.classList.add("active");
+
+    }
+
+    else if(type === "custom"){
+
+        customBtn.classList.add("active");
+
+    }
+
+
+
+    let visibleCount = 0;
+
+
+
+    cards.forEach(card => {
+
+        const status =
+            card.dataset.status;
+
+        const orderType =
+            card.dataset.orderType;
+
+
+
+        // ACTIVE
+
+        if(type === "active"){
+
+            if(
+
+                status !== "cancelled" &&
+                status !== "delivered"
+
+            ){
+
+                card.style.display =
+                    "block";
+
+                visibleCount++;
+
+            }
+
+            else{
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+
+        // DELIVERED
+
+        else if(type === "delivered"){
+
+            if(status === "delivered"){
+
+                card.style.display =
+                    "block";
+
+                visibleCount++;
+
+            }
+
+            else{
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+
+        // CANCELLED
+
+        else if(type === "cancelled"){
+
+            if(status === "cancelled"){
+
+                card.style.display =
+                    "block";
+
+                visibleCount++;
+
+            }
+
+            else{
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+
+        // CUSTOM
+
+        else if(type === "custom"){
+
+            if(orderType === "custom"){
+
+                card.style.display =
+                    "block";
+
+                visibleCount++;
+
+            }
+
+            else{
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+
+    });
+
+
+
+    noActiveOrders.style.display =
+        "none";
+
+    noDeliveredOrders.style.display =
+        "none";
+
+    noCancelledOrders.style.display =
+        "none";
+
+    noCustomOrders.style.display =
+        "none";
+
+
+
+    if(visibleCount === 0){
+
+        if(type === "active"){
+
+            noActiveOrders.style.display =
+                "block";
+
+        }
+
+        else if(type === "delivered"){
+
+            noDeliveredOrders.style.display =
+                "block";
+
+        }
+
+        else if(type === "cancelled"){
+
+            noCancelledOrders.style.display =
+                "block";
+
+        }
+
+        else if(type === "custom"){
+
+            noCustomOrders.style.display =
+                "block";
+
+        }
+
+    }
+
+}
+
+
+
+// ========================================
+// INITIAL FILTER
+// ========================================
+
+window.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        filterOrders("active");
+
+    }
+);
+
+
+
+// ========================================
+// CANCEL ORDER
+// ========================================
+
+async function cancelOrder(orderId){
+
+    const confirmAction =
+        confirm(
+            "Are you sure you want to cancel this order? 😭"
+        );
+
+
+
+    if(!confirmAction){
+
+        return;
+
+    }
+
+
+
+    try{
+
+        const response =
+            await fetch(
+
+                `/cancel-order/${orderId}`,
+
+                {
+                    method:"POST"
+                }
+
+            );
+
+
+
+        const data =
+            await response.json();
+
+
+
+        showToast(
+            data.message
+        );
+
+
+
+        if(data.success){
+
+            setTimeout(() => {
+
+                location.reload();
+
+            }, 1200);
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showToast(
+            "Server connection failed 😭"
+        );
+
+    }
+
+}
+
+
+
+// ========================================
+// ORDER AGAIN
+// ========================================
+
+async function orderAgain(orderId){
+
+    try{
+
+        const response =
+            await fetch(
+
+                `/order-again/${orderId}`,
+
+                {
+                    method:"POST"
+                }
+
+            );
+
+
+
+        const data =
+            await response.json();
+
+
+
+        showToast(
+            data.message
+        );
+
+
+
+        if(data.success){
+
+            setTimeout(() => {
+
+                window.location.href =
+                    data.redirect;
+
+            }, 1200);
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showToast(
+            "Server connection failed 😭"
+        );
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

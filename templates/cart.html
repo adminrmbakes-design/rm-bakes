@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="cart-page">
+
+    <!-- HEADER -->
+
+    <div class="cart-header">
+
+        <a
+            href="{{ url_for('product.products') }}"
+            class="floating-close-btn"
+        >
+
+            ×
+
+        </a>
+
+        <h1 class="main-title">
+
+            Your Cart 🛒
+
+        </h1>
+
+        <p class="cart-subtitle">
+
+            Sweet choices waiting for checkout.
+
+        </p>
+
+    </div>
+
+
+
+    {% if cart_items %}
+
+    <div class="cart-items-wrapper">
+
+        {% for item in cart_items %}
+
+            {% set product = Product.query.get(item.product_id) %}
+
+            {% if product %}
+
+            <div
+                class="cart-card"
+                id="cart-card-{{ item.cart_id }}"
+            >
+
+                <!-- IMAGE -->
+
+                <div class="cart-image-wrapper">
+
+                    {% if product.product_image %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + product.product_image) }}"
+                        class="cart-image"
+                        alt="{{ product.product_name }}"
+                    >
+
+                    {% else %}
+
+                    <div class="empty-product-image">
+
+                        🍰
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- DETAILS -->
+
+                <div class="cart-details">
+
+                    <div class="product-badge">
+
+                        {{ product.product_category }}
+
+                    </div>
+
+                    <h2 class="product-name">
+
+                        {{ product.product_name }}
+
+                    </h2>
+
+                    <p class="product-description">
+
+                        {{ product.product_description[:90] }}...
+
+                    </p>
+
+                    <div class="product-price">
+
+                        ₹{{ product.product_price }}
+
+                        <span class="product-unit">
+
+                            {{ product.product_unit }}
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- ITEM TOTAL -->
+
+                    <div
+                        class="item-total"
+                        id="item-total-{{ item.cart_id }}"
+                    >
+
+                        Item Total:
+                        ₹{{ product.product_price * item.product_quantity }}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- QUANTITY -->
+
+                <div class="quantity-controls">
+
+                    <button
+                        class="qty-btn"
+                        onclick="decreaseQuantity(
+                            {{ item.cart_id }},
+                            {{ product.product_price }}
+                        )"
+                    >
+
+                        -
+
+                    </button>
+
+
+
+                    <div
+                        class="qty-count"
+                        id="qty-{{ item.cart_id }}"
+                    >
+
+                        {{ item.product_quantity }}
+
+                    </div>
+
+
+
+                    <button
+                        class="qty-btn"
+                        onclick="increaseQuantity(
+                            {{ item.cart_id }},
+                            {{ product.product_price }}
+                        )"
+                    >
+
+                        +
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- NOTE SECTION -->
+
+                <div class="note-section">
+
+                    <textarea
+                        id="note-{{ item.cart_id }}"
+                        class="note-box"
+                        placeholder="Add a note for RM Bakes ✨"
+                        {% if item.note %}readonly{% endif %}
+                    >{{ item.note or '' }}</textarea>
+
+
+
+                    <div
+                        class="note-actions"
+                        id="note-actions-{{ item.cart_id }}"
+                    >
+
+                        {% if not item.note %}
+
+                        <button
+                            class="save-note-btn"
+                            onclick="saveNote({{ item.cart_id }})"
+                        >
+
+                            Save Note ✨
+
+                        </button>
+
+                        {% else %}
+
+                        <button
+                            class="delete-note-btn"
+                            onclick="deleteNote({{ item.cart_id }})"
+                        >
+
+                            Delete Note 🗑️
+
+                        </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REMOVE -->
+
+                <div class="remove-btn-wrapper">
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeItem(
+                            {{ item.cart_id }}
+                        )"
+                    >
+
+                        Remove 🗑️
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+
+
+    <!-- TOTAL -->
+
+    <div class="cart-total-card">
+
+        <h2
+            class="total-text"
+            id="cart-total"
+        >
+
+            Total: ₹{{ total_price }}
+
+        </h2>
+
+
+
+        <a
+            href="{{ url_for('checkout.checkout_page') }}"
+            class="checkout-btn"
+        >
+
+            Proceed to Checkout ⚡
+
+        </a>
+
+    </div>
+
+
+
+    {% else %}
+
+    <!-- EMPTY CART -->
+
+    <div class="empty-cart-wrapper">
+
+        <div class="empty-cart-glow"></div>
+
+        <div class="empty-cart-card">
+
+            <div class="empty-cart-icon">
+
+                🛒
+
+            </div>
+
+            <h2 class="empty-cart-title">
+
+                Your cart feels lonely 😭
+
+            </h2>
+
+            <p class="empty-cart-text">
+
+                Warm brownies and creamy cheesecakes
+                are waiting for you ✨
+
+            </p>
+
+            <div class="empty-cart-line"></div>
+
+            <a
+                href="{{ url_for('product.products') }}"
+                class="explore-products-btn"
+            >
+
+                Explore Sweet Collection 🍰
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+function showToast(message){
+
+    const toast = document.createElement("div");
+
+    toast.className =
+        "custom-toast show";
+
+    toast.innerText =
+        message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 2200);
+}
+
+
+
+/* =========================
+   UPDATE TOTALS
+========================= */
+
+function updateTotals(
+    cartId,
+    quantity,
+    price
+){
+
+    const itemTotal =
+        quantity * price;
+
+    document.getElementById(
+        `item-total-${cartId}`
+    ).innerText =
+
+        `Item Total: ₹${itemTotal}`;
+
+
+
+    // =====================
+    // RECALCULATE CART TOTAL
+    // =====================
+
+    let grandTotal = 0;
+
+    document.querySelectorAll(
+        ".item-total"
+    ).forEach(item => {
+
+        const value =
+            parseFloat(
+
+                item.innerText.replace(
+                    "Item Total: ₹",
+                    ""
+                )
+
+            );
+
+        grandTotal += value;
+
+    });
+
+    document.getElementById(
+        "cart-total"
+    ).innerText =
+
+        `Total: ₹${grandTotal}`;
+}
+
+
+
+/* =========================
+   INCREASE QUANTITY
+========================= */
+
+async function increaseQuantity(
+    cartId,
+    price
+){
+
+    const response = await fetch(
+
+        `/increase_quantity/${cartId}`,
+
+        {
+            method: "POST"
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        const qtyElement =
+            document.getElementById(
+                `qty-${cartId}`
+            );
+
+        qtyElement.innerText =
+            data.quantity;
+
+        updateTotals(
+
+            cartId,
+            data.quantity,
+            price
+
+        );
+
+        showToast(data.message);
+    }
+}
+
+
+
+/* =========================
+   DECREASE QUANTITY
+========================= */
+
+async function decreaseQuantity(
+    cartId,
+    price
+){
+
+    const qtyElement =
+        document.getElementById(
+            `qty-${cartId}`
+        );
+
+    let currentQty =
+        parseInt(
+            qtyElement.innerText
+        );
+
+
+
+    if(currentQty <= 1){
+
+        const confirmRemove = confirm(
+            "Your item will be removed from the cart 😭"
+        );
+
+        if(!confirmRemove){
+
+            return;
+        }
+    }
+
+
+
+    const response = await fetch(
+
+        `/decrease_quantity/${cartId}`,
+
+        {
+            method: "POST"
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+
+
+    if(data.success){
+
+        // =====================
+        // ITEM REMOVED
+        // =====================
+
+        if(data.quantity <= 0){
+
+            const card =
+                document.getElementById(
+                    `cart-card-${cartId}`
+                );
+
+            if(card){
+
+                card.remove();
+            }
+
+        }
+
+        else{
+
+            qtyElement.innerText =
+                data.quantity;
+
+            updateTotals(
+
+                cartId,
+                data.quantity,
+                price
+
+            );
+        }
+
+        showToast(data.message);
+    }
+}
+
+
+
+/* =========================
+   REMOVE ITEM
+========================= */
+
+async function removeItem(cartId){
+
+    const confirmRemove = confirm(
+
+        "Remove this delicious item from cart? 😭"
+
+    );
+
+    if(!confirmRemove){
+
+        return;
+    }
+
+    const response = await fetch(
+
+        `/remove_item/${cartId}`,
+
+        {
+            method: "POST"
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        const card =
+            document.getElementById(
+                `cart-card-${cartId}`
+            );
+
+        if(card){
+
+            card.remove();
+        }
+
+        showToast(data.message);
+
+        setTimeout(() => {
+
+            location.reload();
+
+        }, 500);
+    }
+}
+
+
+
+/* =========================
+   SAVE NOTE
+========================= */
+
+async function saveNote(cartId){
+
+    const noteBox =
+        document.getElementById(
+            `note-${cartId}`
+        );
+
+    const note =
+        noteBox.value.trim();
+
+    if(note === ""){
+
+        showToast(
+            "Please enter a note 😭"
+        );
+
+        return;
+    }
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "note",
+        note
+    );
+
+    const response = await fetch(
+
+        `/update-cart-note/${cartId}`,
+
+        {
+            method: "POST",
+            body: formData
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        showToast(data.message);
+
+        noteBox.setAttribute(
+            "readonly",
+            true
+        );
+
+        const actions =
+            document.getElementById(
+                `note-actions-${cartId}`
+            );
+
+        actions.innerHTML = `
+
+            <button
+                class="delete-note-btn"
+                onclick="deleteNote(${cartId})"
+            >
+
+                Delete Note 🗑️
+
+            </button>
+
+        `;
+    }
+}
+
+
+
+/* =========================
+   DELETE NOTE
+========================= */
+
+async function deleteNote(cartId){
+
+    const confirmDelete = confirm(
+        "Delete this note? 😭"
+    );
+
+    if(!confirmDelete){
+
+        return;
+    }
+
+    const response = await fetch(
+
+        `/delete-cart-note/${cartId}`,
+
+        {
+            method: "POST"
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        showToast(data.message);
+
+        const noteBox =
+            document.getElementById(
+                `note-${cartId}`
+            );
+
+        noteBox.value = "";
+
+        noteBox.removeAttribute(
+            "readonly"
+        );
+
+        const actions =
+            document.getElementById(
+                `note-actions-${cartId}`
+            );
+
+        actions.innerHTML = `
+
+            <button
+                class="save-note-btn"
+                onclick="saveNote(${cartId})"
+            >
+
+                Save Note ✨
+
+            </button>
+
+        `;
+    }
+}
+
+</script>
+
+{% endblock %}
