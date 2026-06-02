@@ -1,0 +1,364 @@
+[
+    {
+        "product_name": "Classic Vanilla",
+        "product_price": 750,
+        "product_unit": "/Kg",
+        "product_tags": "Classic",
+        "product_category": "Cakes",
+        "product_stock": 10,
+        "product_description": "Soft vanilla sponge layered with smooth whipped cream and classic vanilla richness.",
+        "product_image": "classic-vanilla-cake.jpg"
+    },
+
+    {
+        "product_name": "Choco Truffle",
+        "product_price": 900,
+        "product_unit": "/Kg",
+        "product_tags": "Bestseller",
+        "product_category": "Cakes",
+        "product_stock": 10,
+        "product_description": "Rich chocolate truffle cake finished with silky ganache and premium cocoa layers.",
+        "product_image": "choco-truffle.jpg"
+    },
+
+    {
+        "product_name": "Black Forest",
+        "product_price": 850,
+        "product_unit": "/Kg",
+        "product_tags": "Popular",
+        "product_category": "Cakes",
+        "product_stock": 10,
+        "product_description": "Chocolate sponge layered with cherries, whipped cream and dark chocolate flakes.",
+        "product_image": "black-forest.jpg"
+    },
+
+    {
+        "product_name": "Chocolate Cake",
+        "product_price": 850,
+        "product_unit": "/Kg",
+        "product_tags": "Chocolate",
+        "product_category": "Cakes",
+        "product_stock": 10,
+        "product_description": "Classic rich chocolate cake crafted for true chocolate lovers.",
+        "product_image": "chocolate-cake.jpg"
+    },
+
+    {
+        "product_name": "Strawberry Cake",
+        "product_price": 850,
+        "product_unit": "/Kg",
+        "product_tags": "Fresh",
+        "product_category": "Cakes",
+        "product_stock": 10,
+        "product_description": "Fresh strawberry cream layered between soft vanilla sponge with fruity sweetness.",
+        "product_image": "strawberry-cake.jpg"
+    },
+
+    {
+        "product_name": "Kunafa Pistachio",
+        "product_price": 1299,
+        "product_unit": "/Kg",
+        "product_tags": "Premium",
+        "product_category": "RM Signature Cakes",
+        "product_stock": 8,
+        "product_description": "Middle Eastern inspired pistachio cake layered with crunchy kunafa textures.",
+        "product_image": "kunafa-pistachio.jpg"
+    },
+
+    {
+        "product_name": "Walnut Caramel",
+        "product_price": 1299,
+        "product_unit": "/Kg",
+        "product_tags": "Signature",
+        "product_category": "RM Signature Cakes",
+        "product_stock": 8,
+        "product_description": "Smooth caramel cream paired with roasted walnuts and rich sponge layers.",
+        "product_image": "walnut-caramel.jpg"
+    },
+
+    {
+        "product_name": "Ferrero Rocher",
+        "product_price": 1299,
+        "product_unit": "/Kg",
+        "product_tags": "Luxury",
+        "product_category": "RM Signature Cakes",
+        "product_stock": 8,
+        "product_description": "Belgian chocolate cake infused with Ferrero crunch and hazelnut cream.",
+        "product_image": "ferrero-rocher.jpg"
+    },
+
+    {
+        "product_name": "Intense Dark",
+        "product_price": 1199,
+        "product_unit": "/Kg",
+        "product_tags": "Dark",
+        "product_category": "RM Signature Cakes",
+        "product_stock": 8,
+        "product_description": "Bold dark chocolate experience crafted with premium cocoa richness.",
+        "product_image": "intense-dark.jpg"
+    },
+
+    {
+        "product_name": "Lotus Biscoff Choco",
+        "product_price": 1399,
+        "product_unit": "/Kg",
+        "product_tags": "Trending",
+        "product_category": "RM Signature Cakes",
+        "product_stock": 8,
+        "product_description": "Creamy chocolate cake layered with Lotus Biscoff spread and cookie crunch.",
+        "product_image": "lotus-biscoff.jpg"
+    },
+
+    {
+        "product_name": "Intense Dark Jar Cake",
+        "product_price": 239,
+        "product_unit": "/200g",
+        "product_tags": "Jar Cake",
+        "product_category": "Jar Cakes",
+        "product_stock": 15,
+        "product_description": "Layered dark chocolate jar cake with smooth mousse and rich cocoa texture.",
+        "product_image": "intense-dark-jar.jpg"
+    },
+
+    {
+        "product_name": "Kunafa Pistachio Jar Cake",
+        "product_price": 249,
+        "product_unit": "/200g",
+        "product_tags": "Premium",
+        "product_category": "Jar Cakes",
+        "product_stock": 15,
+        "product_description": "Creamy pistachio dessert jar layered with crunchy kunafa goodness.",
+        "product_image": "kunafa-pistachio-jar.jpg"
+    },
+
+    {
+        "product_name": "Walnut Caramel Jar Cake",
+        "product_price": 249,
+        "product_unit": "/200g",
+        "product_tags": "Signature",
+        "product_category": "Jar Cakes",
+        "product_stock": 15,
+        "product_description": "Smooth caramel cream layered with roasted walnuts inside dessert jars.",
+        "product_image": "walnut-caramel-jar.jpg"
+    },
+
+    {
+        "product_name": "Ferrero Rocher Jar Cake",
+        "product_price": 249,
+        "product_unit": "/200g",
+        "product_tags": "Luxury",
+        "product_category": "Jar Cakes",
+        "product_stock": 15,
+        "product_description": "Belgian chocolate layered jar dessert inspired by Ferrero Rocher richness.",
+        "product_image": "ferrero-rocher-jar.jpg"
+    },
+
+    {
+        "product_name": "Lotus Biscoff Jar Cake",
+        "product_price": 279,
+        "product_unit": "/200g",
+        "product_tags": "Trending",
+        "product_category": "Jar Cakes",
+        "product_stock": 15,
+        "product_description": "Creamy Lotus Biscoff dessert jar with caramelized biscuit crunch.",
+        "product_image": "lotus-biscoff-jar.jpg"
+    },
+
+    {
+        "product_name": "Classic Crinkle Top",
+        "product_price": 65,
+        "product_unit": "/Pcs",
+        "product_tags": "Classic",
+        "product_category": "Brownies",
+        "product_stock": 20,
+        "product_description": "Fudgy brownie with signature crackled top and rich cocoa center.",
+        "product_image": "crinkle-brownie.jpg"
+    },
+
+    {
+        "product_name": "Walnut Brownie",
+        "product_price": 75,
+        "product_unit": "/Pcs",
+        "product_tags": "Nutty",
+        "product_category": "Brownies",
+        "product_stock": 20,
+        "product_description": "Dense chocolate brownie loaded with roasted walnut crunch.",
+        "product_image": "walnut-brownie.jpg"
+    },
+
+    {
+        "product_name": "Almond Brownie",
+        "product_price": 75,
+        "product_unit": "/Pcs",
+        "product_tags": "Crunchy",
+        "product_category": "Brownies",
+        "product_stock": 20,
+        "product_description": "Soft chocolate brownie infused with crunchy almond bits.",
+        "product_image": "almond-brownie.jpg"
+    },
+
+    {
+        "product_name": "Triple Chocolate Brownie",
+        "product_price": 80,
+        "product_unit": "/Pcs",
+        "product_tags": "Chocolate",
+        "product_category": "Brownies",
+        "product_stock": 20,
+        "product_description": "Three layers of chocolate indulgence packed into every bite.",
+        "product_image": "triple-chocolate-brownie.jpg"
+    },
+
+    {
+        "product_name": "Classic Blondies",
+        "product_price": 65,
+        "product_unit": "/Pcs",
+        "product_tags": "Classic",
+        "product_category": "Blondies",
+        "product_stock": 20,
+        "product_description": "Soft buttery blondies with caramelized sweetness and chewy texture.",
+        "product_image": "classic-blondies.jpg"
+    },
+
+    {
+        "product_name": "Chocolate Brookies",
+        "product_price": 79,
+        "product_unit": "/Pcs",
+        "product_tags": "Fusion",
+        "product_category": "Brookies",
+        "product_stock": 20,
+        "product_description": "Fusion of gooey brownie and chewy cookie textures in one dessert.",
+        "product_image": "brookies.jpg"
+    },
+
+    {
+        "product_name": "Lotus Biscoff Brownie",
+        "product_price": 95,
+        "product_unit": "/Pcs",
+        "product_tags": "RM Special",
+        "product_category": "RM Special Brownies",
+        "product_stock": 15,
+        "product_description": "Chocolate brownie layered with Lotus Biscoff cream and biscuit crunch.",
+        "product_image": "lotus-biscoff-brownie.jpg"
+    },
+
+    {
+        "product_name": "Tiramisu Brownie",
+        "product_price": 105,
+        "product_unit": "/Pcs",
+        "product_tags": "Coffee",
+        "product_category": "RM Special Brownies",
+        "product_stock": 15,
+        "product_description": "Coffee infused brownie inspired by creamy tiramisu flavors.",
+        "product_image": "tiramisu-brownie.jpg"
+    },
+
+    {
+        "product_name": "Kunafa Pistachio Brownie",
+        "product_price": 105,
+        "product_unit": "/Pcs",
+        "product_tags": "Premium",
+        "product_category": "RM Special Brownies",
+        "product_stock": 15,
+        "product_description": "Fudgy brownie infused with crunchy kunafa and pistachio richness.",
+        "product_image": "kunafa-pistachio-brownie.jpg"
+    },
+
+    {
+        "product_name": "Classic Vanilla Cheesecake",
+        "product_price": 149,
+        "product_unit": "/Pcs",
+        "product_tags": "Classic",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Creamy baked cheesecake with a delicate vanilla finish.",
+        "product_image": "vanilla-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Chocolate Cheesecake",
+        "product_price": 159,
+        "product_unit": "/Pcs",
+        "product_tags": "Chocolate",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Velvety cheesecake blended with rich chocolate flavor.",
+        "product_image": "chocolate-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Strawberry Cheesecake",
+        "product_price": 159,
+        "product_unit": "/Pcs",
+        "product_tags": "Fresh",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Smooth cheesecake topped with sweet strawberry goodness.",
+        "product_image": "strawberry-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Mango Cheesecake",
+        "product_price": 159,
+        "product_unit": "/Pcs",
+        "product_tags": "Seasonal",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Refreshing mango infused cheesecake with tropical sweetness.",
+        "product_image": "mango-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Blueberry Cheesecake",
+        "product_price": 169,
+        "product_unit": "/Pcs",
+        "product_tags": "Premium",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Creamy cheesecake balanced with juicy blueberry flavors.",
+        "product_image": "blueberry-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Pistachio Cheesecake",
+        "product_price": 169,
+        "product_unit": "/Pcs",
+        "product_tags": "Nutty",
+        "product_category": "Cheese Cakes",
+        "product_stock": 12,
+        "product_description": "Creamy cheesecake blended with premium pistachio richness.",
+        "product_image": "pistachio-cheesecake.jpg"
+    },
+
+    {
+        "product_name": "Classic Vanilla Basque Cheesecake",
+        "product_price": 179,
+        "product_unit": "/Pcs",
+        "product_tags": "Burnt Basque",
+        "product_category": "Burnt Basque Cheese Cakes",
+        "product_stock": 10,
+        "product_description": "Creamy burnt basque cheesecake with caramelized vanilla finish.",
+        "product_image": "vanilla-basque.jpg"
+    },
+
+    {
+        "product_name": "Chocolate Basque Cheesecake",
+        "product_price": 189,
+        "product_unit": "/Pcs",
+        "product_tags": "Chocolate",
+        "product_category": "Burnt Basque Cheese Cakes",
+        "product_stock": 10,
+        "product_description": "Rich burnt basque cheesecake infused with premium chocolate.",
+        "product_image": "chocolate-basque.jpg"
+    },
+
+    {
+        "product_name": "Lotus Biscoff Basque Cheesecake",
+        "product_price": 199,
+        "product_unit": "/Pcs",
+        "product_tags": "Trending",
+        "product_category": "Burnt Basque Cheese Cakes",
+        "product_stock": 10,
+        "product_description": "Creamy basque cheesecake layered with Lotus Biscoff richness.",
+        "product_image": "lotus-basque.jpg"
+    }
+]

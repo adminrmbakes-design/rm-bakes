@@ -1,0 +1,742 @@
+from flask_sqlalchemy import SQLAlchemy
+
+from flask_login import UserMixin
+
+from datetime import datetime
+
+
+
+# =========================================
+# DATABASE
+# =========================================
+
+db = SQLAlchemy()
+
+
+
+# =========================================
+# USER MODEL
+# =========================================
+
+class User(UserMixin, db.Model):
+
+    __tablename__ = "users"
+
+
+
+    user_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    username = db.Column(
+
+        db.String(100),
+
+        unique=True,
+
+        nullable=False
+
+    )
+
+
+
+    email = db.Column(
+
+        db.String(120),
+
+        unique=True,
+
+        nullable=False
+
+    )
+
+
+
+    password = db.Column(
+
+        db.String(300),
+
+        nullable=False
+
+    )
+
+
+
+    # =====================================
+    # ADMIN
+    # =====================================
+
+    is_admin = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+
+
+    admin_role = db.Column(
+
+        db.String(50),
+
+        nullable=True
+
+    )
+
+
+
+    admin_last_login = db.Column(
+
+        db.DateTime,
+
+        nullable=True
+
+    )
+
+
+
+    # =====================================
+    # PROFILE
+    # =====================================
+
+    full_name = db.Column(
+
+        db.String(120)
+
+    )
+
+
+
+    phone_number = db.Column(
+
+        db.String(20)
+
+    )
+
+
+
+    delivery_address = db.Column(
+
+        db.Text
+
+    )
+
+
+
+    landmark = db.Column(
+
+        db.String(200)
+
+    )
+
+
+
+    city = db.Column(
+
+        db.String(100)
+
+    )
+
+
+
+    pincode = db.Column(
+
+        db.String(10)
+
+    )
+
+
+
+    google_maps_link = db.Column(
+
+        db.Text
+
+    )
+
+
+
+    preferred_payment_method = db.Column(
+
+        db.String(50),
+
+        default="Cash on Delivery"
+
+    )
+
+
+
+    is_deleted = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+
+
+    # =====================================
+    # RELATIONSHIP
+    # =====================================
+
+    cart_items = db.relationship(
+
+        "Cart",
+
+        backref="user",
+
+        lazy=True,
+
+        cascade="all, delete-orphan"
+
+    )
+
+
+
+    # =====================================
+    # FLASK LOGIN
+    # =====================================
+
+    def get_id(self):
+
+        return str(self.user_id)
+
+
+
+# =========================================
+# PRODUCT MODEL
+# =========================================
+
+class Product(db.Model):
+
+    __tablename__ = "products"
+
+
+
+    product_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    product_name = db.Column(
+
+        db.String(200),
+
+        nullable=False
+
+    )
+
+
+
+    product_description = db.Column(
+
+        db.Text,
+
+        nullable=False
+
+    )
+
+
+
+    product_price = db.Column(
+
+        db.Float,
+
+        nullable=False
+
+    )
+
+
+
+    product_unit = db.Column(
+
+        db.String(50),
+
+        nullable=False
+
+    )
+
+
+
+    product_image = db.Column(
+
+        db.String(300)
+
+    )
+
+
+
+    product_tags = db.Column(
+
+        db.String(300)
+
+    )
+
+
+
+    product_category = db.Column(
+
+        db.String(100),
+
+        default="cakes"
+
+    )
+
+
+
+# =========================================
+# CART MODEL
+# =========================================
+
+class Cart(db.Model):
+
+    __tablename__ = "cart"
+
+
+
+    cart_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    user_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey("users.user_id"),
+
+        nullable=False
+
+    )
+
+
+
+    product_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey("products.product_id"),
+
+        nullable=False
+
+    )
+
+
+
+    product_quantity = db.Column(
+
+        db.Integer,
+
+        default=1
+
+    )
+
+
+
+    note = db.Column(
+
+        db.Text
+
+    )
+
+
+
+    # =====================================
+    # RELATIONSHIP
+    # =====================================
+
+    product = db.relationship(
+
+        "Product",
+
+        backref="cart_items",
+
+        lazy=True
+
+    )
+
+
+class AdminNotification(db.Model):
+
+    __tablename__ = "admin_notifications"
+
+
+
+    notification_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    title = db.Column(
+
+        db.String(200),
+
+        nullable=False
+
+    )
+
+
+
+    message = db.Column(
+
+        db.Text,
+
+        nullable=False
+
+    )
+
+
+
+    notification_type = db.Column(
+
+        db.String(50),
+
+        nullable=False,
+
+        default="info"
+
+    )
+
+
+
+    is_read = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
+    
+    
+    
+# =========================================
+# HELPERS
+# =========================================
+
+def get_featured_products(limit=6):
+
+    return Product.query.limit(limit).all()
+
+
+
+def get_products_by_category(category):
+
+    return Product.query.filter_by(
+
+        product_category=category
+
+    ).all()
+
+
+
+def search_products(query):
+
+    return Product.query.filter(
+
+        Product.product_name.ilike(
+            f"%{query}%"
+        )
+
+    ).all()
+    
+    
+# =========================================
+# USER NOTIFICATIONS
+# =========================================
+
+class UserNotification(db.Model):
+
+    __tablename__ = "user_notifications"
+
+
+
+    notification_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    user_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey("users.user_id"),
+
+        nullable=False
+
+    )
+
+
+
+    title = db.Column(
+
+        db.String(200),
+
+        nullable=False
+
+    )
+
+
+
+    message = db.Column(
+
+        db.Text,
+
+        nullable=False
+
+    )
+
+
+
+    notification_type = db.Column(
+
+        db.String(50),
+
+        nullable=False,
+
+        default="info"
+
+    )
+
+
+
+    # =====================================
+    # ORDER LINKING
+    # =====================================
+
+    order_id = db.Column(
+
+        db.Integer,
+
+        nullable=True
+
+    )
+
+
+
+    custom_order_id = db.Column(
+
+        db.Integer,
+
+        nullable=True
+
+    )
+
+
+
+    notification_category = db.Column(
+
+        db.String(50),
+
+        nullable=False,
+
+        default="order"
+
+    )
+
+
+
+    is_read = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+
+
+    is_cleared = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
+    
+    
+    
+    
+    
+# =========================================
+# GLOBAL NOTIFICATIONS
+# =========================================
+
+class GlobalNotification(db.Model):
+
+    __tablename__ = "global_notifications"
+
+
+
+    notification_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    title = db.Column(
+
+        db.String(200),
+
+        nullable=False
+
+    )
+
+
+
+    message = db.Column(
+
+        db.Text,
+
+        nullable=False
+
+    )
+
+
+
+    banner_image = db.Column(
+
+        db.String(300),
+
+        nullable=False
+
+    )
+
+
+
+    is_active = db.Column(
+
+        db.Boolean,
+
+        default=True
+
+    )
+
+
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
+    
+    
+    # =========================================
+# FAVOURITES MODEL
+# =========================================
+
+class Favourite(db.Model):
+
+    __tablename__ = "favourites"
+
+
+
+    favourite_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+
+
+    user_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey("users.user_id"),
+
+        nullable=False
+
+    )
+
+
+
+    product_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey("products.product_id"),
+
+        nullable=False
+
+    )
+
+
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
+
+
+
+    # =====================================
+    # RELATIONSHIP
+    # =====================================
+
+    product = db.relationship(
+
+        "Product",
+
+        backref="favourites",
+
+        lazy=True
+
+    )
