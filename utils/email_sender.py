@@ -1,5 +1,6 @@
 import smtplib
 import os
+import socket
 
 from email.mime.text import MIMEText
 
@@ -14,6 +15,8 @@ from email.mime.multipart import MIMEMultipart
 SMTP_SERVER = "smtp.gmail.com"
 
 SMTP_PORT = 587
+
+socket.setdefaulttimeout(10)
 
 
 
@@ -72,18 +75,20 @@ def send_email(
         # =================================
         # SMTP SERVER
         # =================================
-
+        print("EMAIL:", EMAIL_ADDRESS)
+        print("PASSWORD EXISTS:", bool(EMAIL_PASSWORD))
         server = smtplib.SMTP(
 
             SMTP_SERVER,
-            SMTP_PORT
+            SMTP_PORT,
+            timeout=10
 
         )
 
 
-
+        server.ehlo()
         server.starttls()
-
+        server.ehlo()
 
 
         server.login(
