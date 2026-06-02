@@ -1,4 +1,14 @@
 Flask
 Flask-Login
+Flask-SQLAlchemy
+Werkzeug
 gunicorn
+email-validator
+itsdangerous
+Jinja2
+MarkupSafe
+SQLAlchemy
+WTForms
+python-dotenv
+Pillow
 requests
