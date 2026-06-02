@@ -4,6 +4,9 @@ from email.mime.text import MIMEText
 
 from email.mime.multipart import MIMEMultipart
 
+import socket
+socket.setdefaulttimeout(10)
+
 
 
 # =========================================
@@ -80,13 +83,16 @@ def send_email(
         server = smtplib.SMTP(
 
             SMTP_SERVER,
-            SMTP_PORT
+            SMTP_PORT,
+            timeout = 10
 
         )
 
-
+        server.ehlo()
 
         server.starttls()
+
+        server.ehlo()
 
 
 
