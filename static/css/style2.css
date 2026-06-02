@@ -1,0 +1,1335 @@
+/* =========================================
+   RM BAKES - PHASE 2
+   STYLE2.CSS
+========================================= */
+
+
+
+/* =========================================
+   ROOT COLORS
+========================================= */
+
+:root{
+
+    --rm-bg:
+        #09070b;
+
+    --rm-card:
+        rgba(22, 18, 26, 0.82);
+
+    --rm-border:
+        rgba(255,255,255,0.06);
+
+    --rm-text:
+        #f8f3ee;
+
+    --rm-subtext:
+        rgba(255,255,255,0.68);
+
+    --rm-gold:
+        #ffcc8a;
+
+    --rm-orange:
+        #ff965f;
+
+    --rm-red:
+        #ff5e5e;
+
+    --rm-green:
+        #79ffcb;
+
+    --rm-shadow:
+        rgba(0,0,0,0.38);
+
+}
+
+
+
+/* =========================================
+   GLOBAL
+========================================= */
+
+.phase2-page{
+
+    padding-bottom:80px;
+
+}
+
+
+
+.glass-card{
+
+    background:
+        var(--rm-card);
+
+    border:
+        1px solid var(--rm-border);
+
+    border-radius:34px;
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+        0 12px 40px var(--rm-shadow);
+
+    overflow:hidden;
+}
+
+
+
+/* =========================================
+   GLOW TITLES
+========================================= */
+
+.glow-title{
+
+    font-size:4rem;
+
+    font-weight:900;
+
+    line-height:1.02;
+
+    letter-spacing:-2px;
+
+    color:var(--rm-gold);
+
+    text-shadow:
+        0 0 14px rgba(255,190,120,0.25),
+        0 0 28px rgba(255,140,60,0.16);
+
+    margin-bottom:18px;
+}
+
+
+
+.glow-subtitle{
+
+    color:var(--rm-subtext);
+
+    font-size:1.08rem;
+
+    line-height:1.7;
+
+    max-width:700px;
+}
+
+
+
+/* =========================================
+   PROFILE HERO
+========================================= */
+
+.profile-hero{
+
+    text-align:center;
+
+    padding:40px 24px 10px;
+
+}
+
+
+
+.profile-avatar-large{
+
+    width:130px;
+
+    height:130px;
+
+    margin:0 auto 24px;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,170,120,0.18),
+            rgba(255,90,90,0.18)
+        );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:4rem;
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 0 40px rgba(255,140,80,0.14);
+}
+
+
+
+.member-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px 22px;
+
+    border-radius:999px;
+
+    background:
+        rgba(255,190,120,0.08);
+
+    border:
+        1px solid rgba(255,190,120,0.12);
+
+    color:var(--rm-gold);
+
+    font-weight:700;
+
+    margin-top:18px;
+}
+
+
+
+/* =========================================
+   PROFILE GRID
+========================================= */
+
+.profile-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+
+    gap:28px;
+
+    margin-top:38px;
+}
+
+
+
+/* =========================================
+   SECTION CARDS
+========================================= */
+
+.section-card{
+
+    padding:28px;
+}
+
+
+
+.section-title{
+
+    color:var(--rm-gold);
+
+    font-size:1.55rem;
+
+    font-weight:800;
+
+    margin-bottom:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.premium-input{
+
+    width:100%;
+
+    padding:18px 20px;
+
+    border-radius:20px;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color:white;
+
+    outline:none;
+
+    transition:0.25s;
+
+    margin-bottom:18px;
+
+    font-size:1rem;
+}
+
+
+
+.premium-input:focus{
+
+    border:
+        1px solid rgba(255,190,120,0.22);
+
+    box-shadow:
+        0 0 18px rgba(255,170,80,0.12);
+}
+
+
+
+textarea.premium-input{
+
+    resize:none;
+
+    min-height:140px;
+}
+
+
+
+.premium-input::placeholder{
+
+    color:
+        rgba(255,255,255,0.38);
+}
+
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+.premium-select{
+
+    width:100%;
+
+    padding:18px 20px;
+
+    border-radius:20px;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color:white;
+
+    outline:none;
+
+    margin-bottom:18px;
+}
+
+
+
+.premium-select option{
+
+    background:#16111c;
+
+    color:white;
+}
+
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.premium-btn{
+
+    border:none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffb26f,
+            #ff8459
+        );
+
+    color:white;
+
+    padding:16px 24px;
+
+    border-radius:20px;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:0.25s;
+
+    box-shadow:
+        0 0 22px rgba(255,150,90,0.28);
+}
+
+
+
+.premium-btn:hover{
+
+    transform:
+        translateY(-2px)
+        scale(1.02);
+
+    box-shadow:
+        0 0 30px rgba(255,150,90,0.4);
+}
+
+
+
+.green-btn{
+
+    background:
+        linear-gradient(
+            135deg,
+            #4dffbc,
+            #21d89b
+        );
+
+    box-shadow:
+        0 0 22px rgba(70,255,180,0.25);
+}
+
+
+
+.red-btn{
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff7070,
+            #ff4242
+        );
+
+    box-shadow:
+        0 0 22px rgba(255,70,70,0.25);
+}
+
+
+
+/* =========================================
+   QUICK ACTIONS
+========================================= */
+
+.quick-actions{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap:18px;
+
+    margin-top:22px;
+}
+
+
+
+.quick-action-btn{
+
+    text-decoration:none;
+
+    color:white;
+
+    padding:22px;
+
+    border-radius:24px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    transition:0.25s;
+
+    font-weight:700;
+}
+
+
+
+.quick-action-btn:hover{
+
+    transform:
+        translateY(-4px);
+
+    background:
+        rgba(255,255,255,0.06);
+}
+
+
+
+/* =========================================
+   SETTINGS
+========================================= */
+
+.settings-card{
+
+    padding:28px;
+}
+
+
+
+.settings-divider{
+
+    width:100%;
+
+    height:1px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    margin:26px 0;
+}
+
+
+
+/* =========================================
+   STATUS BADGES
+========================================= */
+
+.status-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    font-size:0.92rem;
+
+    font-weight:800;
+}
+
+
+
+.status-queued{
+
+    background:
+        rgba(255,210,90,0.08);
+
+    color:#ffd86f;
+}
+
+
+
+.status-preparing{
+
+    background:
+        rgba(90,170,255,0.08);
+
+    color:#8cc8ff;
+}
+
+
+
+.status-baking{
+
+    background:
+        rgba(255,150,80,0.08);
+
+    color:#ffb27e;
+}
+
+
+
+.status-delivered{
+
+    background:
+        rgba(80,255,170,0.08);
+
+    color:#89ffd1;
+}
+
+
+
+.status-cancelled{
+
+    background:
+        rgba(255,80,80,0.08);
+
+    color:#ff9292;
+}
+
+
+
+/* =========================================
+   ORDER CARDS
+========================================= */
+
+.order-card{
+
+    padding:28px;
+
+    margin-bottom:26px;
+}
+
+
+
+.order-top{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+    margin-bottom:20px;
+
+    flex-wrap:wrap;
+}
+
+
+
+.order-id{
+
+    color:white;
+
+    font-size:1.2rem;
+
+    font-weight:800;
+}
+
+
+
+.order-price{
+
+    color:var(--rm-gold);
+
+    font-size:1.5rem;
+
+    font-weight:900;
+}
+
+
+/* =====================================
+   STATUS BADGES
+===================================== */
+
+.status-badge{
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    font-size:0.88rem;
+
+    font-weight:800;
+
+    text-transform:capitalize;
+
+    letter-spacing:0.5px;
+
+    border:1px solid transparent;
+
+}
+
+
+
+/* =====================================
+   QUEUED
+===================================== */
+
+.status-queued{
+
+    background:
+        rgba(255,193,7,0.15);
+
+    color:#ffd54f;
+
+    border-color:
+        rgba(255,193,7,0.28);
+
+}
+
+
+
+/* =====================================
+   APPROVED
+===================================== */
+
+.status-approved{
+
+    background:
+        rgba(0,200,255,0.15);
+
+    color:#55dfff;
+
+    border-color:
+        rgba(0,200,255,0.28);
+
+}
+
+
+
+/* =====================================
+   PREPARING
+===================================== */
+
+.status-preparing{
+
+    background:
+        rgba(255,140,0,0.15);
+
+    color:#ffb347;
+
+    border-color:
+        rgba(255,140,0,0.28);
+
+}
+
+
+
+/* =====================================
+   OUT FOR DELIVERY
+===================================== */
+
+.status-out_for_delivery{
+
+    background:
+        rgba(138,43,226,0.15);
+
+    color:#c792ff;
+
+    border-color:
+        rgba(138,43,226,0.28);
+
+}
+
+
+
+/* =====================================
+   DELIVERED
+===================================== */
+
+.status-delivered{
+
+    background:
+        rgba(0,255,170,0.15);
+
+    color:#00ffaa;
+
+    border-color:
+        rgba(0,255,170,0.28);
+
+}
+
+
+
+/* =====================================
+   CANCELLED
+===================================== */
+
+.status-cancelled{
+
+    background:
+        rgba(255,77,109,0.15);
+
+    color:#ff758f;
+
+    border-color:
+        rgba(255,77,109,0.28);
+
+}
+
+
+
+/* =========================================
+   ACCOUNT SETTINGS
+========================================= */
+
+.account-settings-grid{
+
+    display:grid;
+
+    gap:28px;
+
+    margin-top:32px;
+}
+
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state{
+
+    text-align:center;
+
+    padding:80px 24px;
+}
+
+
+
+.empty-state-emoji{
+
+    font-size:5rem;
+
+    margin-bottom:18px;
+}
+
+
+
+.empty-state h2{
+
+    color:white;
+
+    font-size:2.4rem;
+
+    font-weight:900;
+
+    margin-bottom:14px;
+}
+
+
+
+.empty-state p{
+
+    color:var(--rm-subtext);
+
+    max-width:600px;
+
+    margin:0 auto;
+}
+
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.custom-toast{
+
+    position:fixed;
+
+    top:90px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%)
+        translateY(-20px);
+
+    background:
+        rgba(10,10,10,0.94);
+
+    color:white;
+
+    padding:16px 24px;
+
+    border-radius:18px;
+
+    z-index:999999;
+
+    font-size:0.96rem;
+
+    font-weight:700;
+
+    opacity:0;
+
+    transition:0.3s;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(14px);
+
+    max-width:88%;
+
+    text-align:center;
+}
+
+
+
+.custom-toast.show{
+
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    .glow-title{
+
+        font-size:2.7rem;
+    }
+
+    .profile-avatar-large{
+
+        width:105px;
+
+        height:105px;
+
+        font-size:3rem;
+    }
+
+    .section-card,
+    .settings-card{
+
+        padding:22px;
+    }
+
+    .quick-actions{
+
+        grid-template-columns:1fr;
+    }
+
+    .order-top{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+}
+
+
+
+/* =========================================
+   PASSWORD WRAPPER
+========================================= */
+
+.password-wrapper{
+
+    position:relative;
+
+    width:100%;
+
+    margin-bottom:18px;
+}
+
+
+
+/* =========================================
+   PASSWORD TOGGLE BUTTON
+========================================= */
+
+.toggle-password-btn{
+
+    position:absolute;
+
+    top:50%;
+
+    right:18px;
+
+    transform:translateY(-50%);
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    color:rgba(255,255,255,0.72);
+
+    font-size:1.1rem;
+
+    cursor:pointer;
+
+    z-index:999;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:0.2s;
+
+    pointer-events:auto;
+}
+
+
+
+.toggle-password-btn:hover{
+
+    color:#ffcc8a;
+
+    transform:
+        translateY(-50%)
+        scale(1.08);
+}
+
+
+
+/* =========================================
+   PASSWORD INPUT SPACING
+========================================= */
+
+.password-wrapper .premium-input{
+
+    padding-right:60px;
+}
+
+
+
+/* =========================================
+   CHECKOUT ITEM CARD
+========================================= */
+
+.checkout-item-card{
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:flex-start;
+
+    padding:18px;
+
+    border-radius:24px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border:
+        1px solid rgba(255,255,255,0.05);
+
+    margin-bottom:20px;
+}
+
+
+
+/* =========================================
+   CHECKOUT IMAGE
+========================================= */
+
+.checkout-image-wrapper{
+
+    width:95px;
+
+    height:95px;
+
+    flex-shrink:0;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    background:
+        rgba(255,255,255,0.04);
+}
+
+
+
+.checkout-product-image{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+}
+
+
+
+.checkout-empty-image{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:2rem;
+}
+
+
+
+/* =========================================
+   CHECKOUT DETAILS
+========================================= */
+
+.checkout-item-details{
+
+    flex:1;
+}
+
+
+
+.checkout-product-name{
+
+    color:white;
+
+    font-size:1.12rem;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+
+
+.checkout-product-meta{
+
+    color:
+        rgba(255,255,255,0.65);
+
+    font-size:0.95rem;
+
+    margin-bottom:10px;
+}
+
+
+
+/* =========================================
+   CHECKOUT NOTE
+========================================= */
+
+.checkout-note{
+
+    padding:12px 14px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,190,120,0.08);
+
+    border:
+        1px solid rgba(255,190,120,0.08);
+
+    color:#ffcc8a;
+
+    font-size:0.92rem;
+
+    line-height:1.6;
+
+    margin-bottom:12px;
+}
+
+
+
+/* =========================================
+   ITEM TOTAL
+========================================= */
+
+.checkout-item-total{
+
+    color:#79ffcb;
+
+    font-size:1.08rem;
+
+    font-weight:800;
+}
+
+
+
+/* =========================================
+   TOTAL WRAPPER
+========================================= */
+
+.checkout-total-wrapper{
+
+    margin-top:28px;
+
+    padding-top:22px;
+
+    border-top:
+        1px solid rgba(255,255,255,0.08);
+}
+
+
+
+.checkout-total-line{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:16px;
+
+    color:white;
+
+    font-size:1rem;
+}
+
+
+
+/* =========================================
+   CHECKOUT MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    .checkout-item-card{
+
+        flex-direction:column;
+    }
+
+    .checkout-image-wrapper{
+
+        width:100%;
+
+        height:220px;
+    }
+
+}
+
+
+/* =========================================
+   ORDER PLACING OVERLAY
+========================================= */
+
+.order-overlay{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:100vh;
+
+    background:black;
+
+    z-index:999999;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:0.4s ease;
+}
+
+
+
+/* ACTIVE */
+
+.order-overlay.active{
+
+    opacity:1;
+
+    visibility:visible;
+}
+
+
+
+/* VIDEO */
+
+.order-video{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+/* =========================================
+   CHECKOUT PROFILE
+========================================= */
+
+.checkout-profile-line{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+    padding:16px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.06);
+
+    color:white;
+
+    flex-wrap:wrap;
+}
+
+
+
+.checkout-profile-line span{
+
+    color:
+        rgba(255,255,255,0.65);
+}
+
+
+
+.checkout-profile-line strong{
+
+    text-align:right;
+
+    max-width:60%;
+}
+
+
+
+.orders-filter-tabs{
+
+    display:flex;
+    gap:14px;
+    margin:28px 0;
+
+}
+
+
+
+.orders-filter-btn{
+
+    border:none;
+    padding:12px 22px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.06);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+
+}
+
+
+
+.orders-filter-btn.active{
+
+    background:#79ffcb;
+    color:black;
+
+}
