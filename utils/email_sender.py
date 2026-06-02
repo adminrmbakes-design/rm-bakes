@@ -43,7 +43,7 @@ def send_email(
                 "RM Bakes <onboarding@resend.dev>",
 
                 "to":
-                [receiver_email],
+                ["auth.rmbakes@gmail.com"],
 
                 "subject":
                 subject,
