@@ -1,143 +1,62 @@
-import smtplib
 import os
-import socket
+import requests
 
-from email.mime.text import MIMEText
-
-from email.mime.multipart import MIMEMultipart
-
-
-
-# =========================================
-# SMTP CONFIG
-# =========================================
-
-SMTP_SERVER = "smtp.gmail.com"
-
-SMTP_PORT = 587
-
-socket.setdefaulttimeout(10)
-
-
-
-# =========================================
-# AUTH GMAIL
-# =========================================
-
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
-
-
-# =========================================
-# SEND EMAIL
-# =========================================
+RESEND_API_KEY = os.getenv(
+"RESEND_API_KEY"
+)
 
 def send_email(
 
-    receiver_email,
-    subject,
-    body
+receiver_email,
+subject,
+body
 
 ):
 
-    try:
+try:
 
-        # =================================
-        # MESSAGE
-        # =================================
+    response = requests.post(
 
-        message = MIMEMultipart()
+        "https://api.resend.com/emails",
 
-        message["From"] = EMAIL_ADDRESS
+        headers={
 
-        message["To"] = receiver_email
+            "Authorization":
+            f"Bearer {RESEND_API_KEY}",
 
-        message["Subject"] = subject
+            "Content-Type":
+            "application/json"
 
+        },
 
+        json={
 
-        # =================================
-        # BODY
-        # =================================
+            "from":
+            "RM Bakes <onboarding@resend.dev>",
 
-        message.attach(
+            "to":
+            [receiver_email],
 
-            MIMEText(
-                body,
-                "plain"
-            )
+            "subject":
+            subject,
 
-        )
+            "text":
+            body
 
+        }
 
+    )
 
-        # =================================
-        # SMTP SERVER
-        # =================================
-        print("EMAIL:", EMAIL_ADDRESS)
-        print("PASSWORD EXISTS:", bool(EMAIL_PASSWORD))
-        server = smtplib.SMTP(
+    print(
+        response.text
+    )
 
-            SMTP_SERVER,
-            SMTP_PORT,
-            timeout=10
+    return response.status_code == 200
 
-        )
+except Exception as error:
 
+    print(
+        f"Email sending failed: {error}"
+    )
 
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-
-
-        server.login(
-
-            EMAIL_ADDRESS,
-            EMAIL_PASSWORD
-
-        )
-
-
-
-        # =================================
-        # SEND
-        # =================================
-
-        server.sendmail(
-
-            EMAIL_ADDRESS,
-            receiver_email,
-            message.as_string()
-
-        )
-
-
-
-        # =================================
-        # CLOSE
-        # =================================
-
-        server.quit()
-
-
-
-        print(
-            "Email sent successfully ✅"
-        )
-
-
-
-        return True
-
-
-
-    except Exception as error:
-
-        print(
-            f"Email sending failed: {error}"
-        )
-
-
-
-        return False
+    return False
