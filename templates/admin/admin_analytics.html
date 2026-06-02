@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes Analytics
+
+    </title>
+
+
+
+    <!-- =====================================
+         GOOGLE FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <!-- =====================================
+         CHART JS
+    ====================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+
+
+        body{
+
+            min-height:100vh;
+
+            background:
+
+                radial-gradient(
+                    circle at top left,
+                    rgba(0,255,200,0.08),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(0,140,255,0.08),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #040404,
+                    #0b0b0b,
+                    #111111
+                );
+
+            color:white;
+
+            font-family:'Inter', sans-serif;
+
+            overflow-x:hidden;
+
+            position:relative;
+
+        }
+
+
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.22;
+
+            pointer-events:none;
+
+        }
+
+
+
+        /* =====================================
+           TOPBAR
+        ====================================== */
+
+        .topbar{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:100;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            flex-wrap:wrap;
+
+            gap:18px;
+
+            padding:22px 30px;
+
+            background:rgba(0,0,0,0.55);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+
+
+        .topbar h1{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:1.6rem;
+
+            letter-spacing:2px;
+
+        }
+
+
+
+        .topbar p{
+
+            margin-top:8px;
+
+            color:rgba(255,255,255,0.55);
+
+            font-size:0.84rem;
+
+        }
+
+
+
+        .topbar-right{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+            flex-wrap:wrap;
+
+        }
+
+
+
+        .admin-chip{
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:#7affdf;
+
+            font-size:0.82rem;
+
+        }
+
+
+
+        .back-btn{
+
+            text-decoration:none;
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #00ffd0,
+                    #00a6ff
+                );
+
+            color:black;
+
+            font-weight:700;
+
+        }
+
+
+
+        /* =====================================
+           MAIN
+        ====================================== */
+
+        .analytics-container{
+
+            width:92%;
+
+            max-width:1600px;
+
+            margin:34px auto 100px;
+
+        }
+
+
+
+        /* =====================================
+           KPI GRID
+        ====================================== */
+
+        .kpi-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(240px,1fr)
+                );
+
+            gap:22px;
+
+            margin-bottom:28px;
+
+        }
+
+
+
+        .kpi-card{
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            border-radius:30px;
+
+            padding:28px;
+
+            position:relative;
+
+            overflow:hidden;
+
+            backdrop-filter:blur(16px);
+
+        }
+
+
+
+        .kpi-card::before{
+
+            content:"";
+
+            position:absolute;
+
+            inset:0;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    rgba(0,255,200,0.06),
+                    transparent
+                );
+
+            pointer-events:none;
+
+        }
+
+
+
+        .kpi-label{
+
+            color:rgba(255,255,255,0.58);
+
+            font-size:0.82rem;
+
+            letter-spacing:1px;
+
+            margin-bottom:14px;
+
+        }
+
+
+
+        .kpi-value{
+
+            font-size:2.4rem;
+
+            font-weight:800;
+
+            font-family:'Orbitron', sans-serif;
+
+        }
+
+
+
+        .green{
+
+            color:#00ffb7;
+
+        }
+
+
+
+        .cyan{
+
+            color:#00d5ff;
+
+        }
+
+
+
+        .orange{
+
+            color:#ffb347;
+
+        }
+
+
+
+        .pink{
+
+            color:#ff66d9;
+
+        }
+
+
+
+        /* =====================================
+           MAIN GRID
+        ====================================== */
+
+        .main-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                2fr 1fr;
+
+            gap:24px;
+
+            margin-top:24px;
+
+        }
+
+
+
+        @media(max-width:1100px){
+
+            .main-grid{
+
+                grid-template-columns:1fr;
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           PANELS
+        ====================================== */
+
+        .panel{
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            border-radius:32px;
+
+            padding:30px;
+
+            backdrop-filter:blur(18px);
+
+        }
+
+
+
+        .panel-title{
+
+            font-size:1.25rem;
+
+            font-weight:700;
+
+            margin-bottom:24px;
+
+            font-family:'Orbitron', sans-serif;
+
+        }
+
+
+
+        /* =====================================
+           CHART
+        ====================================== */
+
+        .chart-container{
+
+            height:420px;
+
+        }
+
+
+
+        /* =====================================
+           FLOW BARS
+        ====================================== */
+
+        .flow-item{
+
+            margin-bottom:24px;
+
+        }
+
+
+
+        .flow-header{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            margin-bottom:10px;
+
+            font-size:0.92rem;
+
+        }
+
+
+
+        .flow-track{
+
+            width:100%;
+
+            height:16px;
+
+            border-radius:50px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            overflow:hidden;
+
+        }
+
+
+
+        .flow-fill{
+
+            height:100%;
+
+            border-radius:50px;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #00ffd0,
+                    #00a6ff
+                );
+
+        }
+
+
+
+        /* =====================================
+           INSIGHTS
+        ====================================== */
+
+        .insight-box{
+
+            padding:20px;
+
+            border-radius:24px;
+
+            margin-bottom:18px;
+
+            line-height:1.8;
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            background:
+                rgba(255,255,255,0.03);
+
+        }
+
+
+
+        .insight-green{
+
+            border-color:
+                rgba(0,255,170,0.22);
+
+        }
+
+
+
+        .insight-orange{
+
+            border-color:
+                rgba(255,180,0,0.22);
+
+        }
+
+
+
+        .insight-pink{
+
+            border-color:
+                rgba(255,80,180,0.22);
+
+        }
+
+
+
+        canvas{
+
+            width:100% !important;
+            height:100% !important;
+
+        }
+  
+  
+  /* =====================================
+   LIVE STATUS
+===================================== */
+
+.live-status-bar{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-top:18px;
+
+    color:#00ffd0;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+
+
+.live-dot{
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#00ff88;
+
+    box-shadow:
+    0 0 18px #00ff88;
+
+    animation:
+    pulseLive 1.2s infinite;
+}
+
+
+
+@keyframes pulseLive{
+
+    0%{
+
+        transform:scale(1);
+        opacity:1;
+
+    }
+
+    50%{
+
+        transform:scale(1.3);
+        opacity:0.4;
+
+    }
+
+    100%{
+
+        transform:scale(1);
+        opacity:1;
+
+    }
+
+}
+
+
+
+.live-clock{
+
+    margin-top:12px;
+
+    color:rgba(255,255,255,0.6);
+
+    font-size:0.95rem;
+
+    letter-spacing:1px;
+}
+  
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+<!-- =====================================
+     TOPBAR
+====================================== -->
+
+<div class="topbar">
+
+    <div>
+
+        <h1>
+
+            RM BAKES ANALYTICS
+
+        </h1>
+
+        <p>
+
+            Revenue Intelligence • Production Metrics • Tactical Insights
+
+        </p>
+
+    </div>
+
+
+
+    <div class="topbar-right">
+
+        <div class="admin-chip">
+
+            👤 {{ admin_username }}
+
+        </div>
+
+
+
+        <div class="admin-chip">
+
+            🛡 {{ admin_role }}
+
+        </div>
+
+
+
+        <div
+            class="admin-chip"
+            id="sessionTimer"
+        >
+
+            ⏳ Loading...
+
+        </div>
+
+
+
+        <a
+            href="{{ url_for('admin.admin_dashboard') }}"
+            class="back-btn"
+        >
+
+            ← Control Center
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     ANALYTICS
+====================================== -->
+
+<div class="analytics-container">
+  
+  
+  
+  <div class="live-status-bar">
+
+    <div class="live-dot"></div>
+
+    <span>
+
+        LIVE SYSTEM ONLINE
+
+    </span>
+
+</div>
+
+
+
+<div class="live-clock" id="liveClock">
+
+    Loading time...
+
+</div>
+
+
+
+    <!-- KPI -->
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+
+            <div class="kpi-label">
+
+                TOTAL REVENUE
+
+            </div>
+
+            <div class="kpi-value green">
+
+                ₹{{ total_revenue }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-label">
+
+                ACTIVE ORDERS
+
+            </div>
+
+            <div class="kpi-value cyan">
+
+                {{ active_orders }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-label">
+
+                CUSTOM REQUESTS
+
+            </div>
+
+            <div class="kpi-value pink">
+
+                {{ total_custom_orders }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-label">
+
+                DELIVERED ORDERS
+
+            </div>
+
+            <div class="kpi-value orange">
+
+                {{ delivered_orders }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MAIN GRID -->
+
+    <div class="main-grid">
+
+
+
+        <!-- REVENUE CHART -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                Revenue Timeline 📈
+
+            </div>
+
+
+
+            <div class="chart-container">
+
+                <canvas id="revenueChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PRODUCTION -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                Production Flow ⚙
+
+            </div>
+
+
+
+            <div class="flow-item">
+
+                <div class="flow-header">
+
+                    <span>Queued</span>
+
+                    <span>{{ queued_count }}</span>
+
+                </div>
+
+                <div class="flow-track">
+
+                    <div
+                        class="flow-fill"
+                        style="width:{{ queued_count * 10 }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="flow-item">
+
+                <div class="flow-header">
+
+                    <span>Preparing</span>
+
+                    <span>{{ preparing_count }}</span>
+
+                </div>
+
+                <div class="flow-track">
+
+                    <div
+                        class="flow-fill"
+                        style="width:{{ preparing_count * 10 }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="flow-item">
+
+                <div class="flow-header">
+
+                    <span>Baking</span>
+
+                    <span>{{ baking_count }}</span>
+
+                </div>
+
+                <div class="flow-track">
+
+                    <div
+                        class="flow-fill"
+                        style="width:{{ baking_count * 10 }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="flow-item">
+
+                <div class="flow-header">
+
+                    <span>Packed</span>
+
+                    <span>{{ packed_count }}</span>
+
+                </div>
+
+                <div class="flow-track">
+
+                    <div
+                        class="flow-fill"
+                        style="width:{{ packed_count * 10 }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="flow-item">
+
+                <div class="flow-header">
+
+                    <span>Out For Delivery</span>
+
+                    <span>{{ delivery_count }}</span>
+
+                </div>
+
+                <div class="flow-track">
+
+                    <div
+                        class="flow-fill"
+                        style="width:{{ delivery_count * 10 }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SECOND GRID -->
+
+    <div
+        class="main-grid"
+        style="margin-top:24px;"
+    >
+      
+      
+<!-- =====================================
+     PRODUCT INTELLIGENCE
+====================================== -->
+
+<div
+    class="main-grid"
+    style="margin-top:24px;"
+>
+
+
+
+    <!-- TOP PRODUCTS -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Product Dominance 🍰
+
+        </div>
+
+
+
+        <div class="chart-container">
+
+            <canvas id="productChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CATEGORY INTELLIGENCE -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Category Intelligence 🧠
+
+        </div>
+
+
+
+        <div class="chart-container">
+
+            <canvas id="categoryChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+        <!-- CUSTOM ORDER FUNNEL -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                Dessert Studio Intelligence ✨
+
+            </div>
+
+
+
+            <div class="chart-container">
+
+                <canvas id="customChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- LIVE ACTIVITY -->
+
+<div class="panel">
+
+    <div class="panel-title">
+
+        Live Activity Feed ⚡
+
+    </div>
+
+
+
+    {% for activity in activity_feed %}
+
+    <div
+        class="
+            insight-box
+            insight-green
+        "
+    >
+
+        <div
+            style="
+                font-size:1rem;
+                margin-bottom:8px;
+            "
+        >
+
+            {{ activity.icon }}
+            {{ activity.message }}
+
+        </div>
+
+
+
+        <div
+            style="
+                color:rgba(255,255,255,0.45);
+                font-size:0.8rem;
+            "
+        >
+
+            {{ activity.time }}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+      
+      
+      
+      <!-- =====================================
+     ORDER HEATMAP
+====================================== -->
+
+<div
+    class="panel"
+    style="margin-top:24px;"
+>
+
+    <div class="panel-title">
+
+        Order Heatmap Intelligence 🔥
+
+    </div>
+
+
+
+    <!-- MORNING -->
+
+    <div class="flow-item">
+
+        <div class="flow-header">
+
+            <span>
+
+                🌅 Morning Rush
+
+            </span>
+
+            <span>
+
+                {{ morning_orders }}
+
+            </span>
+
+        </div>
+
+        <div class="flow-track">
+
+            <div
+                class="flow-fill"
+                style="
+                    width:
+                    {{ morning_orders * 10 }}%;
+                "
+            ></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AFTERNOON -->
+
+    <div class="flow-item">
+
+        <div class="flow-header">
+
+            <span>
+
+                ☀ Afternoon Flow
+
+            </span>
+
+            <span>
+
+                {{ afternoon_orders }}
+
+            </span>
+
+        </div>
+
+        <div class="flow-track">
+
+            <div
+                class="flow-fill"
+                style="
+                    width:
+                    {{ afternoon_orders * 10 }}%;
+                "
+            ></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- EVENING -->
+
+    <div class="flow-item">
+
+        <div class="flow-header">
+
+            <span>
+
+                🌆 Evening Peak
+
+            </span>
+
+            <span>
+
+                {{ evening_orders }}
+
+            </span>
+
+        </div>
+
+        <div class="flow-track">
+
+            <div
+                class="flow-fill"
+                style="
+                    width:
+                    {{ evening_orders * 10 }}%;
+                    background:
+                    linear-gradient(
+                        90deg,
+                        #ff66d9,
+                        #ff9966
+                    );
+                "
+            ></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- NIGHT -->
+
+    <div class="flow-item">
+
+        <div class="flow-header">
+
+            <span>
+
+                🌙 Night Activity
+
+            </span>
+
+            <span>
+
+                {{ night_orders }}
+
+            </span>
+
+        </div>
+
+        <div class="flow-track">
+
+            <div
+                class="flow-fill"
+                style="
+                    width:
+                    {{ night_orders * 10 }}%;
+                    background:
+                    linear-gradient(
+                        90deg,
+                        #7d7dff,
+                        #00d5ff
+                    );
+                "
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+      
+      
+      <!-- =====================================
+     AI INSIGHTS
+====================================== -->
+
+<div
+    class="panel"
+    style="margin-top:24px;"
+>
+
+    <div class="panel-title">
+
+        AI Business Intelligence 🧠
+
+    </div>
+
+
+
+    {% for insight in ai_insights %}
+
+        <div
+            class="
+                insight-box
+
+                {% if insight.type == 'success' %}
+                    insight-green
+                {% elif insight.type == 'warning' %}
+                    insight-orange
+                {% else %}
+                    insight-pink
+                {% endif %}
+            "
+        >
+
+            {{ insight.message }}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+      
+      <!-- =====================================
+     PREDICTIVE INTELLIGENCE
+====================================== -->
+
+<div
+    class="main-grid"
+    style="margin-top:24px;"
+>
+
+
+
+    <!-- REVENUE FORECAST -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Revenue Forecast Engine 📈
+
+        </div>
+
+
+
+        <div
+            style="
+                font-size:3rem;
+                font-weight:800;
+                color:#00ffd0;
+                margin-top:20px;
+            "
+        >
+
+            ₹{{ predicted_revenue }}
+
+        </div>
+
+
+
+        <div
+            style="
+                color:rgba(255,255,255,0.55);
+                margin-top:12px;
+            "
+        >
+
+            Predicted next-cycle revenue
+            based on recent delivery flow.
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BUSINESS HEALTH -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Business Health Core 🧠
+
+        </div>
+
+
+
+        <div
+            style="
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin-top:25px;
+            "
+        >
+
+            <div
+                style="
+                    width:180px;
+                    height:180px;
+                    border-radius:50%;
+                    border:10px solid rgba(0,255,208,0.15);
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                    radial-gradient(
+                        circle,
+                        rgba(0,255,208,0.15),
+                        transparent
+                    );
+
+                    box-shadow:
+                    0 0 40px rgba(0,255,208,0.2);
+                "
+            >
+
+                <div
+                    style="
+                        text-align:center;
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size:3rem;
+                            font-weight:900;
+                            color:#00ffd0;
+                        "
+                    >
+
+                        {{ business_health }}%
+
+                    </div>
+
+                    <div
+                        style="
+                            color:rgba(255,255,255,0.55);
+                        "
+                    >
+
+                        System Health
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+      
+    </div>
+
+</div>
+      
+      
+      <!-- =====================================
+     CUSTOMER INTELLIGENCE
+====================================== -->
+
+<div
+    class="main-grid"
+    style="margin-top:24px;"
+>
+
+
+
+    <!-- RETENTION -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Customer Retention 🧠
+
+        </div>
+
+
+
+        <div
+            style="
+                font-size:3rem;
+                font-weight:900;
+                color:#00ffd0;
+                margin-top:20px;
+            "
+        >
+
+            {{ retention_rate }}%
+
+        </div>
+
+
+
+        <div
+            style="
+                color:rgba(255,255,255,0.55);
+                margin-top:12px;
+            "
+        >
+
+            Repeat customer retention rate.
+
+        </div>
+
+    </div>
+
+
+
+    <!-- VIP CUSTOMERS -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            VIP Customers 👑
+
+        </div>
+
+
+
+        {% for customer, data in vip_customers %}
+
+        <div class="insight-box insight-green">
+
+            <div
+                style="
+                    font-weight:700;
+                    font-size:1rem;
+                "
+            >
+
+                👑 {{ customer }}
+
+            </div>
+
+
+
+            <div
+                style="
+                    margin-top:8px;
+                    color:rgba(255,255,255,0.7);
+                "
+            >
+
+                {{ data.orders }} orders
+                •
+                ₹{{ data.spent }}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+      
+      
+      <!-- =====================================
+     EXECUTIVE INTELLIGENCE
+====================================== -->
+
+<div
+    class="main-grid"
+    style="margin-top:24px;"
+>
+
+
+
+    <!-- SALES TREND -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Sales Momentum Curve 📈
+
+        </div>
+
+
+
+        <div class="chart-container">
+
+            <canvas id="salesTrendChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MOMENTUM CORE -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Momentum Engine ⚡
+
+        </div>
+
+
+
+        <div
+            style="
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin-top:20px;
+            "
+        >
+
+            <div
+                style="
+                    width:190px;
+                    height:190px;
+
+                    border-radius:50%;
+
+                    border:10px solid
+                    rgba(255,255,255,0.08);
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:
+                    radial-gradient(
+                        circle,
+                        rgba(0,255,208,0.12),
+                        transparent
+                    );
+
+                    box-shadow:
+                    0 0 35px
+                    rgba(0,255,208,0.15);
+                "
+            >
+
+                <div
+                    style="
+                        text-align:center;
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size:3rem;
+                            font-weight:900;
+                            color:#00ffd0;
+                        "
+                    >
+
+                        {{ momentum_score }}%
+
+                    </div>
+
+                    <div
+                        style="
+                            color:rgba(255,255,255,0.55);
+                        "
+                    >
+
+                        Business Momentum
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            style="
+                margin-top:28px;
+                color:rgba(255,255,255,0.65);
+                line-height:1.8;
+            "
+        >
+
+            Real-time operational +
+            customer + revenue
+            confidence indicator.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     PRODUCT AI + ALERTS
+====================================== -->
+
+<div
+    class="main-grid"
+    style="margin-top:24px;"
+>
+
+
+
+    <!-- PRODUCT PERFORMANCE -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Product Performance AI 🍰
+
+        </div>
+
+
+
+        <div class="chart-container">
+
+            <canvas id="liveProductChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SMART ALERTS -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            Smart Alert Engine 🚨
+
+        </div>
+
+
+
+        {% for alert in smart_alerts %}
+
+        <div class="insight-box insight-orange">
+
+            {{ alert }}
+
+        </div>
+
+        {% endfor %}
+
+
+
+        {% for stock_alert in inventory_alerts %}
+
+        <div class="insight-box insight-pink">
+
+            {{ stock_alert }}
+
+        </div>
+
+        {% endfor %}
+
+
+
+        <div class="insight-box insight-green">
+
+            🚚 Avg Delivery Time:
+            {{ avg_delivery_minutes }}
+            mins
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     FLAVOR INTELLIGENCE
+====================================== -->
+
+<div
+    class="panel"
+    style="margin-top:24px;"
+>
+
+    <div class="panel-title">
+
+        Flavor Intelligence Engine 🧠
+
+    </div>
+
+
+
+    {% for flavor, count in top_flavors %}
+
+    <div class="flow-item">
+
+        <div class="flow-header">
+
+            <span>
+
+                {{ flavor.title() }}
+
+            </span>
+
+            <span>
+
+                {{ count }}
+
+            </span>
+
+        </div>
+
+        <div class="flow-track">
+
+            <div
+                class="flow-fill"
+                style="
+                    width:
+                    {{ count * 12 }}%;
+                "
+            ></div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+      
+      
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     SCRIPTS
+====================================== -->
+
+<script>
+
+    // =====================================
+    // SESSION TIMER
+    // =====================================
+
+    const expiryTime =
+        new Date(
+            "{{ expiry_time }}Z"
+        ).getTime();
+
+
+
+    const timerElement =
+        document.getElementById(
+            "sessionTimer"
+        );
+
+
+
+    function updateTimer(){
+
+        const now =
+            new Date().getTime();
+
+
+
+        const distance =
+            expiryTime - now;
+
+
+
+        if(distance <= 0){
+
+            timerElement.innerHTML =
+                "⛔ Expired";
+
+
+
+            window.location.href =
+                "{{ url_for('admin.admin_logout') }}";
+
+            return;
+
+        }
+
+
+
+        const minutes =
+            Math.floor(
+                distance / (1000 * 60)
+            );
+
+
+
+        const seconds =
+            Math.floor(
+                (distance % (1000 * 60)) / 1000
+            );
+
+
+
+        timerElement.innerHTML =
+            `⏳ ${minutes}m ${seconds}s`;
+
+    }
+
+
+
+    updateTimer();
+
+    setInterval(updateTimer,1000);
+
+
+
+    // =====================================
+    // REVENUE CHART
+    // =====================================
+
+    const revenueCtx =
+        document.getElementById(
+            'revenueChart'
+        );
+
+
+
+    new Chart(revenueCtx, {
+
+        type:'line',
+
+        data:{
+
+            labels:
+                {{ revenue_labels|tojson }},
+
+            datasets:[{
+
+                label:'Revenue',
+
+                data:
+                    {{ revenue_data|tojson }},
+
+                borderColor:'#00ffd0',
+
+                backgroundColor:
+                    'rgba(0,255,208,0.12)',
+
+                fill:true,
+
+                tension:0.4,
+
+                borderWidth:3,
+
+                pointRadius:5
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+                    labels:{
+                        color:'white'
+                    }
+                }
+            },
+
+            scales:{
+
+                x:{
+                    ticks:{
+                        color:'rgba(255,255,255,0.6)'
+                    },
+
+                    grid:{
+                        color:'rgba(255,255,255,0.05)'
+                    }
+                },
+
+                y:{
+                    ticks:{
+                        color:'rgba(255,255,255,0.6)'
+                    },
+
+                    grid:{
+                        color:'rgba(255,255,255,0.05)'
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+
+
+    // =====================================
+    // CUSTOM ORDER CHART
+    // =====================================
+
+    const customCtx =
+        document.getElementById(
+            'customChart'
+        );
+
+
+
+    new Chart(customCtx, {
+
+        type:'doughnut',
+
+        data:{
+
+            labels:[
+
+                'Total Requests',
+
+                'Approved',
+
+                'Converted'
+
+            ],
+
+            datasets:[{
+
+                data:[
+
+                    {{ total_custom_orders }},
+
+                    {{ approved_custom_orders }},
+
+                    {{ converted_custom_orders }}
+
+                ],
+
+                backgroundColor:[
+
+                    '#ff66d9',
+
+                    '#00ffd0',
+
+                    '#00a6ff'
+
+                ],
+
+                borderWidth:0
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+                    labels:{
+                        color:'white'
+                    }
+                }
+            }
+
+        }
+      
+      
+      
+      // =====================================
+// PRODUCT CHART
+// =====================================
+
+const productCtx =
+    document.getElementById(
+        'productChart'
+    );
+
+
+
+new Chart(productCtx, {
+
+    type:'bar',
+
+    data:{
+
+        labels:
+            {{ top_product_names|tojson }},
+
+        datasets:[{
+
+            label:'Premium Pricing',
+
+            data:
+                {{ top_product_prices|tojson }},
+
+            backgroundColor:[
+
+                '#00ffd0',
+                '#00c2ff',
+                '#ff66d9',
+                '#ffb347',
+                '#7d7dff'
+
+            ],
+
+            borderRadius:12
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+        plugins:{
+
+            legend:{
+                labels:{
+                    color:'white'
+                }
+            }
+
+        },
+
+        scales:{
+
+            x:{
+                ticks:{
+                    color:'rgba(255,255,255,0.65)'
+                },
+
+                grid:{
+                    color:'rgba(255,255,255,0.04)'
+                }
+            },
+
+            y:{
+                ticks:{
+                    color:'rgba(255,255,255,0.65)'
+                },
+
+                grid:{
+                    color:'rgba(255,255,255,0.04)'
+                }
+            }
+
+        }
+
+    }
+
+});
+
+
+
+// =====================================
+// CATEGORY CHART
+// =====================================
+
+const categoryCtx =
+    document.getElementById(
+        'categoryChart'
+    );
+
+
+
+new Chart(categoryCtx, {
+
+    type:'polarArea',
+
+    data:{
+
+        labels:
+            {{ category_labels|tojson }},
+
+        datasets:[{
+
+            data:
+                {{ category_data|tojson }},
+
+            backgroundColor:[
+
+                '#00ffd0',
+                '#00a6ff',
+                '#ff66d9',
+                '#ffb347',
+                '#7d7dff',
+                '#00ff88'
+
+            ],
+
+            borderWidth:0
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+        plugins:{
+
+            legend:{
+                labels:{
+                    color:'white'
+                }
+            }
+
+        }
+      }
+
+    });
+
+        scales:{
+
+            r:{
+                grid:{
+                    color:'rgba(255,255,255,0.08)'
+                },
+
+                ticks:{
+                    color:'rgba(255,255,255,0.55)',
+                    backdropColor:'transparent'
+                }
+
+            }
+
+        }
+
+    });
+  
+  
+  // =====================================
+// LIVE CLOCK
+// =====================================
+
+function updateClock(){
+
+    const now = new Date();
+
+    const formatted =
+        now.toLocaleString(
+            'en-IN',
+            {
+
+                day:'2-digit',
+                month:'short',
+                year:'numeric',
+
+                hour:'2-digit',
+                minute:'2-digit',
+                second:'2-digit'
+
+            }
+        );
+
+    document.getElementById(
+        'liveClock'
+    ).innerHTML = formatted;
+
+}
+
+
+
+setInterval(
+
+    updateClock,
+
+    1000
+
+);
+
+updateClock();
+
+
+
+// =====================================
+// AUTO REFRESH
+// =====================================
+
+setInterval(() => {
+
+    window.location.reload();
+
+}, 15000);
+  
+  
+  
+  // =====================================
+// SALES TREND CURVE
+// =====================================
+
+const salesTrendCtx =
+    document.getElementById(
+        'salesTrendChart'
+    );
+
+
+
+new Chart(salesTrendCtx, {
+
+    type:'line',
+
+    data:{
+
+        labels:
+            {{ monthly_sales_labels|tojson }},
+
+        datasets:[{
+
+            label:'Monthly Revenue',
+
+            data:
+                {{ monthly_sales_data|tojson }},
+
+            borderColor:'#ff66d9',
+
+            backgroundColor:
+                'rgba(255,102,217,0.12)',
+
+            fill:true,
+
+            tension:0.45,
+
+            borderWidth:4
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false
+
+    }
+
+});
+
+
+
+// =====================================
+// LIVE PRODUCT PERFORMANCE
+// =====================================
+
+const liveProductCtx =
+    document.getElementById(
+        'liveProductChart'
+    );
+
+
+
+new Chart(liveProductCtx, {
+
+    type:'bar',
+
+    data:{
+
+        labels:
+            {{ top_product_live_names|tojson }},
+
+        datasets:[{
+
+            label:'Revenue',
+
+            data:
+                {{ top_product_live_sales|tojson }},
+
+            backgroundColor:[
+
+                '#00ffd0',
+                '#00a6ff',
+                '#ff66d9',
+                '#ffb347',
+                '#7d7dff'
+
+            ],
+
+            borderRadius:14
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false
+
+    }
+
+
+});
+
+
+
+</script>
+
+</body>
+
+</html>

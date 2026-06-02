@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        RM Bakes Control Center
+    </title>
+
+
+
+    <!-- =====================================
+         GOOGLE FONT
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    />
+
+
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+
+
+        body{
+
+            min-height:100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(0,255,200,0.08),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #040404,
+                    #0b0b0b,
+                    #111111
+                );
+
+            color:white;
+
+            font-family:'Inter', sans-serif;
+
+            overflow-x:hidden;
+
+            position:relative;
+
+        }
+
+
+
+        /* ====================================
+           GRID
+        ==================================== */
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            width:100%;
+            height:100%;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.22;
+
+            pointer-events:none;
+
+        }
+
+
+
+        /* ====================================
+           TOPBAR
+        ==================================== */
+
+        .topbar{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:100;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:20px;
+
+            padding:20px 30px;
+
+            background:rgba(0,0,0,0.55);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:1px solid rgba(255,255,255,0.06);
+
+        }
+
+
+
+        .topbar-left h1{
+
+            font-size:1.5rem;
+
+            font-weight:800;
+
+            letter-spacing:2px;
+
+        }
+
+
+
+        .topbar-left p{
+
+            margin-top:8px;
+
+            color:rgba(255,255,255,0.55);
+
+            font-size:0.82rem;
+
+        }
+
+
+
+        .topbar-right{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:18px;
+
+            flex-wrap:wrap;
+
+            justify-content:flex-end;
+
+        }
+
+
+
+        .admin-chip{
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:rgba(255,255,255,0.05);
+
+            border:1px solid rgba(255,255,255,0.06);
+
+            font-size:0.82rem;
+
+            color:#7affdf;
+
+        }
+
+
+
+        .logout-btn{
+
+            text-decoration:none;
+
+            padding:12px 20px;
+
+            border-radius:18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff003c,
+                    #ff3366
+                );
+
+            color:white;
+
+            font-size:0.84rem;
+
+            font-weight:700;
+
+            box-shadow:
+                0 0 25px rgba(255,0,60,0.22);
+
+        }
+
+
+
+        /* ====================================
+           SESSION ALERT
+        ==================================== */
+
+        .session-alert{
+
+            margin:24px auto;
+
+            width:92%;
+
+            max-width:1400px;
+
+            padding:20px;
+
+            border-radius:22px;
+
+            background:rgba(255,180,0,0.08);
+
+            border:1px solid rgba(255,180,0,0.15);
+
+            color:#ffd27a;
+
+            line-height:1.8;
+
+            font-size:0.92rem;
+
+        }
+
+
+
+        .danger-timer{
+
+            color:#ff5c7d !important;
+
+            animation:pulse 1s infinite;
+
+        }
+
+
+
+        @keyframes pulse{
+
+            0%{
+                opacity:1;
+            }
+
+            50%{
+                opacity:0.45;
+            }
+
+            100%{
+                opacity:1;
+            }
+
+        }
+
+
+
+        /* ====================================
+           MAIN GRID
+        ==================================== */
+
+        .dashboard-grid{
+
+              width:92%;
+
+              max-width:1400px;
+
+              margin:30px auto 120px;
+
+              padding-bottom:40px;
+
+              display:grid;
+
+              grid-template-columns:
+            repeat(
+               auto-fit,
+               minmax(300px, 1fr)
+            );
+
+              gap:24px;
+
+              align-items:start;
+
+            }
+
+
+
+        /* ====================================
+           CARDS
+        ==================================== */
+
+        .dashboard-card{
+
+            background:rgba(255,255,255,0.04);
+
+            border:1px solid rgba(255,255,255,0.06);
+
+            border-radius:28px;
+
+            padding:28px;
+
+            backdrop-filter:blur(16px);
+
+            transition:0.3s;
+
+            position:relative;
+
+            overflow:hidden;
+
+        }
+
+
+
+        .dashboard-card:hover{
+
+            transform:translateY(-4px);
+
+            border-color:rgba(0,255,200,0.22);
+
+            box-shadow:
+                0 0 35px rgba(0,255,200,0.08);
+
+        }
+
+
+
+        .card-icon{
+
+            font-size:2rem;
+
+            margin-bottom:20px;
+
+        }
+
+
+
+        .card-title{
+
+            font-size:1.2rem;
+
+            font-weight:700;
+
+            margin-bottom:12px;
+
+        }
+
+
+
+        .card-description{
+
+            color:rgba(255,255,255,0.58);
+
+            line-height:1.8;
+
+            font-size:0.9rem;
+
+            margin-bottom:24px;
+
+        }
+
+
+
+        /* ====================================
+           ACTIONS
+        ==================================== */
+
+        .card-actions{
+
+            display:flex;
+
+            flex-wrap:wrap;
+
+            gap:12px;
+
+        }
+
+
+
+        .action-btn{
+
+            padding:12px 16px;
+
+            border-radius:16px;
+
+            background:rgba(255,255,255,0.05);
+
+            border:1px solid rgba(255,255,255,0.06);
+
+            color:white;
+
+            text-decoration:none;
+
+            font-size:0.82rem;
+
+            transition:0.3s;
+
+        }
+
+
+
+        .action-btn:hover{
+
+            border-color:#00ffd0;
+
+            color:#00ffd0;
+
+        }
+
+
+
+        /* ====================================
+           MOBILE
+        ==================================== */
+
+        @media(max-width:700px){
+
+            .topbar{
+
+                padding:18px;
+
+                flex-direction:column;
+
+                align-items:flex-start;
+
+            }
+
+
+
+            .topbar-right{
+
+                width:100%;
+
+                justify-content:flex-start;
+
+            }
+            
+            .admin-title,
+            .otp-title,
+            .topbar-left h1,
+            .card-title,
+            .admin-badge,
+            .otp-badge{
+
+                  font-family:'Orbitron', sans-serif;
+
+             }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- =====================================
+         TOPBAR
+    ====================================== -->
+
+    <div class="topbar">
+
+        <div class="topbar-left">
+
+            <h1>
+
+                RM BAKES CONTROL CENTER
+
+            </h1>
+
+            <p>
+
+                Tactical Operations & Administrative Authority
+
+            </p>
+
+        </div>
+
+
+
+        <div class="topbar-right">
+
+            <div class="admin-chip">
+
+                👤 {{ admin_username }}
+
+            </div>
+
+
+
+            <div class="admin-chip">
+
+                🛡 {{ admin_role or "Administrator" }}
+
+            </div>
+
+
+
+            <div
+                class="admin-chip"
+                id="sessionTimer"
+            >
+
+                ⏳ Loading...
+
+            </div>
+
+
+
+            <a
+                href="{{ url_for('admin.admin_logout') }}"
+                class="logout-btn"
+            >
+
+                LOGOUT
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SESSION ALERT
+    ====================================== -->
+
+    <div class="session-alert">
+
+        ⚠ Your administrative session is protected
+        and time-restricted for operational security.<br>
+
+        Session duration:
+        <strong>
+            {{ admin_minutes }} minutes
+        </strong>
+
+    </div>
+
+
+
+    <!-- =====================================
+         GRID
+    ====================================== -->
+
+    <div class="dashboard-grid">
+
+
+
+        <!-- =================================
+             ORDERS
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                📦
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                Order Operations
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Monitor and control live order
+                lifecycle, delivery flow and
+                customer order processing.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+    <a href="{{ url_for('admin.admin_orders') }}" class="action-btn">
+        View Orders
+    </a>
+
+    <a href="{{ url_for('admin.admin_notifications') }}"
+       class="action-btn"
+    >
+
+           Live Alerts
+
+    </a>
+
+    <a
+        href="{{ url_for('custom_order.admin_custom_orders') }}"
+        class="action-btn"
+    >
+
+        Dessert Studio
+
+    </a>
+
+    <a href="{{ url_for('admin.admin_analytics') }}"
+       class="action-btn"
+    >
+
+           Analytics
+
+    </a>
+
+</div>
+
+        </div>
+
+
+
+        <!-- =================================
+             PRODUCTS
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                🍰
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                Product Control
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Manage desserts, upload products,
+                update availability and organize
+                product categories.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+                <a href="#" class="action-btn">
+                    Add Product
+                </a>
+
+                <a href="#" class="action-btn">
+                    Edit Products
+                </a>
+
+                <a href="#" class="action-btn">
+                    Categories
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             CUSTOMERS
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                👥
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                Customer Network
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Analyze customer activity,
+                order history and repeat
+                purchase behavior.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+                <a href="#" class="action-btn">
+                    View Users
+                </a>
+
+                <a href="#" class="action-btn">
+                    Customer History
+                </a>
+
+                <a href="#" class="action-btn">
+                    VIP Customers
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             ANALYTICS
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                📊
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                Revenue Intelligence
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Access business insights,
+                revenue tracking and
+                operational analytics.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+                <a href="#" class="action-btn">
+                    Revenue
+                </a>
+
+                <a href="#" class="action-btn">
+                    Sales Trends
+                </a>
+
+                <a href="#" class="action-btn">
+                    Insights
+                </a>
+
+            </div>
+        </div>
+            
+           <!-- =================================
+     GLOBAL ANNOUNCEMENTS
+================================== -->
+
+<div class="dashboard-card">
+
+    <div class="card-icon">
+
+        📢
+
+    </div>
+
+
+
+    <div class="card-title">
+
+        Marketing & Broadcast
+
+    </div>
+
+
+
+    <div class="card-description">
+
+        Publish global offers,
+        promotional campaigns and
+        RM Bakes announcements.
+
+    </div>
+
+
+
+    <div class="card-actions">
+
+        <a
+            href="{{ url_for('admin.admin_global_notifications') }}"
+            class="action-btn"
+        >
+
+            Global Announcements
+
+        </a>
+
+
+
+        <a
+            href="{{ url_for('notification.notifications_page') }}"
+            class="action-btn"
+        >
+
+            Preview Feed
+
+        </a>
+
+    </div>
+
+</div>
+
+    
+
+
+
+        <!-- =================================
+             SECURITY
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                🔒
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                Administrative Security
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Control administrative access,
+                password security and
+                operational protection.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+                <a href="#" class="action-btn">
+                    Change Password
+                </a>
+
+                <a href="#" class="action-btn">
+                    OTP Logs
+                </a>
+
+                <a href="#" class="action-btn">
+                    Access Logs
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             SETTINGS
+        ================================== -->
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+
+                ⚙
+
+            </div>
+
+
+
+            <div class="card-title">
+
+                System Configuration
+
+            </div>
+
+
+
+            <div class="card-description">
+
+                Configure infrastructure,
+                SMTP systems and
+                operational environment.
+
+            </div>
+
+
+
+            <div class="card-actions">
+
+                <a href="#" class="action-btn">
+                    SMTP
+                </a>
+
+                <a href="#" class="action-btn">
+                    Database
+                </a>
+
+                <a href="#" class="action-btn">
+                    Maintenance
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SESSION TIMER
+    ====================================== -->
+
+    <script>
+
+        const expiryTime =
+            new Date(
+                "{{ expiry_time }}Z"
+            ).getTime();
+
+
+
+        const timerElement =
+            document.getElementById(
+                "sessionTimer"
+            );
+
+
+
+        function updateTimer(){
+
+            const now =
+                new Date().getTime();
+
+
+
+            const distance =
+                expiryTime - now;
+
+
+
+            // ================================
+            // EXPIRED
+            // ================================
+
+            if(distance <= 0){
+
+                timerElement.innerHTML =
+                    "⛔ Session Expired";
+
+
+
+                window.location.href =
+                    "{{ url_for('admin.admin_logout') }}";
+
+                return;
+
+            }
+
+
+
+            // ================================
+            // TIME
+            // ================================
+
+            const minutes =
+                Math.floor(
+                    distance / (1000 * 60)
+                );
+
+
+
+            const seconds =
+                Math.floor(
+                    (distance % (1000 * 60)) / 1000
+                );
+
+
+
+            timerElement.innerHTML =
+                `⏳ ${minutes}m ${seconds}s`;
+
+
+
+            // ================================
+            // LAST 10 SECONDS
+            // ================================
+
+            if(distance <= 10000){
+
+                timerElement.classList.add(
+                    "danger-timer"
+                );
+
+
+
+                timerElement.innerHTML =
+                    `⚠ ${seconds}s`;
+
+            }
+
+        }
+
+
+
+        updateTimer();
+
+        setInterval(updateTimer, 1000);
+
+    </script>
+
+</body>
+
+</html>

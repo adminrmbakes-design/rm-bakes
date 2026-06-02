@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        RM Bakes • Order Operations
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --cyan:#00f0ff;
+            --cyan2:#00ffbf;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(0,255,200,0.08),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at top right,
+                    rgba(0,180,255,0.08),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #020202,
+                    #070707,
+                    #0d0d0d
+                );
+
+            color:white;
+
+            font-family:'Inter', sans-serif;
+
+            overflow-x:hidden;
+
+        }
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:42px 42px;
+
+            opacity:0.15;
+
+            pointer-events:none;
+
+        }
+
+        .topbar{
+
+            position:sticky;
+            top:0;
+            z-index:999;
+
+            width:100%;
+
+            padding:18px 24px;
+
+            background:
+                rgba(0,0,0,0.65);
+
+            backdrop-filter:blur(20px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .topbar-content{
+
+            width:92%;
+            max-width:1450px;
+
+            margin:auto;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:18px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .topbar-left h1{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:1.5rem;
+
+            letter-spacing:2px;
+
+            margin-bottom:8px;
+
+        }
+
+        .topbar-left p{
+
+            color:rgba(255,255,255,0.55);
+
+            font-size:0.84rem;
+
+        }
+
+        .topbar-right{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .admin-chip{
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:#8effe8;
+
+            font-size:0.84rem;
+
+        }
+
+        .dashboard-btn{
+
+            text-decoration:none;
+
+            padding:13px 22px;
+
+            border-radius:18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+            font-weight:800;
+
+            font-size:0.84rem;
+
+        }
+
+        .flash-wrapper{
+
+            width:92%;
+            max-width:1450px;
+
+            margin:20px auto 0;
+
+        }
+
+        .flash{
+
+            margin-bottom:14px;
+
+            padding:16px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(0,255,180,0.1);
+
+            border:
+                1px solid rgba(0,255,180,0.16);
+
+            color:#8ffff0;
+
+        }
+
+        .filters-wrapper{
+
+            position:sticky;
+
+            top:102px;
+
+            z-index:500;
+
+            width:100%;
+
+            padding:18px 0;
+
+            backdrop-filter:blur(16px);
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.72),
+                    rgba(0,0,0,0.35)
+                );
+
+        }
+
+        .filters{
+
+            width:92%;
+            max-width:1450px;
+
+            margin:auto;
+
+            display:flex;
+
+            gap:14px;
+
+            overflow-x:auto;
+
+            scrollbar-width:none;
+
+        }
+
+        .filters::-webkit-scrollbar{
+            display:none;
+        }
+
+        .filter-btn{
+
+            flex-shrink:0;
+
+            text-decoration:none;
+
+            padding:13px 20px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:white;
+
+            font-size:0.84rem;
+
+        }
+
+        .active-filter{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+            font-weight:800;
+
+        }
+
+        .orders-grid{
+
+            width:92%;
+            max-width:1450px;
+
+            margin:26px auto 70px;
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(320px,1fr));
+
+            gap:24px;
+
+        }
+
+        .order-card{
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            border-radius:30px;
+
+            padding:24px;
+
+            backdrop-filter:blur(16px);
+
+            overflow:hidden;
+
+        }
+
+        .order-top{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:flex-start;
+
+            gap:14px;
+
+            margin-bottom:22px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .order-id{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:1rem;
+
+            line-height:1.7;
+
+            word-break:break-word;
+
+        }
+
+        .status-pill{
+
+            padding:12px 16px;
+
+            border-radius:16px;
+
+            font-size:0.74rem;
+
+            font-weight:800;
+
+            text-transform:uppercase;
+
+        }
+
+        .queued{
+            background:rgba(255,180,0,0.14);
+            color:#ffd36d;
+        }
+
+        .approved{
+            background:rgba(0,255,180,0.12);
+            color:#7affdf;
+        }
+
+        .preparing,
+        .baking{
+            background:rgba(255,140,0,0.12);
+            color:#ffbf7d;
+        }
+
+        .packed,
+        .out_for_delivery{
+            background:rgba(0,180,255,0.12);
+            color:#7edfff;
+        }
+
+        .delivered{
+            background:rgba(0,255,100,0.12);
+            color:#7dffbc;
+        }
+
+        .cancelled{
+            background:rgba(255,0,60,0.12);
+            color:#ff9f9f;
+        }
+
+        .details{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:16px;
+
+        }
+
+        .detail-box{
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid rgba(255,255,255,0.04);
+
+            border-radius:22px;
+
+            padding:18px;
+
+        }
+
+        .detail-label{
+
+            font-size:0.76rem;
+
+            letter-spacing:2px;
+
+            color:rgba(255,255,255,0.4);
+
+            margin-bottom:10px;
+
+            text-transform:uppercase;
+
+        }
+
+        .detail-value{
+
+            line-height:1.8;
+
+            color:white;
+
+            font-size:0.96rem;
+
+            word-break:break-word;
+
+        }
+
+        .products-wrapper{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+        .product-card{
+
+            padding:18px;
+
+            border-radius:22px;
+
+            background:
+                rgba(255,255,255,0.045);
+
+            border:
+                1px solid rgba(255,255,255,0.05);
+
+        }
+
+        .product-name{
+
+            font-size:1rem;
+
+            font-weight:800;
+
+            margin-bottom:12px;
+
+        }
+
+        .product-info{
+
+            line-height:2;
+
+            color:rgba(255,255,255,0.72);
+
+        }
+
+        .product-note{
+
+            margin-top:12px;
+
+            padding-top:12px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.06);
+
+            color:#ffd089;
+
+            line-height:1.7;
+
+            font-size:0.92rem;
+
+            word-break:break-word;
+
+        }
+
+        .actions{
+
+            margin-top:24px;
+
+            display:flex;
+
+            flex-wrap:wrap;
+
+            gap:12px;
+
+        }
+
+        .action-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:13px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:white;
+
+            font-size:0.82rem;
+
+            font-weight:600;
+
+        }
+
+        .cancel-btn{
+
+            background:
+                rgba(255,0,60,0.12);
+
+            border:
+                1px solid rgba(255,0,60,0.15);
+
+            color:#ff9f9f;
+
+        }
+    
+    
+    .custom-order-badge{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            padding:12px 16px;
+
+            border-radius:18px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    rgba(255,180,0,0.18),
+                    rgba(255,120,0,0.14)
+                );
+
+            border:
+                1px solid rgba(255,180,0,0.22);
+
+            color:#ffd67d;
+
+            font-size:0.76rem;
+
+            font-weight:800;
+
+            letter-spacing:1px;
+
+            text-transform:uppercase;
+
+        }
+
+
+
+        .custom-dessert-panel{
+
+            margin-top:20px;
+
+            border-radius:26px;
+
+            overflow:hidden;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    rgba(255,180,0,0.05),
+                    rgba(255,120,0,0.04)
+                );
+
+            border:
+                1px solid rgba(255,180,0,0.08);
+
+        }
+
+
+
+        .custom-dessert-header{
+
+            padding:18px 20px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.05);
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:0.88rem;
+
+            letter-spacing:2px;
+
+            color:#ffd67d;
+
+        }
+
+
+
+        .custom-dessert-content{
+
+            padding:20px;
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:16px;
+
+        }
+
+
+
+        .dessert-info-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(200px,1fr));
+
+            gap:16px;
+
+        }
+
+
+
+        .dessert-info-box{
+
+            padding:16px;
+
+            border-radius:20px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.05);
+
+        }
+
+
+
+        .dessert-info-label{
+
+            font-size:0.72rem;
+
+            letter-spacing:2px;
+
+            text-transform:uppercase;
+
+            color:rgba(255,255,255,0.45);
+
+            margin-bottom:10px;
+
+        }
+
+
+
+        .dessert-info-value{
+
+            line-height:1.8;
+
+            color:white;
+
+            word-break:break-word;
+
+        }
+
+
+
+        .dessert-image{
+
+            width:100%;
+
+            max-height:320px;
+
+            object-fit:cover;
+
+            border-radius:24px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+        .empty-state{
+
+            width:92%;
+            max-width:900px;
+
+            margin:120px auto;
+
+            padding:60px 30px;
+
+            border-radius:30px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            text-align:center;
+
+        }
+
+        @media(max-width:700px){
+
+            .topbar{
+                padding:18px;
+            }
+
+            .topbar-content{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .filters-wrapper{
+                top:170px;
+            }
+
+            .orders-grid{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-wrapper">
+
+            {% for category, message in messages %}
+
+            <div class="flash">
+                {{ message }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+
+
+<div class="topbar">
+
+    <div class="topbar-content">
+
+        <div class="topbar-left">
+
+            <h1>
+                ORDER OPERATIONS
+            </h1>
+
+            <p>
+                Tactical logistics and live dessert delivery management
+            </p>
+
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="admin-chip">
+                👤 {{ admin_username }}
+            </div>
+
+            <div class="admin-chip">
+                🛡 {{ admin_role }}
+            </div>
+
+            <a
+                href="{{ url_for('admin.admin_dashboard') }}"
+                class="dashboard-btn"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="filters-wrapper">
+
+    <div class="filters">
+
+        {% set filters = [
+
+    ('all', 'All'),
+
+    ('custom', 'Custom Orders'),
+
+    ('queued', 'Queued'),
+
+    ('approved', 'Approved'),
+
+    ('preparing', 'Preparing'),
+
+    ('baking', 'Baking'),
+
+    ('packed', 'Packed'),
+
+    ('out_for_delivery', 'Delivery'),
+
+    ('delivered', 'Delivered'),
+
+    ('cancelled', 'Cancelled')
+
+] %}
+
+        {% for value, label in filters %}
+
+        <a
+            href="{{ url_for('admin.admin_orders', status=value) }}"
+            class="filter-btn {% if status_filter == value %}active-filter{% endif %}"
+        >
+            {{ label }}
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+
+{% if orders %}
+
+<div class="orders-grid">
+
+{% for order in orders %}
+
+<div class="order-card">
+
+<div class="order-top">
+
+    <div>
+
+    <div class="order-id">
+        {{ order.order_number }}
+    </div>
+
+
+
+    {% if order.is_custom_order %}
+
+    <div class="custom-order-badge">
+
+        🔥 Custom Dessert Production
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+    <div class="status-pill {{ order.order_status }}">
+        {{ order.order_status.replace('_', ' ') }}
+    </div>
+
+</div>
+
+
+
+<div class="details">
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Customer
+    </div>
+
+    <div class="detail-value">
+        {{ order.full_name }}
+    </div>
+
+</div>
+
+
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Phone
+    </div>
+
+    <div class="detail-value">
+        {{ order.phone_number }}
+    </div>
+
+</div>
+
+
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Address
+    </div>
+
+    <div class="detail-value">
+        {{ order.delivery_address }}
+    </div>
+
+</div>
+
+
+{% if not order.is_custom_order %}
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Products
+    </div>
+
+    <div class="products-wrapper">
+
+        {% for item in order.products_data %}
+
+        <div class="product-card">
+
+            <div class="product-name">
+                🍰 {{ item.product_name }}
+            </div>
+
+            <div class="product-info">
+
+                Quantity:
+                {{ item.product_quantity }}
+                {{ item.product_unit }}
+
+                <br>
+
+                Price:
+                ₹{{ item.product_price }}
+
+                <br>
+
+                Total:
+                ₹{{ item.total_price }}
+
+            </div>
+
+            {% if item.note %}
+
+            <div class="product-note">
+
+                ✨ Note:
+                {{ item.note }}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+    
+    
+
+{% if not order.is_custom_order %}
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Grand Total
+    </div>
+
+    <div class="detail-value">
+        ₹{{ order.grand_total }}
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<div class="detail-box">
+
+    <div class="detail-label">
+        Ordered At
+    </div>
+
+    <div class="detail-value">
+        {{ order.ordered_at }}
+    </div>
+
+</div>
+
+</div>
+    
+    
+    {% if order.is_custom_order %}
+
+<div class="custom-dessert-panel">
+
+    <div class="custom-dessert-header">
+
+        DESSERT STUDIO CONVERSION
+
+    </div>
+
+
+
+    <div class="custom-dessert-content">
+
+        {% if order.custom_inspiration_image %}
+
+        <img
+
+            src="{{ url_for('static', filename=order.custom_inspiration_image) }}"
+
+            class="dessert-image"
+
+        >
+
+        {% endif %}
+
+
+
+        <div class="dessert-info-grid">
+
+            <div class="dessert-info-box">
+
+                <div class="dessert-info-label">
+                    Request Code
+                </div>
+
+                <div class="dessert-info-value">
+                    {{ order.custom_request_code }}
+                </div>
+
+            </div>
+
+
+
+            <div class="dessert-info-box">
+
+                <div class="dessert-info-label">
+                    Dessert Category
+                </div>
+
+                <div class="dessert-info-value">
+                    {{ order.custom_dessert_category }}
+                </div>
+
+            </div>
+
+
+
+            <div class="dessert-info-box">
+
+                <div class="dessert-info-label">
+                    Flavor
+                </div>
+
+                <div class="dessert-info-value">
+                    {{ order.custom_flavor }}
+                </div>
+
+            </div>
+
+
+
+            <div class="dessert-info-box">
+
+                <div class="dessert-info-label">
+                    Quantity
+                </div>
+
+                <div class="dessert-info-value">
+                    {{ order.custom_quantity }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dessert-info-box">
+
+            <div class="dessert-info-label">
+                Dessert Vision
+            </div>
+
+            <div class="dessert-info-value">
+
+                {{ order.custom_description }}
+
+            </div>
+
+        </div>
+
+
+
+        {% if order.custom_message %}
+
+        <div class="dessert-info-box">
+
+            <div class="dessert-info-label">
+                Custom Message
+            </div>
+
+            <div class="dessert-info-value">
+
+                {{ order.custom_message }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        {% if order.custom_special_notes %}
+
+        <div class="dessert-info-box">
+
+            <div class="dessert-info-label">
+                Special Notes
+            </div>
+
+            <div class="dessert-info-value">
+
+                {{ order.custom_special_notes }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+
+<div class="actions">
+
+{% if order.order_status == "queued" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Approve this order?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="approved"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Approve
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status == "approved" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Move order to preparing?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="preparing"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Preparing
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status == "preparing" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Move order to baking?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="baking"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Baking
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status == "baking" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Mark order as packed?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="packed"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Packed
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status == "packed" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Send order for delivery?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="out_for_delivery"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Delivery
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status == "out_for_delivery" %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Mark order as delivered?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="delivered"
+    >
+
+    <button
+        type="submit"
+        class="action-btn"
+    >
+        Delivered
+    </button>
+
+</form>
+
+{% endif %}
+
+
+
+{% if order.order_status in ["queued", "approved"] %}
+
+<form
+    method="POST"
+    action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+    onsubmit="return confirm('Cancel this order?')"
+>
+
+    <input
+        type="hidden"
+        name="new_status"
+        value="cancelled"
+    >
+
+    <button
+        type="submit"
+        class="action-btn cancel-btn"
+    >
+        Cancel
+    </button>
+
+</form>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+    <h2>
+        No Orders Found
+    </h2>
+
+</div>
+
+{% endif %}
+
+</body>
+</html>

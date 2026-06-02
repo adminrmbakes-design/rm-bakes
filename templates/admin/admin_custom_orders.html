@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        RM Bakes • Dessert Studio Operations
+    </title>
+
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+
+
+        :root{
+
+            --cyan:#00f0ff;
+            --cyan2:#00ffbf;
+
+            --gold:#f6c453;
+
+        }
+
+
+
+        body{
+
+            min-height:100vh;
+
+            background:
+
+                radial-gradient(
+                    circle at top left,
+                    rgba(0,255,200,0.08),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at top right,
+                    rgba(0,180,255,0.08),
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(255,200,100,0.05),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #020202,
+                    #070707,
+                    #0d0d0d
+                );
+
+            color:white;
+
+            font-family:'Inter', sans-serif;
+
+            overflow-x:hidden;
+
+        }
+
+
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:42px 42px;
+
+            opacity:0.15;
+
+            pointer-events:none;
+
+        }
+
+
+
+        /* =====================================
+           TOPBAR
+        ===================================== */
+
+        .topbar{
+
+            position:sticky;
+            top:0;
+
+            z-index:999;
+
+            width:100%;
+
+            padding:18px 24px;
+
+            background:
+                rgba(0,0,0,0.65);
+
+            backdrop-filter:blur(20px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+
+
+        .topbar-content{
+
+            width:92%;
+            max-width:1500px;
+
+            margin:auto;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:18px;
+
+            flex-wrap:wrap;
+
+        }
+
+
+
+        .topbar-left h1{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:1.5rem;
+
+            letter-spacing:2px;
+
+            margin-bottom:8px;
+
+        }
+
+
+
+        .topbar-left p{
+
+            color:rgba(255,255,255,0.55);
+
+            font-size:0.84rem;
+
+        }
+
+
+
+        .topbar-right{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+            flex-wrap:wrap;
+
+        }
+
+
+
+        .admin-chip{
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:#8effe8;
+
+            font-size:0.84rem;
+
+        }
+
+
+
+        .dashboard-btn{
+
+            text-decoration:none;
+
+            padding:13px 22px;
+
+            border-radius:18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+            font-weight:800;
+
+            font-size:0.84rem;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .dashboard-btn:hover{
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+
+        /* =====================================
+           FLASH
+        ===================================== */
+
+        .flash-wrapper{
+
+            width:92%;
+            max-width:1500px;
+
+            margin:20px auto 0;
+
+        }
+
+
+
+        .flash{
+
+            margin-bottom:14px;
+
+            padding:16px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(0,255,180,0.1);
+
+            border:
+                1px solid rgba(0,255,180,0.16);
+
+            color:#8ffff0;
+
+        }
+
+
+
+        /* =====================================
+           FILTERS
+        ===================================== */
+
+        .filters-wrapper{
+
+            position:sticky;
+
+            top:102px;
+
+            z-index:500;
+
+            width:100%;
+
+            padding:18px 0;
+
+            backdrop-filter:blur(16px);
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.72),
+                    rgba(0,0,0,0.35)
+                );
+
+        }
+
+
+
+        .filters{
+
+            width:92%;
+            max-width:1500px;
+
+            margin:auto;
+
+            display:flex;
+
+            gap:14px;
+
+            overflow-x:auto;
+
+            scrollbar-width:none;
+
+        }
+
+
+
+        .filters::-webkit-scrollbar{
+
+            display:none;
+
+        }
+
+
+
+        .filter-btn{
+
+            flex-shrink:0;
+
+            text-decoration:none;
+
+            padding:13px 20px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:white;
+
+            font-size:0.84rem;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .filter-btn:hover{
+
+            border-color:
+                rgba(0,255,255,0.18);
+
+        }
+
+
+
+        .active-filter{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+            font-weight:800;
+
+        }
+
+
+
+        /* =====================================
+           GRID
+        ===================================== */
+
+        .requests-grid{
+
+            width:92%;
+            max-width:1500px;
+
+            margin:26px auto 70px;
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(420px,1fr));
+
+            gap:24px;
+
+        }
+
+
+
+        /* =====================================
+           CARD
+        ===================================== */
+
+        .request-card{
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            border-radius:30px;
+
+            overflow:hidden;
+
+            backdrop-filter:blur(16px);
+
+            position:relative;
+
+        }
+
+
+
+        .request-card::before{
+
+            content:"";
+
+            position:absolute;
+
+            inset:0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,255,255,0.03),
+                    transparent,
+                    rgba(255,200,100,0.02)
+                );
+
+            pointer-events:none;
+
+        }
+
+
+
+        .request-image-wrapper{
+
+            position:relative;
+
+            overflow:hidden;
+
+        }
+
+
+
+        .request-image{
+
+            width:100%;
+
+            height:280px;
+
+            object-fit:cover;
+
+            cursor:pointer;
+
+            transition:0.45s ease;
+
+        }
+
+
+
+        .request-image:hover{
+
+            transform:scale(1.03);
+
+        }
+
+
+
+        .image-overlay{
+
+            position:absolute;
+
+            bottom:18px;
+            right:18px;
+
+            padding:10px 16px;
+
+            border-radius:18px;
+
+            background:
+                rgba(0,0,0,0.6);
+
+            backdrop-filter:blur(14px);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            font-size:0.78rem;
+
+            color:white;
+
+        }
+
+
+
+        .request-content{
+
+            padding:24px;
+
+        }
+
+
+
+        .request-top{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:flex-start;
+
+            gap:14px;
+
+            margin-bottom:24px;
+
+            flex-wrap:wrap;
+
+        }
+
+
+
+        .request-code{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:0.95rem;
+
+            line-height:1.7;
+
+            color:#8effe8;
+
+            word-break:break-word;
+
+        }
+
+
+
+        .dessert-title{
+
+            margin-top:12px;
+
+            font-size:1.4rem;
+
+            font-weight:800;
+
+            color:white;
+
+            line-height:1.5;
+
+        }
+
+
+
+        .status-pill{
+
+            padding:12px 16px;
+
+            border-radius:16px;
+
+            font-size:0.74rem;
+
+            font-weight:800;
+
+            text-transform:uppercase;
+
+        }
+
+
+
+        .pending{
+
+            background:
+                rgba(255,180,0,0.14);
+
+            color:#ffd36d;
+
+        }
+
+
+
+        .reviewing{
+
+            background:
+                rgba(0,180,255,0.12);
+
+            color:#7edfff;
+
+        }
+
+
+
+        .quoted{
+
+            background:
+                rgba(170,0,255,0.16);
+
+            color:#d7a6ff;
+
+        }
+
+
+
+        .approved{
+
+            background:
+                rgba(0,255,180,0.12);
+
+            color:#7affdf;
+
+        }
+
+
+
+        .rejected{
+
+            background:
+                rgba(255,0,60,0.12);
+
+            color:#ff9f9f;
+
+        }
+
+
+
+        .details{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:16px;
+
+        }
+
+
+
+        .detail-box{
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid rgba(255,255,255,0.04);
+
+            border-radius:22px;
+
+            padding:18px;
+
+        }
+
+
+
+        .detail-label{
+
+            font-size:0.76rem;
+
+            letter-spacing:2px;
+
+            color:rgba(255,255,255,0.4);
+
+            margin-bottom:10px;
+
+            text-transform:uppercase;
+
+        }
+
+
+
+        .detail-value{
+
+            line-height:1.8;
+
+            color:white;
+
+            font-size:0.96rem;
+
+            word-break:break-word;
+
+        }
+    
+    line-height:1.8;
+
+            color:white;
+
+            font-size:0.96rem;
+
+            word-break:break-word;
+
+        }
+
+
+
+        /* =====================================
+           DELIVERY OPS PANEL
+        ===================================== */
+
+        .delivery-ops-panel{
+
+            margin-top:22px;
+
+            border-radius:26px;
+
+            overflow:hidden;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    rgba(0,255,200,0.05),
+                    rgba(0,180,255,0.04)
+                );
+
+            border:
+                1px solid rgba(0,255,255,0.08);
+
+        }
+
+
+
+        .delivery-ops-top{
+
+            padding:20px 22px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:16px;
+
+            flex-wrap:wrap;
+
+        }
+
+
+
+        .delivery-ops-title{
+
+            font-family:'Orbitron', sans-serif;
+
+            font-size:0.92rem;
+
+            letter-spacing:2px;
+
+            color:#8effe8;
+
+        }
+
+
+
+        .delivery-readiness{
+
+            padding:11px 16px;
+
+            border-radius:16px;
+
+            font-size:0.72rem;
+
+            font-weight:800;
+
+            letter-spacing:1px;
+
+            text-transform:uppercase;
+
+        }
+
+
+
+        .delivery-ready{
+
+            background:
+                rgba(0,255,180,0.12);
+
+            border:
+                1px solid rgba(0,255,180,0.18);
+
+            color:#7affdf;
+
+        }
+
+
+
+        .delivery-missing{
+
+            background:
+                rgba(255,70,70,0.12);
+
+            border:
+                1px solid rgba(255,70,70,0.18);
+
+            color:#ffb1b1;
+
+        }
+
+
+
+        .fetch-details-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            width:100%;
+
+            padding:16px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border-top:
+                1px solid rgba(255,255,255,0.05);
+
+            color:white;
+
+            font-weight:700;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .fetch-details-btn:hover{
+
+            background:
+                rgba(255,255,255,0.06);
+
+        }
+
+
+
+        .delivery-details{
+
+            display:none;
+
+            padding:22px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.05);
+
+        }
+
+
+
+        .delivery-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(220px,1fr));
+
+            gap:16px;
+
+        }
+
+
+
+        .delivery-box{
+
+            padding:18px;
+
+            border-radius:20px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.05);
+
+        }
+
+
+
+        .delivery-label{
+
+            font-size:0.72rem;
+
+            letter-spacing:2px;
+
+            text-transform:uppercase;
+
+            color:rgba(255,255,255,0.45);
+
+            margin-bottom:10px;
+
+        }
+
+
+
+        .delivery-value{
+
+            line-height:1.8;
+
+            color:white;
+
+            word-break:break-word;
+
+        }
+
+
+
+        .maps-btn{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            text-decoration:none;
+
+            padding:12px 18px;
+
+            border-radius:16px;
+
+            margin-top:18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+            font-weight:800;
+
+        }
+
+
+
+        .snapshot-age{
+
+            margin-top:16px;
+
+            color:rgba(255,255,255,0.42);
+
+            font-size:0.78rem;
+
+        }
+
+
+
+        /* =====================================
+           WORKFLOW
+        ===================================== */
+
+        .workflow-form{
+
+            margin-top:22px;
+
+        }
+
+
+
+        .workflow-section{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:18px;
+
+        }
+
+
+
+        .workflow-box{
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid rgba(255,255,255,0.04);
+
+            border-radius:22px;
+
+            padding:18px;
+
+        }
+
+
+
+        .workflow-label{
+
+            font-size:0.76rem;
+
+            letter-spacing:2px;
+
+            color:rgba(255,255,255,0.4);
+
+            margin-bottom:12px;
+
+            text-transform:uppercase;
+
+        }
+
+
+
+        .workflow-input,
+
+        .workflow-textarea{
+
+            width:100%;
+
+            border:none;
+
+            outline:none;
+
+            padding:16px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.045);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            color:white;
+
+            font-size:0.95rem;
+
+            font-family:'Inter', sans-serif;
+
+        }
+
+
+
+        .workflow-textarea{
+
+            min-height:120px;
+
+            resize:vertical;
+
+            line-height:1.8;
+
+        }
+
+
+
+        .workflow-input:focus,
+
+        .workflow-textarea:focus{
+
+            border-color:
+                rgba(0,255,255,0.22);
+
+            box-shadow:
+                0 0 0 4px rgba(0,255,255,0.08);
+
+        }
+
+
+
+        .actions{
+
+            display:flex;
+
+            flex-wrap:wrap;
+
+            gap:14px;
+
+            margin-top:12px;
+
+        }
+
+
+
+        .action-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:15px 22px;
+
+            border-radius:18px;
+
+            font-size:0.84rem;
+
+            font-weight:800;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .action-btn:hover{
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+
+        .quote-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cyan),
+                    var(--cyan2)
+                );
+
+            color:black;
+
+        }
+
+
+
+        .approve-btn{
+
+            background:
+                rgba(0,255,180,0.12);
+
+            border:
+                1px solid rgba(0,255,180,0.16);
+
+            color:#7affdf;
+
+        }
+
+
+
+        .reject-btn{
+
+            background:
+                rgba(255,0,60,0.12);
+
+            border:
+                1px solid rgba(255,0,60,0.16);
+
+            color:#ff9f9f;
+
+        }
+
+
+
+        .waiting-btn{
+
+            background:
+                rgba(255,255,255,0.06);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            color:white;
+
+        }
+
+
+
+        .submitted-date{
+
+            margin-top:18px;
+
+            color:rgba(255,255,255,0.42);
+
+            font-size:0.82rem;
+
+        }
+
+
+
+        .empty-state{
+
+            width:92%;
+            max-width:900px;
+
+            margin:120px auto;
+
+            padding:60px 30px;
+
+            border-radius:30px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            text-align:center;
+
+        }
+
+
+
+        .image-modal{
+
+            position:fixed;
+
+            inset:0;
+
+            background:
+                rgba(0,0,0,0.92);
+
+            z-index:99999;
+
+            display:none;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:20px;
+
+        }
+
+
+
+        .image-modal img{
+
+            max-width:95%;
+
+            max-height:92vh;
+
+            border-radius:24px;
+
+            border:
+                2px solid rgba(255,255,255,0.08);
+
+        }
+
+
+
+        .close-modal{
+
+            position:absolute;
+
+            top:24px;
+            right:24px;
+
+            width:54px;
+            height:54px;
+
+            border-radius:50%;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-size:1.5rem;
+
+            cursor:pointer;
+
+        }
+
+
+
+        @media(max-width:700px){
+
+            .topbar{
+                padding:18px;
+            }
+
+            .topbar-content{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .filters-wrapper{
+                top:170px;
+            }
+
+            .requests-grid{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-wrapper">
+
+            {% for category, message in messages %}
+
+            <div class="flash">
+                {{ message }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+
+    <div class="topbar-content">
+
+        <div class="topbar-left">
+
+            <h1>
+                DESSERT STUDIO OPS
+            </h1>
+
+            <p>
+                Creative quotation control and custom dessert workflow management
+            </p>
+
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="admin-chip">
+                👤 {{ admin_username }}
+            </div>
+
+            <div class="admin-chip">
+                🎨 Dessert Studio
+            </div>
+
+            <a
+                href="{{ url_for('admin.admin_dashboard') }}"
+                class="dashboard-btn"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- FILTERS -->
+
+<div class="filters-wrapper">
+
+    <div class="filters">
+
+        {% set filters = [
+            ('all', 'All'),
+            ('pending', 'Pending'),
+            ('reviewing', 'Reviewing'),
+            ('quoted', 'Quoted'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected')
+        ] %}
+
+        {% for value, label in filters %}
+
+        <a
+            href="{{ url_for('custom_order.admin_custom_orders', status=value) }}"
+            class="filter-btn {% if status_filter == value %}active-filter{% endif %}"
+        >
+            {{ label }}
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+
+{% if custom_orders %}
+
+<div class="requests-grid">
+
+{% for order in custom_orders %}
+
+<div class="request-card">
+
+{% if order.inspiration_image %}
+
+<div class="request-image-wrapper">
+
+    <img
+
+        src="{{ url_for('static', filename=order.inspiration_image) }}"
+
+        class="request-image"
+
+        onclick="openImageModal(this.src)"
+
+    >
+
+    <div class="image-overlay">
+        Preview Inspiration
+    </div>
+
+</div>
+
+{% endif %}
+
+
+
+<div class="request-content">
+
+<div class="request-top">
+
+<div>
+
+<div class="request-code">
+    {{ order.request_code }}
+</div>
+
+<div class="dessert-title">
+    {{ order.dessert_category }}
+</div>
+
+</div>
+
+<div class="status-pill {{ order.status }}">
+    {{ order.custom_status }}
+</div>
+
+</div>
+
+
+
+<div class="details">
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Customer
+        </div>
+
+        <div class="detail-value">
+            {{ order.username }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Email
+        </div>
+
+        <div class="detail-value">
+            {{ order.email }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Flavor
+        </div>
+
+        <div class="detail-value">
+            {{ order.flavor }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Quantity
+        </div>
+
+        <div class="detail-value">
+            {{ order.quantity }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Occasion
+        </div>
+
+        <div class="detail-value">
+            {{ order.occasion or "Not specified" }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Budget
+        </div>
+
+        <div class="detail-value">
+            ₹{{ order.budget or "Flexible" }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Delivery Date
+        </div>
+
+        <div class="detail-value">
+            {{ order.delivery_date or "Flexible" }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Custom Message
+        </div>
+
+        <div class="detail-value">
+            {{ order.custom_message or "None" }}
+        </div>
+
+    </div>
+
+
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Dessert Vision
+        </div>
+
+        <div class="detail-value">
+            {{ order.description }}
+        </div>
+
+    </div>
+
+
+
+    {% if order.special_notes %}
+
+    <div class="detail-box">
+
+        <div class="detail-label">
+            Special Notes
+        </div>
+
+        <div class="detail-value">
+            {{ order.special_notes }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- DELIVERY OPS -->
+
+    <div class="delivery-ops-panel">
+
+        <div class="delivery-ops-top">
+
+            <div class="delivery-ops-title">
+                DELIVERY OPERATIONS
+            </div>
+
+
+
+            {% if order.full_name
+                  and order.phone_number
+                  and order.delivery_address
+                  and order.city
+                  and order.pincode %}
+
+            <div class="delivery-readiness delivery-ready">
+
+                🟢 Delivery Ready
+
+            </div>
+
+            {% else %}
+
+            <div class="delivery-readiness delivery-missing">
+
+                🔴 Missing Details
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <button
+
+            type="button"
+
+            class="fetch-details-btn"
+
+            onclick="toggleDeliveryDetails('{{ order.custom_order_id }}')"
+
+        >
+
+            📦 Fetch Delivery Details
+
+        </button>
+
+
+
+        <div
+
+            class="delivery-details"
+
+            id="deliveryDetails{{ order.custom_order_id }}"
+
+        >
+
+            <div class="delivery-grid">
+
+                <div class="delivery-box">
+
+                    <div class="delivery-label">
+                        Full Name
+                    </div>
+
+                    <div class="delivery-value">
+                        {{ order.full_name or "Not Available" }}
+                    </div>
+
+                </div>
+
+
+
+                <div class="delivery-box">
+
+                    <div class="delivery-label">
+                        Phone Number
+                    </div>
+
+                    <div class="delivery-value">
+                        {{ order.phone_number or "Not Available" }}
+                    </div>
+
+                </div>
+
+
+
+                <div class="delivery-box">
+
+                    <div class="delivery-label">
+                        City
+                    </div>
+
+                    <div class="delivery-value">
+                        {{ order.city or "Not Available" }}
+                    </div>
+
+                </div>
+
+
+
+                <div class="delivery-box">
+
+                    <div class="delivery-label">
+                        Pincode
+                    </div>
+
+                    <div class="delivery-value">
+                        {{ order.pincode or "Not Available" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div
+                class="delivery-box"
+                style="margin-top:16px;"
+            >
+
+                <div class="delivery-label">
+                    Delivery Address
+                </div>
+
+                <div class="delivery-value">
+                    {{ order.delivery_address or "Not Available" }}
+                </div>
+
+            </div>
+
+
+
+            {% if order.google_maps_link %}
+
+            <a
+
+                href="{{ order.google_maps_link }}"
+
+                target="_blank"
+
+                class="maps-btn"
+
+            >
+
+                📍 Open Google Maps
+
+            </a>
+
+            {% endif %}
+
+
+
+            {% if order.profile_snapshot_updated_at %}
+
+            <div class="snapshot-age">
+
+                Snapshot synced:
+                {{ order.profile_snapshot_updated_at.strftime('%d %b %Y • %I:%M %p') }}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- WORKFLOW FORM -->
+
+    <form
+
+        method="POST"
+
+        action="{{ url_for('custom_order.update_custom_order', custom_order_id=order.custom_order_id) }}"
+
+        class="workflow-form"
+
+    >
+
+        <div class="workflow-section">
+
+            <div class="workflow-box">
+
+                <div class="workflow-label">
+                    Quotation Price
+                </div>
+
+                <input
+
+                    type="number"
+
+                    step="0.01"
+
+                    name="admin_price"
+
+                    class="workflow-input"
+
+                    placeholder="Enter quotation amount"
+
+                    value="{{ order.admin_price or '' }}"
+
+                >
+
+            </div>
+
+
+
+            <div class="workflow-box">
+
+                <div class="workflow-label">
+                    Admin Notes
+                </div>
+
+                <textarea
+
+                    name="admin_notes"
+
+                    class="workflow-textarea"
+
+                    placeholder="Add operational notes..."
+
+                >{{ order.admin_notes or '' }}</textarea>
+
+            </div>
+
+
+
+            <div class="actions">
+
+                <!-- =================================
+                     PENDING
+                ================================== -->
+
+                {% if order.custom_status == "pending" %}
+
+                <button
+                    type="submit"
+                    name="status"
+                    value="reviewing"
+                    class="action-btn quote-btn"
+                >
+                    Start Review
+                </button>
+
+                <button
+                    type="submit"
+                    name="status"
+                    value="rejected"
+                    class="action-btn reject-btn"
+                >
+                    Reject Request
+                </button>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     REVIEWING
+                ================================== -->
+
+                {% if order.custom_status == "reviewing" %}
+
+                <button
+                    type="submit"
+                    name="status"
+                    value="quoted"
+                    class="action-btn quote-btn"
+                >
+                    Send Quotation
+                </button>
+
+                <button
+                    type="submit"
+                    name="status"
+                    value="rejected"
+                    class="action-btn reject-btn"
+                >
+                    Reject Request
+                </button>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     WAITING CUSTOMER
+                ================================== -->
+
+                {% if order.custom_status == "quoted" %}
+
+                <div class="action-btn waiting-btn">
+
+                    Waiting For Customer Response ⏳
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     QUOTATION ACCEPTED
+                ================================== -->
+
+                {% if order.custom_status == "quotation_accepted" %}
+
+</div>
+
+</div>
+
+</form>
+
+
+
+<div class="actions">
+
+    <div class="action-btn approve-btn">
+
+        Ready For Production Conversion 🔥
+
+    </div>
+
+
+
+    <form
+
+        method="POST"
+
+        action="{{ url_for('custom_order_conversion.convert_custom_order', custom_order_id=order.custom_order_id) }}"
+
+        onsubmit="return confirmProductionConversion()"
+
+    >
+
+        <button
+            type="submit"
+            class="action-btn quote-btn"
+        >
+
+            🔥 Convert To Production
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endif %}
+
+
+
+                <!-- =================================
+                     CUSTOMER REJECTED
+                ================================== -->
+
+                {% if order.custom_status == "quotation_rejected" %}
+
+                <div class="action-btn reject-btn">
+
+                    Customer Rejected Quotation
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     CANCEL REQUESTED
+                ================================== -->
+
+                {% if order.custom_status == "cancel_requested" %}
+
+                <form
+
+                    method="POST"
+
+                    action="{{ url_for('custom_order_cancellation.approve_custom_cancellation', custom_order_id=order.custom_order_id) }}"
+
+                    onsubmit="return confirmApproveCancellation()"
+
+                >
+
+                    <button
+                        type="submit"
+                        class="action-btn reject-btn"
+                    >
+                        Approve Cancellation
+                    </button>
+
+                </form>
+
+
+
+                <form
+
+                    method="POST"
+
+                    action="{{ url_for('custom_order_cancellation.reject_custom_cancellation', custom_order_id=order.custom_order_id) }}"
+
+                    onsubmit="return confirmRejectCancellation()"
+
+                >
+
+                    <input
+
+                        type="hidden"
+
+                        name="rejection_reason"
+
+                        value="Production already initiated."
+
+                    >
+
+                    <button
+                        type="submit"
+                        class="action-btn approve-btn"
+                    >
+                        Reject Cancellation
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     CANCELLED
+                ================================== -->
+
+                {% if order.custom_status == "cancelled" %}
+
+                <div class="action-btn reject-btn">
+
+                    Dessert Request Cancelled 💔
+
+                </div>
+
+                {% endif %}
+                
+                
+                
+                <!-- =================================
+     CONVERTED
+================================== -->
+
+{% if order.custom_status == "converted" %}
+
+<div class="action-btn approve-btn">
+
+    Production Order Created ✅
+
+</div>
+
+{% endif %}
+                
+
+
+
+    <div class="submitted-date">
+
+        Submitted on
+        {{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}
+
+    </div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+{% else %}
+
+
+
+<div class="empty-state">
+
+    <h2 style="margin-bottom:18px;">
+        No Dessert Requests Found
+    </h2>
+
+    <p style="color:rgba(255,255,255,0.55); line-height:1.9;">
+        Dessert Studio is currently calm.
+        New creative requests will appear here.
+    </p>
+
+</div>
+
+
+
+{% endif %}
+
+
+
+<!-- IMAGE MODAL -->
+
+<div
+    class="image-modal"
+    id="imageModal"
+>
+
+    <div
+        class="close-modal"
+        onclick="closeImageModal()"
+    >
+        ✕
+    </div>
+
+    <img
+        id="modalImage"
+        src=""
+    >
+
+</div>
+
+
+
+<script>
+
+    function openImageModal(src){
+
+        document.getElementById("imageModal").style.display = "flex";
+
+        document.getElementById("modalImage").src = src;
+
+    }
+
+
+
+    function closeImageModal(){
+
+        document.getElementById("imageModal").style.display = "none";
+
+    }
+
+
+
+    function toggleDeliveryDetails(customOrderId){
+
+        const panel = document.getElementById(
+
+            "deliveryDetails" + customOrderId
+
+        );
+
+
+
+        if(panel.style.display === "block"){
+
+            panel.style.display = "none";
+
+        }
+
+        else{
+
+            panel.style.display = "block";
+
+        }
+
+    }
+
+
+
+    function confirmApproveCancellation(){
+
+        return confirm(
+
+            "Approve cancellation for this dessert request?"
+
+        );
+
+    }
+
+
+
+    function confirmRejectCancellation(){
+
+        return confirm(
+
+            "Reject this cancellation request?"
+
+        );
+
+    }
+    
+    
+    function confirmProductionConversion(){
+
+        return confirm(
+
+            "Convert this dessert request into a real RM Bakes production order?"
+
+        );
+
+    }
+
+</script>
+
+
+
+</body>
+
+</html>
