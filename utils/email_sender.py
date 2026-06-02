@@ -25,6 +25,9 @@ import os
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+print("EMAIL:", EMAIL_ADDRESS)
+print("PASSWORD:", EMAIL_PASSWORD)
+
 
 
 # =========================================
