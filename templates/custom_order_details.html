@@ -580,6 +580,92 @@
 
         }
 
+        /* =====================================
+   QUOTATION ACTIONS
+===================================== */
+
+        .quotation-actions{
+
+            display:flex;
+
+            gap:16px;
+
+            flex-wrap:wrap;
+
+            margin-top:28px;
+
+        }
+
+
+
+        .quote-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:16px 28px;
+
+            border-radius:22px;
+
+            font-weight:700;
+
+            font-size:0.95rem;
+
+            transition:0.35s ease;
+
+        }
+
+
+
+        .quote-btn:hover{
+
+            transform:
+               translateY(-3px)
+               scale(1.02);
+
+        }
+
+
+
+        .accept-btn{
+
+            background:
+
+               linear-gradient(
+               135deg,
+               #ffd36d,
+               #ffb347
+            );
+
+            color:#241200;
+
+            box-shadow:
+
+            0 10px 30px rgba(255,180,70,0.28);
+
+        }
+ 
+
+
+        .reject-btn{
+
+            background:
+
+               linear-gradient(
+               135deg,
+               #ff5f5f,
+               #ff2d55
+            );
+
+            color:white;
+
+            box-shadow:
+
+            0 10px 30px rgba(255,50,80,0.24);
+
+        }
+
 
 
         @media(max-width:700px){
@@ -755,110 +841,6 @@
 
 
 
-            <div class="top-actions">
-              
-              
-              
-              {% if custom_order.custom_status == "quoted" %}
-
-<form
-    method="POST"
-    action="{{ url_for(
-        'custom_order.accept_custom_quote',
-        custom_order_id=custom_order.custom_order_id
-    ) }}"
->
-
-    <button
-        type="submit"
-        class="action-btn"
-    >
-
-        Accept Quotation ✨
-
-    </button>
-
-</form>
-
-
-
-<form
-    method="POST"
-    action="{{ url_for(
-        'custom_order.reject_custom_quote',
-        custom_order_id=custom_order.custom_order_id
-    ) }}"
-    onsubmit="
-        return confirm(
-            'Reject this quotation?'
-        )
-    "
->
-
-    <button
-        type="submit"
-        class="action-btn"
-        style="
-            background:
-                linear-gradient(
-                    135deg,
-                    #ff5f5f,
-                    #ff2d55
-                );
-            color:white;
-        "
-    >
-
-        Reject
-
-    </button>
-
-</form>
-
-{% endif %}
-              
-
-                <a
-
-                    href="{{ url_for('custom_order.my_custom_orders') }}"
-
-                    class="action-btn"
-
-                >
-
-                    ← Back
-
-                </a>
-
-
-
-                {% if custom_order.converted_main_order_id %}
-
-                <a
-
-                    href="{{ url_for(
-                        'order.order_details',
-                        order_id=custom_order.converted_main_order_id
-                    ) }}"
-
-                    class="action-btn"
-
-                >
-
-                    View Production Order 🔥
-
-                </a>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
     <!-- =====================================
          SPECIAL NOTES
     ====================================== -->
@@ -937,6 +919,63 @@
         </div>
 
         {% endif %}
+
+        <!-- =====================================
+     QUOTATION ACTIONS
+===================================== -->
+
+{% if custom_order.custom_status == "quoted" %}
+
+<div class="quotation-actions">
+
+    <form
+        method="POST"
+        action="{{ url_for(
+            'custom_order.accept_custom_quote',
+            custom_order_id=custom_order.custom_order_id
+        ) }}"
+    >
+
+        <button
+            type="submit"
+            class="quote-btn accept-btn"
+        >
+
+            Accept Quotation ✨
+
+        </button>
+
+    </form>
+
+
+
+    <form
+        method="POST"
+        action="{{ url_for(
+            'custom_order.reject_custom_quote',
+            custom_order_id=custom_order.custom_order_id
+        ) }}"
+        onsubmit="
+            return confirm(
+                'Reject this quotation?'
+            )
+        "
+    >
+
+        <button
+            type="submit"
+            class="quote-btn reject-btn"
+        >
+
+            Reject
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endif %}
 
     </div>
 
