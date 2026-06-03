@@ -59,6 +59,8 @@ from utils.custom_order_constants import (
 
 import os
 import uuid
+import cloudinary.uploader
+import cloudinary_config
 
 
 
@@ -446,45 +448,17 @@ def submit_custom_order():
 
 
 
-            filename = secure_filename(
+            upload_result = cloudinary.uploader.upload(
 
-                image.filename
+                    image, folder="rm_bakes/custom_orders"
 
-            )
-
-
-
-            unique_filename = (
-
-                f"{uuid.uuid4().hex}_{filename}"
-
-            )
-
-
-
-            save_path = os.path.join(
-
-                UPLOAD_FOLDER,
-
-                unique_filename
-
-            )
-
-
-
-            image.save(
-
-                save_path
-
-            )
-
-
+                    )
 
             uploaded_image_path = (
 
-                f"uploads/custom_orders/{unique_filename}"
+                    upload_result["secure_url"]
 
-            )
+                    )
 
 
 
