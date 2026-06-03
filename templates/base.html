@@ -1583,20 +1583,23 @@ document
 .querySelectorAll("a")
 .forEach(link => {
 
-    const href =
-        link.getAttribute("href");
+    const href = link.getAttribute("href");
 
+    if(!href) return;
 
+    const isExternal =
+        href.startsWith("http");
+
+    const isBlank =
+        link.getAttribute("target") === "_blank";
 
     if(
 
-        href &&
-
         !href.startsWith("#") &&
 
-        !link.hasAttribute(
-            "target"
-        )
+        !isExternal &&
+
+        !isBlank
 
     ){
 
@@ -1608,18 +1611,13 @@ document
 
                 event.preventDefault();
 
-
-
                 transitionOverlay.classList.add(
                     "active"
                 );
 
-
-
                 setTimeout(() => {
 
-                    window.location.href =
-                        href;
+                    window.location.href = href;
 
                 }, 700);
 
