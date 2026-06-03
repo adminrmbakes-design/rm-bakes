@@ -10,8 +10,7 @@ from database import db
 
 class Order(db.Model):
 
-    __bind_key__ = "orders"
-
+    
     __tablename__ = "orders"
 
 
