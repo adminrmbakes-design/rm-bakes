@@ -383,7 +383,7 @@
             {% if order.custom_inspiration_image %}
 
             <img
-                src="{{ url_for('static', filename=order.custom_inspiration_image) }}"
+                src="{{ order.custom_inspiration_image }}"
                 style="
                     width:100%;
                     max-height:280px;
