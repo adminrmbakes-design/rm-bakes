@@ -1,44 +1,35 @@
 from flask import Flask
-
 from flask_login import LoginManager
 from flask_login import current_user
 
 import os
 
-=========================================
-
-DATABASE
-
-=========================================
+# =========================================
+# DATABASE
+# =========================================
 
 from database import db
 from database import User
 from database import UserNotification
 
-=========================================
-
-ORDER MODELS
-
-=========================================
+# =========================================
+# ORDER MODELS
+# =========================================
 
 from orders_database import Order
 
-=========================================
-
-CUSTOM ORDER MODELS
-
-=========================================
+# =========================================
+# CUSTOM ORDER MODELS
+# =========================================
 
 from custom_orders_database import (
-CustomOrder,
-CustomOrderTimeline
+    CustomOrder,
+    CustomOrderTimeline
 )
 
-=========================================
-
-ROUTES
-
-=========================================
+# =========================================
+# ROUTES
+# =========================================
 
 from routes.auth_routes import auth_bp
 from routes.main_routes import main_bp
@@ -52,77 +43,67 @@ from routes.notification_routes import notification_bp
 from routes.password_reset_routes import password_reset_bp
 from routes.custom_order_routes import custom_order_bp
 from routes.custom_order_profile_routes import (
-custom_order_profile_bp
+    custom_order_profile_bp
 )
 from routes.custom_order_cancellation_routes import (
-custom_order_cancellation_bp
+    custom_order_cancellation_bp
 )
 from routes.custom_order_conversion_routes import (
-custom_order_conversion_bp
+    custom_order_conversion_bp
 )
 from routes.favourite_routes import favourite_bp
 
-=========================================
+# =========================================
+# CREATE APP
+# =========================================
 
-CREATE APP
+app = Flask(__name__)
 
-=========================================
-
-app = Flask(name)
-
-=========================================
-
-SECRET KEY
-
-=========================================
+# =========================================
+# SECRET KEY
+# =========================================
 
 app.config[
-"SECRET_KEY"
+    "SECRET_KEY"
 ] = "rm_bakes_secret_key"
 
-=========================================
-
-POSTGRESQL DATABASE
-
-=========================================
+# =========================================
+# DATABASE CONFIG
+# =========================================
 
 database_url = os.getenv(
-"DATABASE_URL"
+    "DATABASE_URL"
 )
 
 if database_url.startswith(
-"postgres://"
+    "postgres://"
 ):
 
-database_url = database_url.replace(
+    database_url = database_url.replace(
 
-    "postgres://",
-    "postgresql://",
-    1
+        "postgres://",
+        "postgresql://",
+        1
 
-)
+    )
 
 app.config[
-"SQLALCHEMY_DATABASE_URI"
+    "SQLALCHEMY_DATABASE_URI"
 ] = database_url
 
 app.config[
-"SQLALCHEMY_TRACK_MODIFICATIONS"
+    "SQLALCHEMY_TRACK_MODIFICATIONS"
 ] = False
 
-=========================================
-
-INITIALIZE DATABASE
-
-=========================================
+# =========================================
+# INITIALIZE DATABASE
+# =========================================
 
 db.init_app(app)
 
-=========================================
-
-LOGIN MANAGER
-
-=========================================
+# =========================================
+# LOGIN MANAGER
+# =========================================
 
 login_manager = LoginManager()
 
@@ -133,49 +114,45 @@ login_manager.login_view = "auth.login"
 @login_manager.user_loader
 def load_user(user_id):
 
-return User.query.get(
-    int(user_id)
-)
+    return User.query.get(
+        int(user_id)
+    )
 
-=========================================
-
-GLOBAL NOTIFICATION COUNT
-
-=========================================
+# =========================================
+# GLOBAL NOTIFICATION COUNT
+# =========================================
 
 @app.context_processor
 def inject_notification_count():
 
-unread_notifications_count = 0
+    unread_notifications_count = 0
 
-if current_user.is_authenticated:
+    if current_user.is_authenticated:
 
-    unread_notifications_count = (
+        unread_notifications_count = (
 
-        UserNotification.query.filter_by(
+            UserNotification.query.filter_by(
 
-            user_id=current_user.user_id,
+                user_id=current_user.user_id,
 
-            is_read=False,
+                is_read=False,
 
-            is_cleared=False
+                is_cleared=False
 
-        ).count()
+            ).count()
+
+        )
+
+    return dict(
+
+        unread_notifications_count=
+            unread_notifications_count
 
     )
 
-return dict(
-
-    unread_notifications_count=
-        unread_notifications_count
-
-)
-
-=========================================
-
-REGISTER BLUEPRINTS
-
-=========================================
+# =========================================
+# REGISTER BLUEPRINTS
+# =========================================
 
 app.register_blueprint(main_bp)
 
@@ -202,41 +179,37 @@ app.register_blueprint(custom_order_bp)
 app.register_blueprint(custom_order_profile_bp)
 
 app.register_blueprint(
-custom_order_cancellation_bp
+    custom_order_cancellation_bp
 )
 
 app.register_blueprint(
-custom_order_conversion_bp
+    custom_order_conversion_bp
 )
 
 app.register_blueprint(
-favourite_bp
+    favourite_bp
 )
 
-=========================================
-
-CREATE DATABASE TABLES
-
-=========================================
+# =========================================
+# CREATE DATABASE TABLES
+# =========================================
 
 with app.app_context():
 
-db.create_all()
+    db.create_all()
 
-=========================================
+# =========================================
+# RUN APP
+# =========================================
 
-RUN APP
+if __name__ == "__main__":
 
-=========================================
+    app.run(
 
-if name == "main":
+        host="0.0.0.0",
 
-app.run(
+        port=5000,
 
-    host="0.0.0.0",
+        debug=True
 
-    port=5000,
-
-    debug=True
-
-)
+    )
