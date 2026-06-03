@@ -13,3 +13,4 @@ python-dotenv
 Pillow
 requests
 psycopg2-binary
+cloudinary
