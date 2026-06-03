@@ -604,8 +604,6 @@ class CustomOrder(db.Model):
 
 class CustomOrderTimeline(db.Model):
 
-    __bind_key__ = "custom_orders"
-
 
 
     __tablename__ = "custom_order_timeline"
