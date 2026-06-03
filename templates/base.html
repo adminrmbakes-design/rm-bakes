@@ -1572,11 +1572,9 @@ document
 ===================================== */
 
 const transitionOverlay =
-
     document.getElementById(
         "pageTransition"
     );
-
 
 document
 .querySelectorAll("a")
@@ -1592,13 +1590,18 @@ document
     const isBlank =
         link.getAttribute("target") === "_blank";
 
+    const isDownload =
+        link.hasAttribute("download");
+
     if(
 
         !href.startsWith("#") &&
 
         !isExternal &&
 
-        !isBlank
+        !isBlank &&
+
+        !isDownload
 
     ){
 
@@ -1606,7 +1609,7 @@ document
 
             "click",
 
-            event => {
+            function(event){
 
                 event.preventDefault();
 
@@ -1616,9 +1619,9 @@ document
 
                 setTimeout(() => {
 
-                    window.location.href = href;
+                    window.location.assign(href);
 
-                }, 700);
+                }, 500);
 
             }
 
