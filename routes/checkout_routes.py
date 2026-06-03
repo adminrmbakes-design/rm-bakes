@@ -448,30 +448,19 @@ QUEUED
 
 
 
-    except Exception as error:
+        except Exception as error:
+           
+            db.session.rollback()
 
+            print("\nORDER ERROR:")
+            print(error)
+            print()
 
+            return jsonify({
+                
+                "success": False,
+                "message":
+                str(error)
 
-        db.session.rollback()
+            })
 
-
-
-        print("\nORDER ERROR:")
-        print(error)
-        print()
-
-
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-            str(error)
-
-        })
-
-
-
-    finally:
-        
