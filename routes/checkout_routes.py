@@ -7,7 +7,6 @@ from flask import jsonify
 from flask_login import login_required
 from flask_login import current_user
 
-from sqlalchemy.orm import sessionmaker
 
 from database import db
 from database import Cart
@@ -198,23 +197,6 @@ def place_order():
 
 
 
-        # =================================
-        # ORDERS DATABASE SESSION
-        # =================================
-
-        orders_engine = db.engines["orders"]
-
-
-
-        OrdersSession = sessionmaker(
-            bind=orders_engine
-        )
-
-
-
-        orders_session = OrdersSession()
-
-
 
         # =================================
         # GET CART
@@ -399,9 +381,9 @@ def place_order():
 
 
 
-        orders_session.add(new_order)
+        db.session.add(new_order)
 
-        orders_session.commit()
+        db.session.commit()
 
 
 
@@ -468,10 +450,6 @@ QUEUED
 
     except Exception as error:
 
-        if orders_session:
-
-            orders_session.rollback()
-
 
 
         db.session.rollback()
@@ -496,7 +474,4 @@ QUEUED
 
 
     finally:
-
-        if orders_session:
-
-            orders_session.close()
+        
