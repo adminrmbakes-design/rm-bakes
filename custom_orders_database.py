@@ -43,9 +43,7 @@ def generate_request_code():
 
 class CustomOrder(db.Model):
 
-    __bind_key__ = "custom_orders"
-
-
+    
 
     __tablename__ = "custom_orders"
 
