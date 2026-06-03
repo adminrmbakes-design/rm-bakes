@@ -1,29 +1,14 @@
-from flask import Blueprint
-from flask import render_template
-from flask import redirect
-from flask import url_for
-from flask import jsonify
+from flask import Blueprint, render_template, redirect, url_for, jsonify
+from flask_login import login_required, current_user
 
-from flask_login import login_required
-from flask_login import current_user
-
-from sqlalchemy.orm import sessionmaker
-
-from database import db
-from database import Cart
-
+from database import db, Cart
 from orders_database import Order
 
 from datetime import datetime
 
-from utils.notification_utils import (
-
-    create_admin_notification
-
-)
+from utils.notification_utils import create_admin_notification
 
 import json
-
 
 
 # =========================================
@@ -36,7 +21,6 @@ order_bp = Blueprint(
 )
 
 
-
 # =========================================
 # MY ORDERS
 # =========================================
@@ -45,172 +29,86 @@ order_bp = Blueprint(
 @login_required
 def my_orders():
 
-    # =====================================
-    # ORDERS DATABASE SESSION
-    # =====================================
-
-    orders_engine = db.engines["orders"]
-
-    OrdersSession = sessionmaker(
-        bind=orders_engine
-    )
-
-    orders_session = OrdersSession()
-
-
-
     try:
 
-        # =================================
-        # DEBUG
-        # =================================
-
         print("\n========== DEBUG ==========")
-
         print("CURRENT USER ID:")
         print(current_user.user_id)
 
-
-
-        all_orders = orders_session.query(
-            Order
-        ).all()
-
-
+        all_orders = Order.query.all()
 
         print("\nALL ORDERS IN DATABASE:")
         print(all_orders)
 
-
-
         print("\nALL USER IDS:")
 
         for existing_order in all_orders:
-
             print(existing_order.user_id)
-
-
 
         print("===========================\n")
 
-
-
-        # =================================
-        # GET USER ORDERS
-        # =================================
-
-        orders = orders_session.query(
-            Order
-        ).filter_by(
-
+        orders = Order.query.filter_by(
             user_id=current_user.user_id
-
         ).order_by(
-
             Order.ordered_at.desc()
-
         ).all()
 
-
-
-        # =================================
-        # CONVERT PRODUCTS JSON
-        # =================================
-
         for order in orders:
-
             order.products = json.loads(
                 order.products_json
             )
 
-
-
         return render_template(
-
             "orders.html",
-
             orders=orders
-
         )
 
+    except Exception as error:
 
+        print("MY ORDERS ERROR:", error)
 
-    finally:
-
-        orders_session.close()
-
+        return render_template(
+            "orders.html",
+            orders=[]
+        )
 
 
 # =========================================
 # ORDER DETAILS
 # =========================================
 
-@order_bp.route(
-    "/order/<int:order_id>"
-)
+@order_bp.route("/order/<int:order_id>")
 @login_required
 def order_details(order_id):
 
-    # =====================================
-    # ORDERS DATABASE SESSION
-    # =====================================
-
-    orders_engine = db.engines["orders"]
-
-    OrdersSession = sessionmaker(
-        bind=orders_engine
-    )
-
-    orders_session = OrdersSession()
-
-
-
     try:
 
-        order = orders_session.query(
-            Order
-        ).filter_by(
-
+        order = Order.query.filter_by(
             order_id=order_id,
-
             user_id=current_user.user_id
-
         ).first()
 
-
-
         if not order:
-
             return redirect(
                 url_for("order.my_orders")
             )
-
-
-
-        # =================================
-        # CONVERT PRODUCTS JSON
-        # =================================
 
         order.products = json.loads(
             order.products_json
         )
 
-
-
         return render_template(
-
             "order_details.html",
-
             order=order
-
         )
 
+    except Exception as error:
 
+        print("ORDER DETAILS ERROR:", error)
 
-    finally:
-
-        orders_session.close()
-
+        return redirect(
+            url_for("order.my_orders")
+        )
 
 
 # =========================================
@@ -224,104 +122,40 @@ def order_details(order_id):
 @login_required
 def cancel_order(order_id):
 
-    # =====================================
-    # ORDERS DATABASE SESSION
-    # =====================================
-
-    orders_engine = db.engines["orders"]
-
-    OrdersSession = sessionmaker(
-        bind=orders_engine
-    )
-
-    orders_session = OrdersSession()
-
-
-
     try:
 
-        order = orders_session.query(
-            Order
-        ).filter_by(
-
+        order = Order.query.filter_by(
             order_id=order_id,
-
             user_id=current_user.user_id
-
         ).first()
-
-
-
-        # =================================
-        # ORDER NOT FOUND
-        # =================================
 
         if not order:
 
             return jsonify({
-
                 "success": False,
-
-                "message":
-                "Order not found 😭"
-
+                "message": "Order not found 😭"
             })
 
-
-
-        # =================================
-        # CANCEL RULE
-        # =================================
-
         allowed_status = [
-
             "queued",
-
             "approved"
-
         ]
-
-
 
         if order.order_status not in allowed_status:
 
             return jsonify({
-
                 "success": False,
-
-                "message":
-                "This order cannot be cancelled 😭"
-
+                "message": "This order cannot be cancelled 😭"
             })
-
-
-
-        # =================================
-        # CANCEL ORDER
-        # =================================
 
         order.order_status = "cancelled"
 
+        order.cancelled_at = datetime.utcnow()
 
-
-        order.cancelled_at = (
-            datetime.utcnow()
-        )
-
-
-
-        orders_session.commit()
-
-
-
-        # =================================
-        # CREATE ADMIN NOTIFICATION
-        # =================================
+        db.session.commit()
 
         create_admin_notification(
-
             title="Order Cancelled",
-
             message=f"""
 
 Order:
@@ -334,45 +168,22 @@ Status:
 CANCELLED
 
 """,
-
             notification_type="cancelled"
-
         )
 
-
-
         return jsonify({
-
             "success": True,
-
-            "message":
-            "Order cancelled successfully 😭"
-
+            "message": "Order cancelled successfully 😭"
         })
-
-
 
     except Exception as error:
 
-        orders_session.rollback()
-
-
+        db.session.rollback()
 
         return jsonify({
-
             "success": False,
-
-            "message":
-            str(error)
-
+            "message": str(error)
         })
-
-
-
-    finally:
-
-        orders_session.close()
-
 
 
 # =========================================
@@ -386,72 +197,30 @@ CANCELLED
 @login_required
 def order_again(order_id):
 
-    # =====================================
-    # ORDERS DATABASE SESSION
-    # =====================================
-
-    orders_engine = db.engines["orders"]
-
-    OrdersSession = sessionmaker(
-        bind=orders_engine
-    )
-
-    orders_session = OrdersSession()
-
-
-
     try:
 
-        order = orders_session.query(
-            Order
-        ).filter_by(
-
+        order = Order.query.filter_by(
             order_id=order_id,
-
             user_id=current_user.user_id
-
         ).first()
-
-
 
         if not order:
 
             return jsonify({
-
                 "success": False,
-
-                "message":
-                "Order not found 😭"
-
+                "message": "Order not found 😭"
             })
-
-
-
-        # =================================
-        # CONVERT PRODUCTS JSON
-        # =================================
 
         products = json.loads(
             order.products_json
         )
 
-
-
-        # =================================
-        # ADD TO CART
-        # =================================
-
         for item in products:
 
             existing_cart_item = Cart.query.filter_by(
-
                 user_id=current_user.user_id,
-
                 product_id=item["product_id"]
-
             ).first()
-
-
 
             if existing_cart_item:
 
@@ -459,64 +228,30 @@ def order_again(order_id):
                     item["product_quantity"]
                 )
 
-
-
             else:
 
                 cart_item = Cart(
-
                     user_id=current_user.user_id,
-
                     product_id=item["product_id"],
-
-                    product_quantity=
-                        item["product_quantity"],
-
-                    note=item["note"]
-
+                    product_quantity=item["product_quantity"],
+                    note=item.get("note", "")
                 )
-
-
 
                 db.session.add(cart_item)
 
-
-
         db.session.commit()
 
-
-
         return jsonify({
-
             "success": True,
-
-            "message":
-            "Items added to cart again 🍰",
-
-            "redirect":
-            url_for("cart.cart")
-
+            "message": "Items added to cart again 🍰",
+            "redirect": url_for("cart.cart")
         })
-
-
 
     except Exception as error:
 
         db.session.rollback()
 
-
-
         return jsonify({
-
             "success": False,
-
-            "message":
-            str(error)
-
+            "message": str(error)
         })
-
-
-
-    finally:
-
-        orders_session.close()
