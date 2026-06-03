@@ -197,8 +197,7 @@ app.register_blueprint(
 with app.app_context():
 
     db.create_all()
-    import seed_products
-    import create_admin
+    
 
 # =========================================
 # RUN APP
