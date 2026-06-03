@@ -7,7 +7,6 @@ from flask import jsonify
 from flask_login import login_required
 from flask_login import current_user
 
-
 from database import db
 from database import Cart
 from database import Product
@@ -17,14 +16,11 @@ from orders_database import Order
 from datetime import datetime
 
 from utils.notification_utils import (
-
     create_admin_notification
-
 )
 
 import json
 import random
-
 
 
 # =========================================
@@ -35,7 +31,6 @@ checkout_bp = Blueprint(
     "checkout",
     __name__
 )
-
 
 
 # =========================================
@@ -50,21 +45,15 @@ def checkout_page():
         user_id=current_user.user_id
     ).all()
 
-
-
     if not cart_items:
 
         return redirect(
             url_for("cart.cart")
         )
 
-
-
     checkout_items = []
 
     subtotal = 0
-
-
 
     for item in cart_items:
 
@@ -72,12 +61,8 @@ def checkout_page():
             item.product_id
         )
 
-
-
         if not product:
             continue
-
-
 
         total_price = (
 
@@ -87,11 +72,7 @@ def checkout_page():
 
         )
 
-
-
         subtotal += total_price
-
-
 
         checkout_items.append({
 
@@ -121,11 +102,7 @@ def checkout_page():
 
         })
 
-
-
     delivery_fee = 40
-
-
 
     grand_total = (
 
@@ -134,8 +111,6 @@ def checkout_page():
         delivery_fee
 
     )
-
-
 
     return render_template(
 
@@ -152,7 +127,6 @@ def checkout_page():
     )
 
 
-
 # =========================================
 # PLACE ORDER
 # =========================================
@@ -163,8 +137,6 @@ def checkout_page():
 )
 @login_required
 def place_order():
-
-    orders_session = None
 
     try:
 
@@ -182,8 +154,6 @@ def place_order():
 
         ]
 
-
-
         if not all(required_fields):
 
             return jsonify({
@@ -195,9 +165,6 @@ def place_order():
 
             })
 
-
-
-
         # =================================
         # GET CART
         # =================================
@@ -205,8 +172,6 @@ def place_order():
         cart_items = Cart.query.filter_by(
             user_id=current_user.user_id
         ).all()
-
-
 
         if not cart_items:
 
@@ -219,8 +184,6 @@ def place_order():
 
             })
 
-
-
         # =================================
         # GENERATE ORDER NUMBER
         # =================================
@@ -229,20 +192,14 @@ def place_order():
             "%Y%m%d%H%M%S"
         )
 
-
-
         random_number = random.randint(
             100,
             999
         )
 
-
-
         order_number = (
             f"RM{timestamp}{random_number}"
         )
-
-
 
         # =================================
         # BUILD PRODUCTS JSON
@@ -252,20 +209,14 @@ def place_order():
 
         subtotal = 0
 
-
-
         for item in cart_items:
 
             product = Product.query.get(
                 item.product_id
             )
 
-
-
             if not product:
                 continue
-
-
 
             item_total = (
 
@@ -275,11 +226,7 @@ def place_order():
 
             )
 
-
-
             subtotal += item_total
-
-
 
             products.append({
 
@@ -309,15 +256,11 @@ def place_order():
 
             })
 
-
-
         # =================================
         # TOTALS
         # =================================
 
         delivery_fee = 40
-
-
 
         grand_total = (
 
@@ -326,8 +269,6 @@ def place_order():
             delivery_fee
 
         )
-
-
 
         # =================================
         # CREATE ORDER
@@ -379,13 +320,9 @@ def place_order():
 
         )
 
-
-
         db.session.add(new_order)
 
         db.session.commit()
-
-
 
         # =================================
         # CREATE ADMIN NOTIFICATION
@@ -415,8 +352,6 @@ QUEUED
 
         )
 
-
-
         # =================================
         # CLEAR CART
         # =================================
@@ -425,17 +360,11 @@ QUEUED
 
             db.session.delete(item)
 
-
-
         db.session.commit()
-
-
 
         print("\nORDER SAVED")
         print(order_number)
         print()
-
-
 
         return jsonify({
 
@@ -446,21 +375,19 @@ QUEUED
 
         })
 
+    except Exception as error:
 
+        db.session.rollback()
 
-        except Exception as error:
-           
-            db.session.rollback()
+        print("\nORDER ERROR:")
+        print(error)
+        print()
 
-            print("\nORDER ERROR:")
-            print(error)
-            print()
+        return jsonify({
 
-            return jsonify({
-                
-                "success": False,
-                "message":
-                str(error)
+            "success": False,
 
-            })
+            "message":
+            str(error)
 
+        })
