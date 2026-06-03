@@ -1019,15 +1019,6 @@ Order:
 
 
 
-    # =================================
-    # ORDER LINKING
-    # =================================
-
-    order_id=order.order_id,
-
-
-
-    notification_category="order"
 
 
 
