@@ -76,7 +76,8 @@ from custom_orders_database import (
 from database import Product
 
 import json
-
+import cloudinary.uploader
+import cloudinary_config
 
 
 # =========================================
@@ -1177,44 +1178,19 @@ def admin_global_notifications():
 
 
 
-        filename = secure_filename(
+        upload_result = cloudinary.uploader.upload(
 
-            banner.filename
-
-        )
-
-
-
-        timestamp = datetime.utcnow().strftime(
-
-            "%Y%m%d%H%M%S"
+              banner,
+              folder="rm_bakes/notifications"
 
         )
 
+        banner_url = (
 
-
-        final_filename = f"""
-
-{timestamp}_{filename}
-
-""".replace("\n", "").strip()
-
-
-
-        banner_path = os.path.join(
-
-            upload_folder,
-            final_filename
+              upload_result["secure_url"]
 
         )
 
-
-
-        banner.save(
-
-            banner_path
-
-        )
 
 
 
@@ -1228,7 +1204,7 @@ def admin_global_notifications():
 
             message=message,
 
-            banner_image=final_filename,
+            banner_image=banner_url,
 
             is_active=True
 
