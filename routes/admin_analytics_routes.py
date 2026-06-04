@@ -8,7 +8,7 @@ from flask import (
     session
 )
 
-from routes.admin_guard import admin_required
+from utils.admin_guard import admin_required
 
 from database import (
     User,
