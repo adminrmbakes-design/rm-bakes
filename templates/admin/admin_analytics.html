@@ -1214,97 +1214,81 @@ new Chart(
 
 
 
-const productsCtx = document
-.getElementById("productsChart");
+const productsCtx = document.getElementById("productsChart");
 
-new Chart(
+new Chart(productsCtx, {
 
-    productsCtx,
+    type: "bar",
 
-    {
+    data: {
 
-        type:"bar",
+        labels: {{ product_chart_labels|tojson }},
 
-        data:{
+        datasets: [{
 
-            labels:
-            {{ product_chart_labels|tojson }},
+            label: "Products Sold",
 
-            datasets:[{
-                label:"Products Sold",
+            data: {{ product_chart_values|tojson }},
 
-                data:
-                {{ product_chart_values|tojson }},
+            backgroundColor: [
+                "#00ffd0",
+                "#00bfff",
+                "#ffcc00",
+                "#ff6b6b",
+                "#9b5cff"
+            ],
 
-                options:{
+            borderRadius: 12,
 
-                    responsive:true,
-    
-                    maintainAspectRatio:false,
+            borderWidth: 0
 
-                    plugins:{
+        }]
 
-                        legend:{
+    },
 
-                            labels:{
-                                color:"#ffffff"
-                            }
+    options: {
 
-                        }
+        responsive: true,
 
-                    },
+        maintainAspectRatio: false,
 
-                    scales:{
+        plugins: {
 
-                        y:{
+            legend: {
 
-                            beginAtZero:true,
-
-                            ticks:{
-                                color:"#ffffff"
-                            },
-
-                            grid:{
-                color:"rgba(255,255,255,0.08)"
-                            }
-
-                        },
-
-                        x:{
-
-                            ticks:{
-                                color:"#ffffff"
-                            },
-
-                            grid:{
-                                display:false
-                            }
-
-                         }
-
-                     }
-
+                labels: {
+                    color: "#ffffff"
                 }
 
-                backgroundColor:[
-                    "#00ffd0",
-                    "#00bfff",
-                    "#ffcc00",
-                    "#ff6b6b",
-                    "#9b5cff"
-                ],
+            }
 
-                borderRadius:12,
+        },
 
-                borderWidth:0
+        scales: {
 
-                }]
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    color: "#ffffff"
+                }
+
+            },
+
+            x: {
+
+                ticks: {
+                    color: "#ffffff"
+                }
+
+            }
 
         }
 
     }
 
-);
+});
 
 
 
