@@ -1457,3 +1457,304 @@ body::before{
     margin-bottom:20px;
 
 }
+
+
+/* =====================================
+   BUSINESS HEALTH CENTER
+===================================== */
+
+.health-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
+    gap:20px;
+
+}
+
+
+
+.health-score-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:260px;
+
+    border-radius:30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,255,200,0.12),
+            rgba(0,120,255,0.08)
+        );
+
+    border:
+        1px solid rgba(0,255,200,0.2);
+
+}
+
+
+
+.health-score{
+
+    font-size:5rem;
+
+    font-weight:900;
+
+    color:#00ffd0;
+
+    line-height:1;
+
+}
+
+
+
+.health-status{
+
+    margin-top:12px;
+
+    letter-spacing:2px;
+
+    font-weight:700;
+
+    color:#7affdf;
+
+}
+
+
+
+.health-metric-card{
+
+    padding:28px;
+
+    border-radius:24px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.health-metric-card h3{
+
+    margin-bottom:16px;
+
+    color:
+        rgba(255,255,255,0.65);
+
+}
+
+
+
+.health-metric-card p{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+}
+
+
+
+/* =====================================
+   DESSERT STUDIO INTELLIGENCE
+===================================== */
+
+.studio-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px,1fr)
+        );
+
+    gap:20px;
+
+}
+
+
+
+.studio-card{
+
+    padding:28px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,150,0,0.08),
+            rgba(255,80,80,0.05)
+        );
+
+    border:
+        1px solid rgba(255,180,80,0.15);
+
+    transition:0.3s;
+
+}
+
+
+
+.studio-card:hover{
+
+    transform:
+        translateY(-5px);
+
+}
+
+
+
+.studio-card h3{
+
+    margin-bottom:16px;
+
+    color:
+        rgba(255,255,255,0.7);
+
+}
+
+
+
+.studio-card p{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+}
+
+
+
+/* =====================================
+   REVENUE CHART POLISH
+===================================== */
+
+.chart-card{
+
+    backdrop-filter:
+        blur(18px);
+
+}
+
+
+
+.chart-card canvas{
+
+    width:100% !important;
+
+    height:300px !important;
+
+}
+
+
+
+/* =====================================
+   REVENUE GROWTH BADGE
+===================================== */
+
+.revenue-growth{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    background:
+        rgba(0,255,200,0.08);
+
+    color:#00ffd0;
+
+    font-weight:700;
+
+}
+
+
+
+/* =====================================
+   PREMIUM SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+
+
+::-webkit-scrollbar-track{
+
+    background:#111;
+
+}
+
+
+
+::-webkit-scrollbar-thumb{
+
+    background:#00ffd0;
+
+    border-radius:999px;
+
+}
+
+
+
+/* =====================================
+   HEALTH CARD ANIMATION
+===================================== */
+
+.health-score{
+
+    animation:
+        pulseHealth 4s infinite;
+
+}
+
+
+
+@keyframes pulseHealth{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.05);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
