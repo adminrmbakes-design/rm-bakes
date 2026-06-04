@@ -63,7 +63,7 @@ def analytics_dashboard():
     # ORDER STATUS
     queued_orders = Order.query.filter_by(order_status="queued").count()
     approved_orders = Order.query.filter_by(order_status="approved").count()
-    preparing_orders = Order.query.filter_by(order_status="preparing").count(
+    preparing_orders = Order.query.filter_by(order_status="preparing").count()
     baking_orders = Order.query.filter_by(order_status="baking").count()
     packed_orders = Order.query.filter_by(order_status="packed").count()
     delivery_orders = Order.query.filter_by(order_status="out_for_delivery").count()
