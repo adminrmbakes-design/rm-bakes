@@ -83,8 +83,8 @@ def analytics_dashboard():
 
             for item in products:
                 name = item.get("product_name", "Unknown")
-                qty = item.get("quantity", 0)
-                total = item.get("total", 0)
+                qty = item.get("product_quantity", 0)
+                total = item.get("total_price", 0)
 
                 product_counter[name] += qty
                 product_revenue[name] += total
