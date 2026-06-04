@@ -931,6 +931,64 @@ RM Bakes Intelligence Hub
 
 </section>
 
+<!-- =====================================
+     ANALYTICS VISUALIZATION CENTER
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Analytics Visualization Center
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>
+
+                Revenue Trend
+
+            </h3>
+
+            <canvas id="revenueChart"></canvas>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Products
+
+            </h3>
+
+            <canvas id="productsChart"></canvas>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Order Status
+
+            </h3>
+
+            <canvas id="statusChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 <script
     src="{{ url_for(
@@ -940,6 +998,118 @@ RM Bakes Intelligence Hub
 >
     
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const revenueCtx = document
+.getElementById("revenueChart");
+
+new Chart(
+
+    revenueCtx,
+
+    {
+
+        type:"line",
+
+        data:{
+
+            labels:
+            {{ revenue_chart_labels|tojson }},
+
+            datasets:[{
+
+                data:
+                {{ revenue_chart_values|tojson }},
+
+                borderColor:"#00ffd0",
+
+                tension:0.4
+
+            }]
+
+        }
+
+    }
+
+);
+
+
+
+const productsCtx = document
+.getElementById("productsChart");
+
+new Chart(
+
+    productsCtx,
+
+    {
+
+        type:"bar",
+
+        data:{
+
+            labels:
+            {{ product_chart_labels|tojson }},
+
+            datasets:[{
+
+                data:
+                {{ product_chart_values|tojson }}
+
+            }]
+
+        }
+
+    }
+
+);
+
+
+
+const statusCtx = document
+.getElementById("statusChart");
+
+new Chart(
+
+    statusCtx,
+
+    {
+
+        type:"doughnut",
+
+        data:{
+
+            labels:[
+
+                "Queued",
+
+                "Production",
+
+                "Ready",
+
+                "Delivered",
+
+                "Cancelled"
+
+            ],
+
+            datasets:[{
+
+                data:
+                {{ status_chart_values|tojson }}
+
+            }]
+
+        }
+
+    }
+
+);
+
+        </script>
 
 </body>
 
