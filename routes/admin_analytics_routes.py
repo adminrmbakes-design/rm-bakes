@@ -66,7 +66,9 @@ def analytics_dashboard():
     ready_orders = Order.query.filter_by(order_status="ready").count()
     delivered_orders = Order.query.filter_by(order_status="delivered").count()
     cancelled_orders = Order.query.filter_by(is_cancelled=True).count()
-
+    # DESSERT STUDIO METRICS
+    quoted_requests = CustomOrder.query.filter_by(custom_status="quoted").count()
+    converted_requests = CustomOrder.query.filter_by(converted_to_order=True).count()
     
     # PRODUCT INTELLIGENCE
     product_counter = Counter()
@@ -313,9 +315,7 @@ def analytics_dashboard():
         ready_orders=ready_orders,
         delivered_orders=delivered_orders,
         cancelled_orders=cancelled_orders,
-        pending_requests=pending_requests,
         quoted_requests=quoted_requests,
-        approved_requests=approved_requests,
         converted_requests=converted_requests,
         top_products=top_products,
         top_product_revenue=top_product_revenue,
