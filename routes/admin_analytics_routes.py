@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 import json
 
@@ -432,6 +432,189 @@ def analytics_dashboard():
 
             heatmap[3] += 1
 
+    # =====================================
+    # BUSINESS HEALTH
+    # =====================================
+
+    health_score = 100
+
+
+
+    # Cancellation Penalty
+
+    cancellation_rate = 0
+
+    if total_orders > 0:
+
+        cancellation_rate = round(
+
+        (cancelled_orders / total_orders) * 100,
+
+        1
+
+        )
+
+        health_score -= int(
+        cancellation_rate * 1.5
+        )
+
+
+
+    # Delivery Bonus
+
+    delivery_rate = 0
+
+    if total_orders > 0:
+        
+
+        delivery_rate = round(
+
+        (delivered_orders / total_orders) * 100,
+
+         1
+
+        )
+
+        health_score += int(
+        delivery_rate * 0.10
+        )
+
+
+
+    # Dessert Studio Conversion
+
+    conversion_rate = 0
+
+    if total_custom_orders > 0:
+        
+
+        conversion_rate = round(
+
+        (
+            converted_requests
+            /
+            total_custom_orders
+        ) * 100,
+
+         1
+
+        )
+
+
+
+        health_score += int(
+        conversion_rate * 0.15
+        )
+
+
+
+        health_score = max(
+        0,
+        min(100, health_score)
+        )
+
+
+
+   # =====================================
+   # QUOTE ACCEPTANCE RATE
+   # =====================================
+
+   accepted_quotes = (
+
+    CustomOrder.query.filter_by(
+
+        customer_response="accepted"
+
+    ).count()
+
+    )
+
+
+
+   quote_acceptance_rate = 0
+
+   if quoted_requests > 0:
+
+       quote_acceptance_rate = round(
+
+        (
+            accepted_quotes
+            /
+            quoted_requests
+        ) * 100,
+
+        1
+
+        )
+
+
+
+   # =====================================
+   # REVENUE FORECAST
+   # =====================================
+
+   forecast_revenue = monthly_revenue
+
+   if monthly_revenue > 0:
+
+       daily_average = monthly_revenue / 30
+
+       forecast_revenue = round(
+
+       daily_average * 30,
+
+        0
+
+       )
+
+
+
+   # =====================================
+   # FLAVOUR INTELLIGENCE
+   # =====================================
+
+   flavour_counter = Counter()
+ 
+   for order in CustomOrder.query.all():
+
+       if order.flavor:
+
+           flavour_counter[
+            order.flavor
+            ] += 1
+
+
+
+       top_flavours = (
+
+       flavour_counter.most_common(5)
+
+       )
+
+
+
+   # =====================================
+   # OCCASION INTELLIGENCE
+   # =====================================
+
+   occasion_counter = Counter()
+
+   for order in CustomOrder.query.all():
+
+       if order.occasion:
+
+           occasion_counter[
+            order.occasion
+           ] += 1
+  
+
+
+           top_occasions = (
+
+           occasion_counter.most_common(5)
+
+           )
+
 
 
     # =====================================
@@ -604,6 +787,26 @@ def analytics_dashboard():
         product_chart_values=product_chart_values,
 
         status_chart_values=status_chart_values,
+
+        health_score=health_score,
+
+        cancellation_rate=cancellation_rate,
+
+        delivery_rate=delivery_rate,
+
+        conversion_rate=conversion_rate,
+
+        quote_acceptance_rate=
+        quote_acceptance_rate,
+
+        forecast_revenue=
+        forecast_revenue,
+
+        top_flavours=
+        top_flavours,
+
+        top_occasions=
+        top_occasions,
 
         admin_username=session.get(
 
