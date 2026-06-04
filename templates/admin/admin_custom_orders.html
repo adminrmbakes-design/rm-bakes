@@ -1434,9 +1434,9 @@
 
 {% if custom_orders %}
 
-{% for order in custom_orders %}
-
 <div class="requests-grid">
+
+{% for order in custom_orders %}
 
 <div class="request-card">
 
@@ -1482,8 +1482,6 @@
 
 <div class="status-pill {{ order.status }}">
     {{ order.custom_status }}
-</div>
-
 </div>
 
 
@@ -1946,8 +1944,6 @@
 </div> <!-- workflow-section -->
 
 </form> <!-- workflow-form -->
-
-</div> <!-- request-content -->
     
 
 
@@ -2117,13 +2113,15 @@
     </div>
 
 
-</div>
-
+    </div> <!-- Details -->
     
-</div>
-
+  </div> <!-- request-content -->
+    
+</div> <!-- request-card -->
+    
 {% endfor %}
-
+    
+</div> <!-- requests-grid -->
 
 
 {% else %}
