@@ -237,6 +237,113 @@ RM Bakes Intelligence Hub
 </section>
 
 
+<!-- =====================================
+     BUSINESS HEALTH CENTER
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Business Health Center
+
+    </div>
+
+    <div class="health-grid">
+
+        <div class="health-score-card">
+
+            <div class="health-score">
+
+                {{ health_score }}
+
+            </div>
+
+            <div class="health-status">
+
+                {{ health_status }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Delivery Rate
+
+            </h3>
+
+            <p>
+
+                {{ delivery_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Cancellation Rate
+
+            </h3>
+
+            <p>
+
+                {{ cancellation_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Studio Conversion
+
+            </h3>
+
+            <p>
+
+                {{ conversion_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Revenue Forecast
+
+            </h3>
+
+            <p>
+
+                ₹{{ "{:,.0f}".format(forecast_revenue) }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
 
 <!-- =====================================
      REVENUE NEBULA
@@ -488,6 +595,133 @@ RM Bakes Intelligence Hub
     </div>
 
 </section>
+
+
+<!-- =====================================
+     DESSERT STUDIO INTELLIGENCE
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Dessert Studio Intelligence
+
+    </div>
+
+    <div class="studio-grid">
+
+        <div class="studio-card">
+
+            <h3>
+
+                Average Budget
+
+            </h3>
+
+            <p>
+
+                ₹{{ "{:,.0f}".format(average_budget) }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Quote Acceptance
+
+            </h3>
+
+            <p>
+
+                {{ quote_acceptance_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Success Rate
+
+            </h3>
+
+            <p>
+
+                {{ studio_success_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Accepted Quotes
+
+            </h3>
+
+            <p>
+
+                {{ accepted_quotes }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Rejected Quotes
+
+            </h3>
+
+            <p>
+
+                {{ rejected_quotes }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Pending Responses
+
+            </h3>
+
+            <p>
+
+                {{ pending_quote_responses }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+    
 
 <!-- =====================================
      PRODUCT MARKET BOARD
@@ -930,6 +1164,69 @@ RM Bakes Intelligence Hub
     </div>
 
 </section>
+
+
+<!-- =====================================
+     FLAVOURS & OCCASIONS
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Flavours & Occasions
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Flavours
+
+            </h3>
+
+            {% for flavour, count in top_flavours %}
+
+            <p>
+
+                🍓 {{ flavour }} — {{ count }}
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Occasions
+
+            </h3>
+
+            {% for occasion, count in top_occasions %}
+
+            <p>
+
+                🎂 {{ occasion }} — {{ count }}
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+    
 
 <!-- =====================================
      ANALYTICS VISUALIZATION CENTER
