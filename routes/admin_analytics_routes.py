@@ -313,6 +313,7 @@ def analytics_dashboard():
         ready_orders=ready_orders,
         delivered_orders=delivered_orders,
         cancelled_orders=cancelled_orders,
+        converted_requests=converted_requests,
         top_products=top_products,
         top_product_revenue=top_product_revenue,
         top_favourites=top_favourites,
