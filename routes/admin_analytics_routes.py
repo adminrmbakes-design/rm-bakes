@@ -563,33 +563,89 @@ def analytics_dashboard():
 
         )
 
-    # =====================================
-    # CHART DATA
-    # =====================================
+# =====================================
+# REAL REVENUE CHART DATA
+# =====================================
 
-    revenue_chart_labels = [
+revenue_chart_labels = []
 
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-    "Sun"
+revenue_chart_values = []
 
-    ]
 
-    revenue_chart_values = [
 
-    1200,
-    1800,
-    1600,
-    2400,
-    3000,
-    4200,
-    5000
+for days_back in range(6, -1, -1):
 
-    ]
+    target_date = (
+
+        today
+
+        - timedelta(days=days_back)
+
+    )
+
+
+
+    day_revenue = sum(
+
+        order.grand_total or 0
+
+        for order in all_orders
+
+        if (
+            order.created_at
+
+            and
+
+            order.created_at.date()
+            == target_date
+        )
+
+    )
+
+
+
+    revenue_chart_labels.append(
+
+        target_date.strftime("%a")
+
+    )
+
+
+
+    revenue_chart_values.append(
+
+        round(day_revenue, 2)
+
+    )
+
+
+    if len(revenue_chart_values) > 1:
+        
+        revenue_growth = round(
+
+        (
+            revenue_chart_values[-1]
+            -
+            revenue_chart_values[-2]
+        )
+
+        /
+
+        max(
+            revenue_chart_values[-2],
+            1
+        )
+
+        * 100,
+
+        1
+
+        )
+
+    else:
+        
+        revenue_growth = 0
+        
 
     product_chart_labels = [
 
