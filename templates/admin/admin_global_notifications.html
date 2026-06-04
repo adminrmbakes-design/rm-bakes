@@ -832,11 +832,40 @@
 
         }
 
+
+        .flash-wrapper{
+             width:92%;
+             max-width:1450px;
+             margin:20px auto;
+        }
+
+        .flash{
+             padding:16px;
+             border-radius:16px;
+             margin-bottom:12px;
+             background:rgba(0,255,170,0.12);
+             border:1px solid rgba(0,255,170,0.2);
+        }
+
     </style>
 
 </head>
 
 <body>
+
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-wrapper">
+            {% for category, message in messages %}
+                <div class="flash">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
 
 
