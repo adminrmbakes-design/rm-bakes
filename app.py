@@ -42,16 +42,12 @@ from routes.admin_routes import admin_bp
 from routes.notification_routes import notification_bp
 from routes.password_reset_routes import password_reset_bp
 from routes.custom_order_routes import custom_order_bp
-from routes.custom_order_profile_routes import (
-    custom_order_profile_bp
-)
-from routes.custom_order_cancellation_routes import (
-    custom_order_cancellation_bp
-)
-from routes.custom_order_conversion_routes import (
-    custom_order_conversion_bp
-)
+from routes.custom_order_profile_routes import (custom_order_profile_bp)
+from routes.custom_order_cancellation_routes import (custom_order_cancellation_bp)
+from routes.custom_order_conversion_routes import (custom_order_conversion_bp)
 from routes.favourite_routes import favourite_bp
+from routes.admin_analytics_routes import (admin_analytics_bp)
+
 
 # =========================================
 # CREATE APP
@@ -178,17 +174,13 @@ app.register_blueprint(custom_order_bp)
 
 app.register_blueprint(custom_order_profile_bp)
 
-app.register_blueprint(
-    custom_order_cancellation_bp
-)
+app.register_blueprint(custom_order_cancellation_bp)
 
-app.register_blueprint(
-    custom_order_conversion_bp
-)
+app.register_blueprint(custom_order_conversion_bp)
 
-app.register_blueprint(
-    favourite_bp
-)
+app.register_blueprint(favourite_bp)
+
+app.register_blueprint(admin_analytics_bp)
 
 # =========================================
 # CREATE DATABASE TABLES
