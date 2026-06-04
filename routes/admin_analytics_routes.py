@@ -318,6 +318,16 @@ def analytics_dashboard():
 
     )
 
+    # =====================================
+    # PRODUCT REVENUE LEADERBOARD
+    # =====================================
+
+    top_product_revenue = (
+
+        product_revenue.most_common(10)
+
+    )
+
 
 
     # =====================================
@@ -465,6 +475,26 @@ def analytics_dashboard():
 
     health_score = max(0, min(100, health_score))
 
+# =====================================
+# HEALTH STATUS
+# =====================================
+
+if health_score >= 85:
+
+    health_status = "EXCELLENT"
+
+elif health_score >= 70:
+
+    health_status = "GOOD"
+
+elif health_score >= 50:
+
+    health_status = "AVERAGE"
+
+else:
+
+    health_status = "NEEDS ATTENTION"
+
     # =====================================
     # QUOTE ACCEPTANCE RATE
     # =====================================
@@ -518,6 +548,83 @@ def analytics_dashboard():
     top_occasions = occasion_counter.most_common(5)
 
 # =====================================
+# DESSERT STUDIO INTELLIGENCE
+# =====================================
+
+average_budget = 0
+
+budget_orders = [
+
+    order.budget
+
+    for order in CustomOrder.query.all()
+
+    if order.budget
+
+]
+
+if budget_orders:
+
+    average_budget = round(
+
+        sum(budget_orders)
+
+        /
+
+        len(budget_orders),
+
+        2
+
+    )
+
+
+
+accepted_quotes = CustomOrder.query.filter_by(
+
+    customer_response="accepted"
+
+).count()
+
+
+
+rejected_quotes = CustomOrder.query.filter_by(
+
+    customer_response="rejected"
+
+).count()
+
+
+
+pending_quote_responses = CustomOrder.query.filter_by(
+
+    customer_response="pending"
+
+).count()
+
+
+
+studio_success_rate = 0
+
+if total_custom_orders > 0:
+
+    studio_success_rate = round(
+
+        (
+
+            converted_requests
+
+            /
+
+            total_custom_orders
+
+        ) * 100,
+
+        1
+
+    )
+    
+
+    # =====================================
     # AI INSIGHTS
     # =====================================
 
@@ -723,6 +830,8 @@ for days_back in range(6, -1, -1):
         converted_requests=converted_requests,
 
         top_products=top_products,
+        
+        top_product_revenue=top_product_revenue,
 
         top_favourites=top_favourites,
 
@@ -738,13 +847,27 @@ for days_back in range(6, -1, -1):
 
         revenue_chart_values=revenue_chart_values,
 
+        revenue_growth=revenue_growth,
+
         product_chart_labels=product_chart_labels,
 
         product_chart_values=product_chart_values,
 
         status_chart_values=status_chart_values,
 
+        average_budget=average_budget,
+
+        accepted_quotes=accepted_quotes,
+
+        rejected_quotes=rejected_quotes,
+
+        pending_quote_responses=pending_quote_responses,
+
+        studio_success_rate=studio_success_rate,
+
         health_score=health_score,
+
+        health_status=health_status,
 
         cancellation_rate=cancellation_rate,
 
