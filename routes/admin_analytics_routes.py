@@ -62,10 +62,12 @@ def analytics_dashboard():
 
     # ORDER STATUS
     queued_orders = Order.query.filter_by(order_status="queued").count()
-    production_orders = Order.query.filter_by(order_status="production").count()
-    ready_orders = Order.query.filter_by(order_status="ready").count()
+    approved_orders = Order.query.filter_by(order_status="approved").count()
+    baking_orders = Order.query.filter_by(order_status="baking").count()
+    packed_orders = Order.query.filter_by(order_status="packed").count()
+    delivery_orders = Order.query.filter_by(order_status="out_for_delivery").count()
     delivered_orders = Order.query.filter_by(order_status="delivered").count()
-    cancelled_orders = Order.query.filter_by(is_cancelled=True).count()
+    cancelled_orders = Order.query.filter_by(order_status="cancelled").count()
     # DESSERT STUDIO METRICS
     quoted_requests = CustomOrder.query.filter_by(custom_status="quoted").count()
     converted_requests = CustomOrder.query.filter_by(converted_to_order=True).count()
@@ -292,12 +294,17 @@ def analytics_dashboard():
     ]
 
     status_chart_values = [
-        queued_orders,
-        production_orders,
-        ready_orders,
-        delivered_orders,
-        cancelled_orders
+       "Queued",
+       "Approved",
+       "Preparing",
+       "Baking",
+       "Packed",
+       "Delivery",
+       "Delivered",
+       "Cancelled"
     ]
+
+    
 
     return render_template(
         "admin/admin_analytics.html",
