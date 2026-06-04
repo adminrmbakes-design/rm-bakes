@@ -416,68 +416,6 @@ RM Bakes Intelligence Hub
     </div>
 
 
-
-    <div class="revenue-engine">
-
-    <svg
-        class="revenue-svg"
-        viewBox="0 0 1000 300"
-    >
-
-        <defs>
-
-            <linearGradient
-                id="graphGradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-            >
-
-                <stop
-                    offset="0%"
-                    stop-color="#00ffd0"
-                />
-
-                <stop
-                    offset="100%"
-                    stop-color="#00aaff"
-                />
-
-            </linearGradient>
-
-        </defs>
-
-
-
-        <polyline
-
-            class="revenue-line"
-
-            fill="none"
-
-            stroke="url(#graphGradient)"
-
-            stroke-width="6"
-
-            points="
-            0,250
-            120,210
-            220,190
-            340,160
-            470,180
-            600,120
-            760,90
-            880,70
-            1000,40
-            "
-
-        />
-
-    </svg>
-
-    </div>
-
 </section>
 
 
@@ -1204,6 +1142,8 @@ new Chart(
 
             datasets:[{
 
+                label:"Revenue",
+
                 data:
                 {{ revenue_chart_values|tojson }},
 
@@ -1238,6 +1178,8 @@ new Chart(
             {{ product_chart_labels|tojson }},
 
             datasets:[{
+
+                label:"Products Sold",
 
                 data:
                 {{ product_chart_values|tojson }}
