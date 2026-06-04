@@ -1145,6 +1145,10 @@ RM Bakes Intelligence Hub
 
             </h3>
 
+            <div style="color:white;padding:10px;">
+                {{ product_chart_values }}
+            </div>
+
             <canvas id="productsChart"></canvas>
 
         </div>
@@ -1168,14 +1172,6 @@ RM Bakes Intelligence Hub
 </section>
 
 
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/admin_analytics.js'
-    ) }}"
->
-    
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -1235,13 +1231,74 @@ new Chart(
             {{ product_chart_labels|tojson }},
 
             datasets:[{
-
                 label:"Products Sold",
 
                 data:
-                {{ product_chart_values|tojson }}
+                {{ product_chart_values|tojson }},
 
-            }]
+                options:{
+
+                    responsive:true,
+    
+                    maintainAspectRatio:false,
+
+                    plugins:{
+
+                        legend:{
+
+                            labels:{
+                                color:"#ffffff"
+                            }
+
+                        }
+
+                    },
+
+                    scales:{
+
+                        y:{
+
+                            beginAtZero:true,
+
+                            ticks:{
+                                color:"#ffffff"
+                            },
+
+                            grid:{
+                color:"rgba(255,255,255,0.08)"
+                            }
+
+                        },
+
+                        x:{
+
+                            ticks:{
+                                color:"#ffffff"
+                            },
+
+                            grid:{
+                                display:false
+                            }
+
+                         }
+
+                     }
+
+                }
+
+                backgroundColor:[
+                    "#00ffd0",
+                    "#00bfff",
+                    "#ffcc00",
+                    "#ff6b6b",
+                    "#9b5cff"
+                ],
+
+                borderRadius:12,
+
+                borderWidth:0
+
+                }]
 
         }
 
