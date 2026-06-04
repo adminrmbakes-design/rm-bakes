@@ -1462,6 +1462,9 @@
 
 {% endif %}
 
+</div>
+</div>
+
 
 
 <div class="request-content">
@@ -1961,9 +1964,26 @@
     </div>
 
 
-    <div class="action-btn approve-btn">
-    Ready For Production Conversion 🔥
-    </div>
+    <form
+
+        method="POST"
+
+        action="{{ url_for('custom_order_conversion.convert_custom_order', custom_order_id=order.custom_order_id) }}"
+
+        onsubmit="return confirmProductionConversion()"
+
+    >
+
+        <button
+            type="submit"
+            class="action-btn quote-btn"
+        >
+
+            🔥 Convert To Production
+
+        </button>
+
+    </form>
 
 
 
