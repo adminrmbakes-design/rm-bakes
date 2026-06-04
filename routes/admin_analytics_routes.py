@@ -295,14 +295,23 @@ def analytics_dashboard():
     ]
 
     status_chart_values = [
-       "Queued",
-       "Approved",
-       "Preparing",
-       "Baking",
-       "Packed",
-       "Delivery",
-       "Delivered",
-       "Cancelled"
+
+        queued_orders,
+
+        approved_orders,
+
+        preparing_orders,
+
+        baking_orders,
+
+        packed_orders,
+
+        delivery_orders,
+
+        delivered_orders,
+
+        cancelled_orders
+
     ]
 
     
