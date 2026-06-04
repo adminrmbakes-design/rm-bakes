@@ -63,6 +63,7 @@ def analytics_dashboard():
     # ORDER STATUS
     queued_orders = Order.query.filter_by(order_status="queued").count()
     approved_orders = Order.query.filter_by(order_status="approved").count()
+    preparing_orders = Order.query.filter_by(order_status="preparing").count(
     baking_orders = Order.query.filter_by(order_status="baking").count()
     packed_orders = Order.query.filter_by(order_status="packed").count()
     delivery_orders = Order.query.filter_by(order_status="out_for_delivery").count()
@@ -318,8 +319,11 @@ def analytics_dashboard():
         total_products=total_products,
         total_favourites=total_favourites,
         queued_orders=queued_orders,
-        production_orders=production_orders,
-        ready_orders=ready_orders,
+        approved_orders=approved_orders,
+        preparing_orders=preparing_orders,
+        baking_orders=baking_orders,
+        packed_orders=packed_orders,
+        delivery_orders=delivery_orders,
         delivered_orders=delivered_orders,
         cancelled_orders=cancelled_orders,
         quoted_requests=quoted_requests,
