@@ -1039,7 +1039,6 @@ body::before{
 .heat-cell,
 .ops-card,
 .insight-card,
-.pipeline-node,
 .mini-card{
 
     position:relative;
@@ -1171,77 +1170,6 @@ body::before{
 }
 
 
-
-/* =====================================
-   PIPELINE
-===================================== */
-
-.pipeline-grid{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:18px;
-
-    flex-wrap:wrap;
-
-}
-
-
-
-.pipeline-node{
-
-    min-width:180px;
-
-    text-align:center;
-
-    padding:26px;
-
-    border-radius:26px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
-
-}
-
-
-
-.pipeline-count{
-
-    font-size:2rem;
-
-    font-weight:800;
-
-    color:#00ffd0;
-
-}
-
-
-
-.pipeline-arrow{
-
-    font-size:2rem;
-
-    color:#00ffd0;
-
-}
 
 
 
