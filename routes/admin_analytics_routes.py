@@ -480,6 +480,63 @@ def analytics_dashboard():
 
         )
 
+    # =====================================
+    # CHART DATA
+    # =====================================
+
+    revenue_chart_labels = [
+
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun"
+
+    ]
+
+    revenue_chart_values = [
+
+    1200,
+    1800,
+    1600,
+    2400,
+    3000,
+    4200,
+    5000
+
+    ]
+
+    product_chart_labels = [
+
+         product[0]
+
+         for product in top_products[:5]
+    ]
+
+    product_chart_values = [
+
+         product[1]
+
+         for product in top_products[:5]
+
+    ]
+
+    status_chart_values = [
+
+    queued_orders,
+
+    production_orders,
+
+    ready_orders,
+
+    delivered_orders,
+
+    cancelled_orders
+
+    ]
+
 
 
     # =====================================
@@ -537,6 +594,16 @@ def analytics_dashboard():
         heatmap=heatmap,
 
         insights=insights,
+
+        revenue_chart_labels=revenue_chart_labels,
+
+        revenue_chart_values=revenue_chart_values,
+
+        product_chart_labels=product_chart_labels,
+
+        product_chart_values=product_chart_values,
+
+        status_chart_values=status_chart_values,
 
         admin_username=session.get(
 
