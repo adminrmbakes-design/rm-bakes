@@ -55,7 +55,7 @@
                     {% if product.product_image %}
 
                     <img
-                        src="{{ url_for('static', filename='uploads/' + product.product_image) }}"
+                        src="{{ get_product_image(product.product_image) }}"
                         class="cart-image"
                         alt="{{ product.product_name }}"
                     >
