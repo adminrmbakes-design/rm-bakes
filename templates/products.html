@@ -188,7 +188,7 @@ after a long tiring day.
             data-name="{{ product.product_name|lower }}">
 
             <img
-                src="{{ url_for('static', filename='uploads/' + product.product_image) }}"
+                src="{{ get_product_image(product.product_image) }}"
                 alt="{{ product.product_name }}"
                 class="product-image"
             >
