@@ -17,6 +17,8 @@ from orders_database import (
     ProductReview
 )
 
+from sqlalchemy import func
+
 import json
 
 
