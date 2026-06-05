@@ -45,21 +45,33 @@
 
         </h2>
 
-        <div class="rating-grid">
+        <div class="star-rating">
 
-            {% for star in range(1, 6) %}
+            <span
+                class="star overall-star"
+                onclick="selectOverallRating(1)"
+            >☆</span>
 
-            <button
-                type="button"
-                class="rating-btn"
-                onclick="selectOverallRating({{ star }})"
-            >
+            <span
+                class="star overall-star"
+                onclick="selectOverallRating(2)"
+            >☆</span>
 
-                ⭐ {{ star }}
 
-            </button>
+            <span
+                class="star overall-star"
+                onclick="selectOverallRating(3)"
+            >☆</span>
+            
+            <span
+                class="star overall-star"
+                onclick="selectOverallRating(4)"
+            >☆</span>
 
-            {% endfor %}
+            <span
+                class="star overall-star"
+                onclick="selectOverallRating(5)"
+            >☆</span>
 
         </div>
 
@@ -105,6 +117,7 @@
             <button
                 type="button"
                 class="sweet-btn"
+                onclick="maybeLater()"
             >
 
                 Maybe Later 🌷
@@ -157,23 +170,34 @@
         </select>
 
         <div
-            class="rating-grid"
+            class="star-rating"
             style="margin-top:20px;"
         >
 
-            {% for star in range(1,6) %}
+            <span
+                class="star product-star"
+                onclick="selectProductRating(1)"
+            >☆</span>
 
-            <button
-                type="button"
-                class="rating-btn"
-                onclick="selectProductRating({{ star }})"
-            >
+            <span
+                class="star product-star"
+                onclick="selectProductRating(2)"
+            >☆</span>
 
-                ⭐ {{ star }}
+            <span
+                class="star product-star"
+                onclick="selectProductRating(3)"
+            >☆</span>
 
-            </button>
+            <span
+                class="star product-star"
+                onclick="selectProductRating(4)"
+            >☆</span>
 
-            {% endfor %}
+            <span
+                class="star product-star"
+                onclick="selectProductRating(5)"
+            >☆</span>
 
         </div>
 
@@ -289,16 +313,6 @@
 
 }
 
-.rating-grid{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(5,1fr);
-
-    gap:14px;
-
-}
 
 .choice-grid{
 
@@ -311,7 +325,6 @@
 
 }
 
-.rating-btn,
 .sweet-btn{
 
     border:none;
@@ -337,7 +350,6 @@
 
 }
 
-.rating-btn:hover,
 .sweet-btn:hover{
 
     transform:translateY(-3px);
@@ -347,6 +359,8 @@
         rgba(255,180,220,0.55);
 
 }
+
+
 
 .review-select,
 .review-textarea{
@@ -373,6 +387,58 @@
     min-height:150px;
 
     resize:none;
+
+}
+
+.star-rating{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+}
+
+.star{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    font-size:2rem;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    transition:0.3s;
+
+}
+
+.star.filled{
+
+    color:#ffd700;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff9bd2,
+            #ffd67d
+        );
+
+    box-shadow:
+        0 0 20px
+        rgba(255,215,0,0.7);
 
 }
 
@@ -477,7 +543,42 @@ function selectOverallRating(rating){
         )
         .value = rating;
 
+    const stars =
+
+        document.querySelectorAll(
+            ".overall-star"
+        );
+
+    stars.forEach(
+
+        (star,index)=>{
+
+            if(index < rating){
+
+                star.innerHTML = "⭐";
+
+                star.classList.add(
+                    "filled"
+                );
+
+            }
+
+            else{
+
+                star.innerHTML = "☆";
+
+                star.classList.remove(
+                    "filled"
+                );
+
+            }
+
+        }
+
+    );
+
 }
+
 
 function selectProductRating(rating){
 
@@ -487,7 +588,54 @@ function selectProductRating(rating){
         )
         .value = rating;
 
+    const stars =
+
+        document.querySelectorAll(
+            ".product-star"
+        );
+
+    stars.forEach(
+
+        (star,index)=>{
+
+            if(index < rating){
+
+                star.innerHTML = "⭐";
+
+                star.classList.add(
+                    "filled"
+                );
+
+            }
+
+            else{
+
+                star.innerHTML = "☆";
+
+                star.classList.remove(
+                    "filled"
+                );
+
+            }
+
+        }
+
+    );
+
 }
+    
+
+function maybeLater(){
+
+    alert(
+        "🌷 We'll remind you later!"
+    );
+
+    window.location.href =
+        "/my-orders";
+
+}
+    
 
 async function submitReview(){
 
