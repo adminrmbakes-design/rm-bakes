@@ -48,6 +48,7 @@ from routes.custom_order_conversion_routes import (custom_order_conversion_bp)
 from routes.favourite_routes import favourite_bp
 from routes.admin_analytics_routes import (admin_analytics_bp)
 from routes.admin_product_routes import (admin_product_bp)
+from utils.image_helpers import (get_product_image)
 
 # =========================================
 # CREATE APP
@@ -183,6 +184,11 @@ app.register_blueprint(favourite_bp)
 app.register_blueprint(admin_analytics_bp)
 
 app.register_blueprint(admin_product_bp)
+
+app.jinja_env.globals.update(
+    get_product_image=
+    get_product_image
+)
 
 # =========================================
 # CREATE DATABASE TABLES
