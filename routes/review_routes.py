@@ -334,3 +334,108 @@ def my_review(order_id):
         review=review
 
     )
+
+
+
+@review_bp.route(
+    "/edit-review/<int:review_id>",
+    methods=["GET", "POST"]
+)
+@login_required
+def edit_review(review_id):
+
+    review = ProductReview.query.get_or_404(
+        review_id
+    )
+
+    if review.customer_id != current_user.user_id:
+
+        flash(
+            "Unauthorized access.",
+            "danger"
+        )
+
+        return redirect(
+            url_for(
+                "order.my_orders"
+            )
+        )
+
+    if request.method == "POST":
+
+        review.rating = int(
+            request.form.get(
+                "rating"
+            )
+        )
+
+        review.review_text = (
+            request.form.get(
+                "review_text"
+            )
+        )
+
+        db.session.commit()
+
+        flash(
+            "Review updated successfully 💖",
+            "success"
+        )
+
+        return redirect(
+            url_for(
+                "review.my_review",
+                order_id=review.order_id
+            )
+        )
+
+    return render_template(
+
+        "edit_review.html",
+
+        review=review
+
+    )
+
+
+@review_bp.route(
+    "/delete-review/<int:review_id>"
+)
+@login_required
+def delete_review(review_id):
+
+    review = ProductReview.query.get_or_404(
+        review_id
+    )
+
+    if review.customer_id != current_user.user_id:
+
+        flash(
+            "Unauthorized access.",
+            "danger"
+        )
+
+        return redirect(
+            url_for(
+                "order.my_orders"
+            )
+        )
+
+    order_id = review.order_id
+
+    db.session.delete(
+        review
+    )
+
+    db.session.commit()
+
+    flash(
+        "Review deleted 💔",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "order.my_orders"
+        )
+    )
