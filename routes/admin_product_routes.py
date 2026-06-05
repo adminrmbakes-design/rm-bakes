@@ -10,6 +10,8 @@ from flask import (
 )
 
 import os
+import cloudinary.uploader
+import cloudinary_config
 
 from werkzeug.utils import secure_filename
 
@@ -149,33 +151,31 @@ def add_product():
 
             )
 
-        # =====================================
-        # IMAGE UPLOAD
-        # =====================================
-
+        #===== IMAGE PATH =======
+        
         image_filename = None
 
         if product_image and product_image.filename:
+            
+            upload_result = (
 
-            image_filename = secure_filename(
+                cloudinary.uploader.upload(
 
-                product_image.filename
+                    product_image,
 
-            )
+                    folder="rm_bakes/products"
 
-            image_path = os.path.join(
-
-                UPLOAD_FOLDER,
-                image_filename
-
-            )
-
-            product_image.save(
-
-                image_path
+                )
 
             )
 
+            image_filename = (
+
+                upload_result["secure_url"]
+
+            )
+
+    
         # =====================================
         # CREATE PRODUCT
         # =====================================
@@ -392,39 +392,25 @@ def edit_product(product_id):
 
         if (
 
-            new_image and
-            new_image.filename
+            new_image and new_image.filename
 
         ):
+            
+            upload_result = (
 
-            image_filename = secure_filename(
+                cloudinary.uploader.upload(
 
-                new_image.filename
+                    new_image,
 
-            )
+                    folder="rm_bakes/products"
 
-
-
-            image_path = os.path.join(
-
-                UPLOAD_FOLDER,
-                image_filename
+                )
 
             )
-
-
-
-            new_image.save(
-
-                image_path
-
-            )
-
-
 
             product.product_image = (
 
-                image_filename
+                upload_result["secure_url"]
 
             )
 
