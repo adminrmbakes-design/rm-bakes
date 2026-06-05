@@ -82,34 +82,27 @@ def products():
 
 
     # ========================================
-    # CATEGORY LIST
+    # CATEGORY LIST (AUTO FROM DATABASE)
     # ========================================
 
-    categories = [
+    categories = ["all"]
 
-        "all",
+    db_categories = {
 
-        "Cakes",
+        product.product_category.strip()
 
-        "Jar Cakes",
+        for product in Product.query.all()
 
-        "RM Signature Cakes",
+        if product.product_category
 
-        "Brownies",
+    }
 
-        "Brookies",
+    categories.extend(
 
-        "Blondies",
 
-        "Burnt Basque Cheese Cakes",
+        sorted(db_categories)
 
-        "Cheese Cakes",
-
-        "RM Special Brownies",
-
-        "Cookies"
-
-    ]
+    )
     
     
     favourite_ids = []
