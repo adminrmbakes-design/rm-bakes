@@ -76,48 +76,52 @@ def add_product():
     if request.method == "POST":
 
         product_name = request.form.get(
-
             "product_name"
-
         )
 
         product_description = request.form.get(
-
             "product_description"
-
         )
 
         product_price = request.form.get(
-
             "product_price"
-
         )
 
         product_unit = request.form.get(
-
             "product_unit"
-
         )
 
         product_tags = request.form.get(
-
             "product_tags"
-
         )
 
         product_category = request.form.get(
-
             "product_category"
+        )
 
+        new_category = request.form.get(
+            "new_category"
         )
 
         product_image = request.files.get(
-
             "product_image"
-
         )
 
+        # =====================================
+        # USE NEW CATEGORY IF PROVIDED
+        # =====================================
 
+        if new_category and new_category.strip():
+
+            product_category = (
+                new_category
+                .strip()
+                .title()
+            )
+
+        # =====================================
+        # VALIDATION
+        # =====================================
 
         if (
 
@@ -145,11 +149,11 @@ def add_product():
 
             )
 
-
+        # =====================================
+        # IMAGE UPLOAD
+        # =====================================
 
         image_filename = None
-
-
 
         if product_image and product_image.filename:
 
@@ -159,8 +163,6 @@ def add_product():
 
             )
 
-
-
             image_path = os.path.join(
 
                 UPLOAD_FOLDER,
@@ -168,15 +170,15 @@ def add_product():
 
             )
 
-
-
             product_image.save(
 
                 image_path
 
             )
 
-
+        # =====================================
+        # CREATE PRODUCT
+        # =====================================
 
         new_product = Product(
 
@@ -185,9 +187,7 @@ def add_product():
             product_description=product_description,
 
             product_price=float(
-
                 product_price
-
             ),
 
             product_unit=product_unit,
@@ -200,19 +200,13 @@ def add_product():
 
         )
 
-
-
         db.session.add(
 
             new_product
 
         )
 
-
-
         db.session.commit()
-
-
 
         flash(
 
@@ -222,8 +216,6 @@ def add_product():
 
         )
 
-
-
         return redirect(
 
             url_for(
@@ -232,13 +224,34 @@ def add_product():
 
         )
 
+    # =====================================
+    # LOAD EXISTING CATEGORIES
+    # =====================================
 
+    categories = [
+
+        row[0]
+
+        for row in db.session.query(
+            Product.product_category
+        ).distinct().all()
+
+        if row[0]
+
+    ]
+
+    categories = sorted(categories)
 
     return render_template(
 
-        "admin/admin_add_product.html"
+        "admin/admin_add_product.html",
+
+        categories=categories
 
     )
+
+
+
 
 
 # =========================================
