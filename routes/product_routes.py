@@ -4,6 +4,8 @@ from flask import request
 
 from flask_login import current_user
 
+from database import db
+
 from database import Favourite
 
 from database import Product
