@@ -741,7 +741,7 @@
                     {% if item.product_image %}
 
                     <img
-                        src="{{ get_product_image(product.product_image) }}"
+                        src="{{ get_product_image(item.product_image) }}"
                         class="checkout-product-image"
                     >
 
@@ -938,20 +938,36 @@
             </a>
 
             {% if order.order_status == "delivered" %}
+                    {% if order.has_review %}
 
-            <a
-                href="{{ url_for(
-                'review.leave_review',
-                order_id=order.order_id
-                ) }}"
-                class="premium-btn"
-                style="
-                text-decoration:none;"
-            >
+                        <a
+                            href="{{ url_for(
+                            'review.my_review',
+                            order_id=order.order_id
+                            ) }}"
+                            class="premium-btn"
+                            style="text-decoration:none;"
+                        >
 
-                💖 Share Experience
+                            💌 My Experience
 
-            </a>
+                        </a>
+                
+                   {% else %}
+                      
+                       <a
+                           href="{{ url_for(
+                           'review.leave_review',
+                           order_id=order.order_id
+                           ) }}"
+                           class="premium-btn"
+                           style="text-decoration:none;"
+                       >
+
+                           💖 Share Experience
+                       </a>
+
+                   {% endif %}
 
             {% endif %}
             
