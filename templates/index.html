@@ -110,7 +110,7 @@
         <div class="col-lg-6 text-center mt-5 mt-lg-0">
 
             <img
-                src="{{ url_for('static', filename='uploads/products/ferrero-rocher.jpg') }}"
+                src="{{ get_product_image(product.product_image) }}"
                 class="img-fluid hero-image"
             >
 
@@ -153,7 +153,7 @@
                     <div class="product-image-wrapper">
 
     <img
-        src="{{ url_for('static', filename='uploads/' + product.product_image) }}"
+        src="{{ get_product_image(product.product_image) }}"
         alt="{{ product.product_name }}"
         class="product-details-image"
     >
