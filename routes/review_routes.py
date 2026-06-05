@@ -400,7 +400,8 @@ def edit_review(review_id):
 
 
 @review_bp.route(
-    "/delete-review/<int:review_id>"
+    "/delete-review/<int:review_id>",
+    methods=["POST"]
 )
 @login_required
 def delete_review(review_id):
