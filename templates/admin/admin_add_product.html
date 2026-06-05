@@ -518,7 +518,9 @@
                        CATEGORY SELECTOR
             ====================================== -->
 
-            <div class="form-group">
+            <div class="form-group"
+                 id="categorySelectContainer"
+            >
 
                 <label>
 
@@ -677,48 +679,65 @@
 
     <!-- ===== JAVASCRIPT ===== -->
 
-    <script>
+<script>
 
-        const addCategoryBtn =
-            document.getElementById(
-            "showCategoryInput"
-        );
+const addCategoryBtn =
+    document.getElementById(
+        "showCategoryInput"
+    );
 
-        const categoryContainer =
-            document.getElementById(
-            "newCategoryContainer"
-        );
+const categoryContainer =
+    document.getElementById(
+        "newCategoryContainer"
+    );
 
-        addCategoryBtn.addEventListener(
+const categorySelectContainer =
+    document.getElementById(
+        "categorySelectContainer"
+    );
 
-            "click",
+let addingNewCategory = false;
 
-            function(){
+addCategoryBtn.addEventListener(
 
-                if(
+    "click",
 
-                    categoryContainer.style.display
-                    === "none"
+    function(){
 
-                  ){
+        addingNewCategory =
+            !addingNewCategory;
 
-                    categoryContainer.style.display =
-                        "block";
+        if(addingNewCategory){
 
-                  }
+            categoryContainer.style.display =
+                "block";
 
-                else{
+            categorySelectContainer.style.display =
+                "none";
 
-                    categoryContainer.style.display =
-                        "none";
+            addCategoryBtn.innerHTML =
+                "❌ Cancel New Category";
 
-                }
+        }
 
-            }
+        else{
 
-        );
+            categoryContainer.style.display =
+                "none";
 
-    </script>
+            categorySelectContainer.style.display =
+                "block";
+
+            addCategoryBtn.innerHTML =
+                "➕ Add New Category";
+
+        }
+
+    }
+
+);
+
+</script>
 
     
 
