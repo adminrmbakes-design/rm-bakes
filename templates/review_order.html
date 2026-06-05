@@ -1,0 +1,495 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="review-page">
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="review-hero">
+
+        <div class="review-heart">
+
+            💖
+
+        </div>
+
+        <h1 class="review-title">
+
+            Share Your Sweet Experience
+
+        </h1>
+
+        <p class="review-subtitle">
+
+            Every dessert leaves a memory.
+            Tell us how your heart felt ✨
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         REVIEW CARD
+    ====================================== -->
+
+    <div class="review-card">
+
+        <h2 class="review-section-title">
+
+            🌸 How was your overall experience?
+
+        </h2>
+
+        <div class="rating-grid">
+
+            {% for star in range(1, 6) %}
+
+            <button
+                type="button"
+                class="rating-btn"
+                onclick="selectOverallRating({{ star }})"
+            >
+
+                ⭐ {{ star }}
+
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+        <input
+            type="hidden"
+            id="overall_rating"
+            value="0"
+        >
+
+    </div>
+
+
+
+    <!-- =====================================
+         OPTIONAL REVIEW
+    ====================================== -->
+
+    <div class="review-card">
+
+        <h2 class="review-section-title">
+
+            🍰 Did any dessert steal your heart?
+
+        </h2>
+
+        <p class="review-text">
+
+            Completely optional 💛
+
+        </p>
+
+        <div class="choice-grid">
+
+            <button
+                type="button"
+                class="sweet-btn"
+                onclick="showProductReview()"
+            >
+
+                Yes ✨
+            </button>
+
+            <button
+                type="button"
+                class="sweet-btn"
+            >
+
+                Maybe Later 🌷
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         PRODUCT REVIEW
+    ====================================== -->
+
+    <div
+        class="review-card"
+        id="productReviewBlock"
+        style="display:none;"
+    >
+
+        <h2 class="review-section-title">
+
+            💌 Tell us your sweet story
+        </h2>
+
+        <select
+            id="product_name"
+            class="review-select"
+        >
+
+            <option value="">
+
+                Select a Dessert
+
+            </option>
+
+            {% for product in products %}
+
+            <option
+                value="{{ product.product_name }}"
+            >
+
+                {{ product.product_name }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <div
+            class="rating-grid"
+            style="margin-top:20px;"
+        >
+
+            {% for star in range(1,6) %}
+
+            <button
+                type="button"
+                class="rating-btn"
+                onclick="selectProductRating({{ star }})"
+            >
+
+                ⭐ {{ star }}
+
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+        <input
+            type="hidden"
+            id="product_rating"
+            value="0"
+        >
+
+        <textarea
+            id="review_text"
+            class="review-textarea"
+            placeholder="Tell us how your heart felt after tasting it... 💖"
+        ></textarea>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SUBMIT
+    ====================================== -->
+
+    <div
+        style="
+            text-align:center;
+            margin-top:32px;
+        "
+    >
+
+        <button
+            class="submit-review-btn"
+            onclick="submitReview()"
+        >
+
+            Send Sweet Memories 💖
+        </button>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.review-page{
+
+    max-width:850px;
+
+    margin:auto;
+
+    padding:24px;
+
+}
+
+.review-hero{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.review-heart{
+
+    font-size:4rem;
+
+    animation: pulse 2s infinite;
+
+}
+
+.review-title{
+
+    color:#ffd9f2;
+
+    font-weight:900;
+
+}
+
+.review-subtitle{
+
+    color:#f6d7a7;
+
+}
+
+.review-card{
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,192,203,0.12),
+            rgba(255,215,0,0.08)
+        );
+
+    border:
+        1px solid rgba(255,215,180,0.15);
+
+    border-radius:28px;
+
+    padding:28px;
+
+    margin-bottom:22px;
+
+    backdrop-filter:blur(16px);
+
+}
+
+.review-section-title{
+
+    color:#ffd9f2;
+
+    margin-bottom:16px;
+
+}
+
+.rating-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:14px;
+
+}
+
+.choice-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:16px;
+
+}
+
+.rating-btn,
+.sweet-btn{
+
+    border:none;
+
+    border-radius:20px;
+
+    padding:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff9bd2,
+            #ffd67d
+        );
+
+    color:#222;
+
+}
+
+.rating-btn:hover,
+.sweet-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 22px
+        rgba(255,180,220,0.55);
+
+}
+
+.review-select,
+.review-textarea{
+
+    width:100%;
+
+    margin-top:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    padding:16px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color:white;
+
+}
+
+.review-textarea{
+
+    min-height:150px;
+
+    resize:none;
+
+}
+
+.submit-review-btn{
+
+    border:none;
+
+    border-radius:28px;
+
+    padding:18px 40px;
+
+    font-size:1.1rem;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    color:#222;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff9bd2,
+            #ffd67d
+        );
+
+    animation:
+        glowButton 2s infinite;
+
+}
+
+@keyframes glowButton{
+
+    0%{
+
+        box-shadow:
+            0 0 12px
+            rgba(255,180,220,0.4);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 28px
+            rgba(255,180,220,0.9);
+
+    }
+
+    100%{
+
+        box-shadow:
+            0 0 12px
+            rgba(255,180,220,0.4);
+
+    }
+
+}
+
+@keyframes pulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.08);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+</style>
+
+
+<script>
+
+function showProductReview(){
+
+    document
+        .getElementById(
+            "productReviewBlock"
+        )
+        .style.display = "block";
+
+}
+
+function selectOverallRating(rating){
+
+    document
+        .getElementById(
+            "overall_rating"
+        )
+        .value = rating;
+
+}
+
+function selectProductRating(rating){
+
+    document
+        .getElementById(
+            "product_rating"
+        )
+        .value = rating;
+
+}
+
+</script>
+
+
+{% endblock %}
