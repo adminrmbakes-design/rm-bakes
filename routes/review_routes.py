@@ -304,3 +304,33 @@ def product_reviews(product_name):
             average_rating
 
     )
+
+
+
+@review_bp.route(
+    "/my-review/<int:order_id>"
+)
+@login_required
+def my_review(order_id):
+
+    review = ProductReview.query.filter_by(
+
+        order_id=order_id,
+
+        customer_id=current_user.user_id
+
+    ).first()
+
+    if not review:
+
+        return redirect(
+            url_for("order.my_orders")
+        )
+
+    return render_template(
+
+        "my_review.html",
+
+        review=review
+
+    )
