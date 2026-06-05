@@ -8,6 +8,8 @@ from database import Favourite
 
 from database import Product
 
+from orders_database import ProductReview
+from sqlalchemy import func
 
 product_bp = Blueprint(
     "product",
@@ -78,6 +80,7 @@ def products():
     # ========================================
 
     product_list = query.all()
+
 
 
 
@@ -160,6 +163,38 @@ def product_details(product_id):
         product_id
     )
 
+    #==== Reviews =====
+    
+    reviews = ProductReview.query.filter_by(
+        
+        product_name=product.product_name,
+
+        is_visible=True
+
+    ).all()
+    
+    review_count = len(reviews)
+    
+    average_rating = (
+        
+        round(
+            
+            db.session.query(
+                
+                func.avg(
+                    ProductReview.rating
+                )
+
+            ).filter_by(
+
+                product_name=product.product_name,
+                is_visible=True
+            ).scalar() or 0,1
+
+        )
+
+    )
+
 
 
     is_favourite = False
@@ -190,6 +225,10 @@ def product_details(product_id):
 
         product=product,
 
-        is_favourite=is_favourite
+        is_favourite=is_favourite,
+
+        review_count=review_count,
+
+        average_rating=average_rating
 
     )
