@@ -53,6 +53,54 @@
 
         </p>
 
+       <!-- Reviews -->
+
+       <div class="review-summary">
+
+           {% if review_count > 0 %}
+
+               <div class="review-rating">
+
+                   ⭐ {{ average_rating }}
+
+                   <span>
+
+                      ({{ review_count }} Reviews)
+
+                   </span>
+
+               </div>
+          
+          <a
+
+             href="{{ url_for(
+
+             'review.product_reviews',
+             product_name=product.product_name
+             ) }}"
+
+             class="view-reviews-btn"
+
+          >
+
+            💌 View Customer Reviews →
+
+          </a>
+
+          {% else %}
+
+          <div class="review-rating">
+
+            No reviews yet 🌷
+
+          </div>
+
+          {% endif %}
+
+       </div>
+
+       <!-- Review section ends -->
+
 
         <div class="price-favourite-row">
 
@@ -197,6 +245,65 @@
 .favourite-btn-detail:active{
 
     transform:scale(0.92);
+
+}
+
+.review-summary{
+
+    margin-top:25px;
+
+    margin-bottom:25px;
+
+}
+
+.review-rating{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    color:#ffd700;
+
+    margin-bottom:12px;
+
+}
+
+.view-reviews-btn{
+
+    display:inline-block;
+
+    padding:12px 22px;
+
+    border-radius:18px;
+
+    text-decoration:none;
+
+    color:white;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff77aa,
+            #ffcc88
+        );
+
+    box-shadow:
+
+        0 0 25px rgba(
+            255,
+            180,
+            120,
+            0.4
+        );
+
+    transition:0.35s ease;
+
+}
+
+.view-reviews-btn:hover{
+
+    transform:translateY(-3px);
 
 }
 
