@@ -108,6 +108,16 @@ def order_details(order_id):
             order.products_json
         )
 
+        order.has_review = (
+            ProductReview.query.filter_by(
+                order_id=order.order_id,
+                customer_id=current_user.user_id
+            ).first()
+
+            is not None
+
+        )
+
         return render_template(
             "order_details.html",
             order=order
