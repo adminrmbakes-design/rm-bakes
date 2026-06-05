@@ -479,3 +479,225 @@ class Order(db.Model):
             self.converted_from_dessert_studio
 
         )
+
+
+# =========================================
+# ORDER EXPERIENCE FEEDBACK
+# =========================================
+
+class OrderFeedback(db.Model):
+
+    __tablename__ = "order_feedbacks"
+
+    feedback_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+    # =====================================
+    # ORDER
+    # =====================================
+
+    order_id = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    order_number = db.Column(
+
+        db.String(100),
+
+        nullable=False
+
+    )
+
+    is_custom_order = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+    # =====================================
+    # CUSTOMER
+    # =====================================
+
+    customer_id = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    customer_name = db.Column(
+
+        db.String(150),
+
+        nullable=False
+
+    )
+
+    # =====================================
+    # EXPERIENCE
+    # =====================================
+
+    overall_rating = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    # =====================================
+    # TIMESTAMP
+    # =====================================
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
+
+
+# =========================================
+# PRODUCT REVIEWS
+# =========================================
+
+class ProductReview(db.Model):
+
+    __tablename__ = "product_reviews"
+
+    review_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+    # =====================================
+    # ORDER
+    # =====================================
+
+    order_id = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    order_number = db.Column(
+
+        db.String(100),
+
+        nullable=False
+
+    )
+
+    is_custom_order = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+    # =====================================
+    # PRODUCT
+    # =====================================
+
+    product_id = db.Column(
+
+        db.Integer,
+
+        nullable=True
+
+    )
+
+    product_name = db.Column(
+
+        db.String(200),
+
+        nullable=False
+
+    )
+
+    # =====================================
+    # CUSTOMER
+    # =====================================
+
+    customer_id = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    customer_name = db.Column(
+
+        db.String(150),
+
+        nullable=False
+
+    )
+
+    # =====================================
+    # REVIEW
+    # =====================================
+
+    rating = db.Column(
+
+        db.Integer,
+
+        nullable=False
+
+    )
+
+    review_text = db.Column(
+
+        db.Text
+
+    )
+
+    review_image = db.Column(
+
+        db.String(500)
+
+    )
+
+    # =====================================
+    # MODERATION
+    # =====================================
+
+    is_visible = db.Column(
+
+        db.Boolean,
+
+        default=True
+
+    )
+
+    # =====================================
+    # TIMESTAMP
+    # =====================================
+
+    created_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
