@@ -61,22 +61,28 @@
 
             </a>
 
-            <a
-                href="{{ url_for(
-                    'review.delete_review',
-                    review_id=review.review_id
+            <form
+                method="POST"
+                action="{{ url_for(
+                'review.delete_review',
+                review_id=review.review_id
                 ) }}"
-                class="memory-btn delete-btn"
-                onclick="
+                
+                onsubmit="
                     return confirm(
-                    'Delete this memory?'
-                    );
-                "
+                'Delete this memory forever? 💔'
+                );"
             >
 
-                🗑 Delete
+                <button
+                    type="submit"
+                    class="memory-btn delete-btn"
+                >
 
-            </a>
+                   🗑 Delete
+                </button>
+
+            </form>
 
         </div>
 
