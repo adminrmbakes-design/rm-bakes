@@ -588,8 +588,7 @@
 
     <img
 
-        src="{{ url_for('static',
-        filename='uploads/' + product.product_image) }}"
+        src="{{ get_product_image(product.product_image) }}"
 
         class="product-image"
 
