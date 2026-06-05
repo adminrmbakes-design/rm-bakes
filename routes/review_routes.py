@@ -442,32 +442,3 @@ def delete_review(review_id):
         )
     )
 
-
-@review_bp.route(
-    "/product-reviews/<product_name>"
-)
-def product_reviews(product_name):
-
-    reviews = ProductReview.query.filter_by(
-
-        product_name=product_name,
-
-        is_visible=True
-
-    ).order_by(
-
-        ProductReview.created_at.desc()
-
-    ).all()
-
-
-
-    return render_template(
-
-        "product_reviews.html",
-
-        reviews=reviews,
-
-        product_name=product_name
-
-    )
