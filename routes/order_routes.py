@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 
 from database import db, Cart
-from orders_database import Order
+from orders_database import Order, ProductReview
 
 from datetime import datetime
 
@@ -56,6 +56,17 @@ def my_orders():
         for order in orders:
             order.products = json.loads(
                 order.products_json
+            )
+            
+            order.has_review = (
+                
+                ProductReview.query.filter_by(
+                    
+                    order_id=order.order_id,
+                    customer_id=current_user.user_id
+                ).first()
+
+                is not None
             )
 
         return render_template(
