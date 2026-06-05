@@ -443,6 +443,36 @@
 
         }
 
+        /* Toast CSS */
+        
+        .flash-wrapper{
+            
+            width:92%;
+    
+            max-width:1450px;
+
+            margin:20px auto 0;
+
+        }
+
+        .flash{
+
+            margin-bottom:14px;
+
+            padding:16px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(0,255,180,0.1);
+
+            border:
+                1px solid rgba(0,255,180,0.16);
+
+            color:#8ffff0;
+
+        }
+
 
 
         /* ====================================
@@ -489,6 +519,27 @@
 </head>
 
 <body>
+
+    <!-- Toast messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-wrapper">
+
+            {% for category, message in messages %}
+
+            <div class="flash">
+                {{ message }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+    {% endwith %}
 
 
 
