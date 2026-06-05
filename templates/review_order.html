@@ -489,6 +489,111 @@ function selectProductRating(rating){
 
 }
 
+async function submitReview(){
+
+    const overallRating =
+
+        document.getElementById(
+            "overall_rating"
+        ).value;
+
+    if(overallRating === "0"){
+
+        alert(
+            "Please rate your experience first 😭"
+        );
+
+        return;
+
+    }
+
+    const formData = new FormData();
+
+    formData.append(
+
+        "overall_rating",
+
+        overallRating
+
+    );
+
+    formData.append(
+
+        "product_name",
+
+        document.getElementById(
+            "product_name"
+        )?.value || ""
+
+    );
+
+    formData.append(
+
+        "product_rating",
+
+        document.getElementById(
+            "product_rating"
+        )?.value || ""
+
+    );
+
+    formData.append(
+
+        "review_text",
+
+        document.getElementById(
+            "review_text"
+        )?.value || ""
+
+    );
+
+    try{
+
+        const response =
+
+            await fetch(
+
+                "/submit-review/{{ order.order_id }}",
+
+                {
+
+                    method:"POST",
+
+                    body:formData
+
+                }
+
+            );
+
+        const data =
+            await response.json();
+
+        alert(
+            data.message
+        );
+
+        if(data.success){
+
+            window.location.href =
+
+                "/my-orders";
+
+        }
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert(
+            "Something went wrong 😭"
+        );
+
+    }
+
+}
+
 </script>
 
 
