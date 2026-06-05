@@ -514,11 +514,83 @@
 
             </div>
 
+            <!-- =====================================
+                       CATEGORY SELECTOR
+            ====================================== -->
+
             <div class="form-group">
 
                 <label>
 
-                    Category
+                   Category
+
+                </label>
+
+                <select
+
+                    name="product_category"
+
+                    id="categorySelect"
+
+                    class="form-control"
+
+                >
+
+                    {% for category in categories %}
+
+                    <option value="{{ category }}">
+
+                        {{ category }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- =====================================
+            ADD NEW CATEGORY BUTTON
+            ====================================== -->
+
+            <div class="form-group">
+
+                <button
+
+                    type="button"
+
+                    id="showCategoryInput"
+
+                    class="save-btn"
+
+                    style="
+                    margin-top:0;
+                    padding:14px;"
+
+                >
+
+                   ➕ Add New Category
+
+                </button>
+
+            </div>
+
+            <!-- =====================================
+            HIDDEN CATEGORY INPUT
+            ====================================== -->
+
+            <div
+
+                class="form-group"
+                id="newCategoryContainer"
+                style="display:none;"
+                
+            >
+
+                <label>
+
+                    New Category
 
                 </label>
 
@@ -526,17 +598,17 @@
 
                     type="text"
 
-                    name="product_category"
-
-                    placeholder="Cakes, Brownies, Cookies..."
+                    name="new_category"
 
                     class="form-control"
 
-                    required
+                    placeholder="Example: Kunafa"
 
                 >
 
             </div>
+
+            
 
             <div class="form-group">
 
@@ -603,5 +675,50 @@
 </div>
 
 </body>
+
+    <!-- ===== JAVASCRIPT ===== -->
+
+    <script>
+
+        const addCategoryBtn =
+            document.getElementById(
+            "showCategoryInput"
+        );
+
+        const categoryContainer =
+            document.getElementById(
+            "newCategoryContainer"
+        );
+
+        addCategoryBtn.addEventListener(
+
+            "click",
+
+            function(){
+
+                if(
+
+                    categoryContainer.style.display
+                    === "none"
+
+                  ){
+
+                    categoryContainer.style.display =
+                        "block";
+
+                  }
+
+                else{
+
+                    categoryContainer.style.display =
+                        "none";
+
+                }
+
+            }
+
+        );
+
+    </script>
 
 </html>
