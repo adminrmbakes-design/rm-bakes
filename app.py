@@ -17,6 +17,11 @@ from database import UserNotification
 # =========================================
 
 from orders_database import Order
+from orders_database import (
+    Order,
+    OrderFeedback,
+    ProductReview
+)
 
 # =========================================
 # CUSTOM ORDER MODELS
