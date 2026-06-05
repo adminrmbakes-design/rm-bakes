@@ -54,7 +54,7 @@
                 {% if item.product_image %}
 
                 <img
-                    src="{{ url_for('static', filename='uploads/' + item.product_image) }}"
+                    src="{{ get_product_image(product.product_image) }}"
                     class="checkout-product-image"
                 >
 
