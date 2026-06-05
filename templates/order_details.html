@@ -937,6 +937,25 @@
 
             </a>
 
+            {% if order.order_status == "delivered" %}
+
+            <a
+                href="{{ url_for(
+                'review.leave_review',
+                order_id=order.order_id
+                ) }}"
+                class="premium-btn"
+                style="
+                text-decoration:none;"
+            >
+
+                💖 Share Experience
+
+            </a>
+
+            {% endif %}
+            
+
         </div>
 
     </div>
