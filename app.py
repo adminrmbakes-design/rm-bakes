@@ -18,7 +18,6 @@ from database import UserNotification
 
 from orders_database import Order
 from orders_database import (
-    Order,
     OrderFeedback,
     ProductReview
 )
@@ -54,6 +53,7 @@ from routes.favourite_routes import favourite_bp
 from routes.admin_analytics_routes import (admin_analytics_bp)
 from routes.admin_product_routes import (admin_product_bp)
 from utils.image_helpers import (get_product_image)
+from routes.review_routes import (review_bp)
 
 # =========================================
 # CREATE APP
@@ -194,6 +194,9 @@ app.jinja_env.globals.update(
     get_product_image=
     get_product_image
 )
+
+app.register_blueprint(review_bp)
+
 
 # =========================================
 # CREATE DATABASE TABLES
