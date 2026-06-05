@@ -740,19 +740,26 @@
 
             <div class="card-actions">
 
-                <a href="#" class="action-btn">
-                    Add Product
+                <a
+                    href="{{ url_for('admin_product.add_product') }}"
+                    class="action-btn"
+                >
+
+                    ➕ Add Product
+
                 </a>
 
-                <a href="#" class="action-btn">
-                    Edit Products
-                </a>
+                <a
+                    href="{{ url_for('admin_product.manage_products') }}"
+                    class="action-btn"
+                >
 
-                <a href="#" class="action-btn">
-                    Categories
+                    📦 Manage Products
+
                 </a>
 
             </div>
+            
 
         </div>
 
