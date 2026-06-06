@@ -450,6 +450,29 @@ class Order(db.Model):
 
 
     # =====================================
+    # REVIEW REMINDER
+    # =====================================
+
+    review_reminder_sent = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+    
+    review_remind_at = db.Column(
+
+        db.DateTime,
+
+        nullable=True
+
+    )
+
+
+
+    # =====================================
     # OPTIONAL INTERNAL NOTES
     # =====================================
 
