@@ -29,8 +29,26 @@
 
             <div class="review-count">
 
-                💬 {{ reviews|length }}
-                Sweet Memories
+                {% if written_reviews > 0 %}
+                
+                <div>
+   
+                    💬 {{ written_reviews }} Sweet Memories
+
+                </div>
+
+                {% endif %}
+
+
+                {% if rating_only_reviews > 0 %}
+
+                <div>
+
+                    ⭐ {{ rating_only_reviews }} Sweet Ratings
+
+                </div>
+
+                {% endif %}
 
             </div>
 
