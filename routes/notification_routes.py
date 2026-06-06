@@ -26,7 +26,8 @@ from database import (
 from datetime import datetime
 
 from orders_database import (
-    Order
+    Order,
+    ProductReview
 )
 
 # =========================================
@@ -165,6 +166,36 @@ def notifications_page():
         .all()
 
     )
+
+
+
+    # =====================================
+    # REVIEW STATUS
+    # =====================================
+    
+    for notification in user_notifications:
+        
+        notification.has_review = False
+        
+        if notification.order_id:
+            
+            review = (
+
+                ProductReview.query.filter_by(
+
+                    order_id=notification.order_id,
+
+                    customer_id=current_user.user_id
+
+                ).first()
+
+            )
+            
+            notification.has_review = (
+
+                review is not None
+
+            )
 
 
 
