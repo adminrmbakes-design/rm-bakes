@@ -625,14 +625,36 @@ function selectProductRating(rating){
 }
     
 
-function maybeLater(){
+async function maybeLater(){
 
-    alert(
-        "🌷 We'll remind you later!"
-    );
+    try{
 
-    window.location.href =
-        "/my-orders";
+        await fetch(
+
+            "/review-remind-later/{{ order.order_id }}",
+
+            {
+
+                method:"POST"
+
+            }
+
+        );
+
+        alert(
+            "🌷 We'll remind you later!"
+        );
+
+        window.location.href =
+            "/my-orders";
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+    }
 
 }
     
