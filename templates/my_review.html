@@ -47,6 +47,35 @@
             ) }}
         </div>
 
+
+        {% if review.admin_reply %}
+
+        <div class="admin-reply-card">
+
+            <div class="admin-reply-title">
+
+                💌 RM Bakes Reply
+
+            </div>
+
+            <div class="admin-reply-message">
+
+                {{ review.admin_reply }}
+
+            </div>
+
+            <div class="admin-reply-meta">
+
+                Replied by {{ review.reply_by }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        
+
         <div class="review-actions">
 
             <a
