@@ -1559,3 +1559,63 @@ RM Bakes Control Center.
         )
 
     )
+
+
+
+#==== Temporary=====
+
+@admin_bp.route(
+    "/admin/migrate-review-replies"
+)
+def migrate_review_replies():
+
+    try:
+
+        db.session.execute(
+
+            db.text(
+
+                """
+                ALTER TABLE product_reviews
+                ADD COLUMN IF NOT EXISTS admin_reply TEXT;
+                """
+
+            )
+
+        )
+
+        db.session.execute(
+
+            db.text(
+
+                """
+                ALTER TABLE product_reviews
+                ADD COLUMN IF NOT EXISTS reply_by VARCHAR(100);
+                """
+
+            )
+
+        )
+
+        db.session.execute(
+
+            db.text(
+
+                """
+                ALTER TABLE product_reviews
+                ADD COLUMN IF NOT EXISTS reply_date TIMESTAMP;
+                """
+
+            )
+
+        )
+
+        db.session.commit()
+
+        return "Review reply columns added successfully ✅"
+
+    except Exception as error:
+
+        db.session.rollback()
+
+        return str(error)
