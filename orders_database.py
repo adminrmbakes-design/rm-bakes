@@ -678,6 +678,35 @@ class ProductReview(db.Model):
 
     )
 
+
+    # =====================================
+    # ADMIN REPLY
+    # =====================================
+
+    admin_reply = db.Column(
+
+        db.Text,
+
+        nullable=True
+
+    )
+    
+    reply_by = db.Column(
+
+        db.String(100),
+
+        nullable=True
+
+    )
+
+    reply_date = db.Column(
+
+        db.DateTime,
+
+        nullable=True
+
+    )
+
     # =====================================
     # MODERATION
     # =====================================
