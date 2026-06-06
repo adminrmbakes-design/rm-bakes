@@ -521,7 +521,8 @@ def review_remind_later(order_id):
 
             overall_rating=overall_rating
         )
-        
+
+
         db.session.add(feedback)
         
     order.review_remind_at = (
@@ -533,6 +534,47 @@ def review_remind_later(order_id):
     )
     
     order.review_reminder_sent = False
+
+
+    existing_review = (
+        
+        ProductReview.query.filter_by(
+
+            order_id=order.order_id,
+
+            customer_id=current_user.user_id
+
+        ).first()
+
+    )
+    
+    if not existing_review and overall_rating > 0:
+        
+        review = ProductReview(
+
+            order_id=order.order_id,
+
+            order_number=order.order_number,
+
+            is_custom_order=order.is_custom_order,
+
+            product_name=(
+                "Custom Order"
+                if order.is_custom_order
+                else "Rating Only"
+            ),
+
+            customer_id=current_user.user_id,
+            
+            customer_name=current_user.full_name,
+
+            rating=overall_rating,
+
+            review_text=None
+
+        )
+        
+        db.session.add(review)
     
     db.session.commit()
 
