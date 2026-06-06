@@ -641,21 +641,40 @@ async function maybeLater(){
 
     try{
 
-        await fetch(
+        const formData = new FormData();
+        
+        formData.append(
 
+            "overall_rating",
+
+            document.getElementById(
+                "overall_rating"
+            ).value
+        );
+        
+        await fetch(
+            
             "/review-remind-later/{{ order.order_id }}",
 
             {
 
-                method:"POST"
+                method:"POST",
+
+                body:formData
 
             }
+        );
+        
 
+        
+        alert(
+            "💛 Thank you for rating us!"
         );
 
         alert(
-            "🌷 We'll remind you later!"
+            "🌷 We'll remind you later for your sweet story!"
         );
+        
 
         window.location.href =
             "/my-orders";
