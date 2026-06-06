@@ -32,7 +32,11 @@ from database import (
     db,
     User,
     AdminNotification
+)
 
+from database import (
+    User,
+    UserNotification
 )
 
 from utils.admin_guard import (
@@ -1733,6 +1737,33 @@ def reply_review(review_id):
     )
 
     review.reply_date = datetime.utcnow()
+
+
+    #=== Notify customer ===
+
+    notification = UserNotification(
+
+        user_id=review.customer_id,
+
+        title="💌 We replied to your sweet words",
+
+        message=(
+
+            f"Our team replied to your review "
+
+            f"for '{review.product_name}'. "
+
+            f"Tap to read it ✨"
+
+        ),
+
+        notification_type="success",
+
+        notification_category="review"
+
+    )
+
+    db.session.add(notification)
 
     db.session.commit()
 
