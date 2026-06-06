@@ -227,6 +227,27 @@
 
                             {% endif %}
 
+
+                            <!-- Admin replies -->
+
+                            {% if notification.notification_category == "review" %}
+
+                            <a
+
+                                href="{{ url_for(
+                                'review.my_review',
+                                order_id=notification.order_id
+                                ) }}"
+                                class="notification-action-btn"
+                            >
+
+                                View Reply →
+
+                            </a>
+
+                            {% endif %}
+                            
+
                         </div>
 
                     </div>
