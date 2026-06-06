@@ -1571,6 +1571,179 @@ def admin_reviews():
 
 
 
+# =========================================
+# REPLY TO REVIEW
+# =========================================
+
+@admin_bp.route(
+
+    "/admin/reviews/reply/<int:review_id>",
+
+    methods=["POST"]
+
+)
+@admin_required
+def reply_review(review_id):
+
+    review = ProductReview.query.get_or_404(
+
+        review_id
+
+    )
+
+    admin_reply = request.form.get(
+
+        "admin_reply"
+    )
+
+    if not admin_reply:
+
+        flash(
+
+            "Reply cannot be empty",
+
+            "danger"
+
+        )
+
+        return redirect(
+
+            url_for(
+                "admin.admin_reviews"
+            )
+
+        )
+
+    review.admin_reply = admin_reply
+
+    review.reply_by = session.get(
+
+        "admin_username"
+    )
+
+    review.reply_date = datetime.utcnow()
+
+    db.session.commit()
+
+    flash(
+
+        "Reply sent successfully 💌",
+
+        "success"
+
+    )
+
+    return redirect(
+
+        url_for(
+            "admin.admin_reviews"
+        )
+
+    )
+
+
+
+
+# =========================================
+# TOGGLE REVIEW VISIBILITY
+# =========================================
+
+@admin_bp.route(
+
+    "/admin/reviews/toggle/<int:review_id>",
+
+    methods=["POST"]
+
+)
+@admin_required
+def toggle_review_visibility(review_id):
+
+    review = ProductReview.query.get_or_404(
+
+        review_id
+
+    )
+
+    review.is_visible = (
+
+        not review.is_visible
+
+    )
+
+    db.session.commit()
+
+    state = "visible"
+
+    if not review.is_visible:
+
+        state = "hidden"
+
+    flash(
+
+        f"Review is now {state}",
+
+        "success"
+
+    )
+
+    return redirect(
+
+        url_for(
+            "admin.admin_reviews"
+        )
+
+    )
+
+
+
+
+
+# =========================================
+# DELETE REVIEW
+# =========================================
+
+@admin_bp.route(
+
+    "/admin/reviews/delete/<int:review_id>",
+
+    methods=["POST"]
+
+)
+@admin_required
+def delete_review_admin(review_id):
+
+    review = ProductReview.query.get_or_404(
+
+        review_id
+
+    )
+
+    db.session.delete(
+
+        review
+
+    )
+
+    db.session.commit()
+
+    flash(
+
+        "Review deleted successfully 🗑",
+
+        "success"
+
+    )
+
+    return redirect(
+
+        url_for(
+            "admin.admin_reviews"
+        )
+
+    )
+
+
+
 
 # =========================================
 # ADMIN LOGOUT
