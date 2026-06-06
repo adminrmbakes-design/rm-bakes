@@ -1549,6 +1549,109 @@ def admin_reviews():
 
         )
 
+    # ============================
+    # REVIEW INTELLIGENCE
+    # ============================
+
+    hidden_reviews_count = len(
+
+        [
+
+            review
+
+            for review in reviews
+
+            if not review.is_visible
+
+        ]
+
+    )
+
+    five_star_reviews = len(
+
+        [
+
+            review
+
+            for review in reviews
+
+            if review.rating == 5
+
+        ]
+
+    )
+
+    product_counter = {}
+
+    product_rating_totals = {}
+
+    product_rating_counts = {}
+
+    for review in reviews:
+
+        product_name = review.product_name
+
+        product_counter[product_name] = (
+
+            product_counter.get(
+                product_name,
+                0
+            ) + 1
+
+        )
+
+        product_rating_totals[product_name] = (
+
+            product_rating_totals.get(
+                product_name,
+                0
+            ) + review.rating
+
+        )
+
+        product_rating_counts[product_name] = (
+
+            product_rating_counts.get(
+                product_name,
+                0
+            ) + 1
+
+        )
+
+    most_reviewed_product = None
+
+    if product_counter:
+
+        most_reviewed_product = max(
+
+            product_counter,
+
+            key=product_counter.get
+
+        )
+
+    highest_rated_product = None
+
+    highest_rating = 0
+
+    for product_name in product_rating_totals:
+
+        avg = (
+
+            product_rating_totals[product_name]
+
+            /
+
+            product_rating_counts[product_name]
+
+        )
+
+        if avg > highest_rating:
+
+            highest_rating = avg
+
+            highest_rated_product = product_name
+
     return render_template(
 
         "admin/admin_reviews.html",
@@ -1558,6 +1661,14 @@ def admin_reviews():
         total_reviews=total_reviews,
 
         average_rating=average_rating,
+
+        hidden_reviews_count=hidden_reviews_count,
+
+        five_star_reviews=five_star_reviews,
+
+        most_reviewed_product=most_reviewed_product,
+
+        highest_rated_product=highest_rated_product,
 
         admin_username=session.get(
             "admin_username"
