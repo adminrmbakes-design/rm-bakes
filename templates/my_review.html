@@ -36,7 +36,17 @@
 
         <div class="review-text-card">
 
+            {% if review.review_text %}
+
             "{{ review.review_text }}"
+
+            {% else %}
+
+            🌷 No written review yet.
+            You shared a rating and can
+            add your sweet story anytime.
+
+            {% endif %}
 
         </div>
 
@@ -86,7 +96,15 @@
                 class="memory-btn"
             >
 
+                {% if review.review_text %}
+                
                 ✏️ Edit
+                
+                {% else %}
+
+                💌 Add Review
+
+                {% endif %}
 
             </a>
 
