@@ -1759,7 +1759,7 @@ def reply_review(review_id):
 
         notification_type="success",
 
-        notification_category="review"
+        notification_category="review",
 
         order_id=review.order_id
 
