@@ -1067,7 +1067,7 @@ Order:
 
             order_id=order.order_id,
 
-            notification_category="review"
+            notification_category="delivered_review"
 
         )
 
