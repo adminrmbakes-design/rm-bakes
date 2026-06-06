@@ -329,6 +329,19 @@
 
             <div class="review-actions">
 
+                {% if review.admin_reply %}
+
+                <button
+                    class="reply-toggle-btn"
+                    disabled
+                >
+
+                    ✅ Replied
+
+                </button>
+
+                {% else %}
+
                 <button
                     class="reply-toggle-btn"
                     onclick="toggleReply({{ review.review_id }})"
@@ -337,6 +350,8 @@
                     💌 Reply
 
                 </button>
+
+                {% endif %}
 
                 <form
                     method="POST"
