@@ -208,26 +208,6 @@
 
 
 
-                            <!-- VIEW CUSTOM ORDER -->
-
-                            {% if notification.custom_order_id %}
-
-                                <a
-                                    
-                                    href="{{ url_for(
-    'custom_order.custom_order_details',
-    custom_order_id=notification.custom_order_id
-) }}"
-                                    class="notification-action-btn custom-btn"
-                                >
-
-                                    View Dessert →
-
-                                </a>
-
-                            {% endif %}
-
-
                             <!-- Admin replies -->
 
                             {% if notification.notification_category == "review"
@@ -247,6 +227,28 @@
                             </a>
 
                             {% endif %}
+
+
+
+                            <!-- VIEW CUSTOM ORDER -->
+
+                            {% if notification.custom_order_id %}
+
+                                <a
+                                    
+                                    href="{{ url_for(
+    'custom_order.custom_order_details',
+    custom_order_id=notification.custom_order_id
+) }}"
+                                    class="notification-action-btn custom-btn"
+                                >
+
+                                    View Dessert →
+
+                                </a>
+
+                            {% endif %}
+
                             
 
                         </div>
