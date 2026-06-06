@@ -58,7 +58,20 @@
 
                     <div class="review-message">
 
-                        "{{ review.review_text }}"
+                        {% if review.review_text and review.review_text.strip() %}
+
+                        <p class="review-text">
+                            {{ review.review_text }}
+                        </p>
+
+                        {% else %}
+
+                        <p class="review-text rating-only">
+                            🌷 Rated {{ review.rating }} stars
+                        </p>
+                        
+                        {% endif %}
+                        
                     </div>
 
                     <div class="review-footer">
