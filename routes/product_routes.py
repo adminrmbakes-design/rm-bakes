@@ -270,4 +270,4 @@ def product_details(product_id):
 
     )
 
-    )
+
