@@ -23,7 +23,11 @@ from database import (
 
 )
 
+from datetime import datetime
 
+from orders_database import (
+    Order
+)
 
 # =========================================
 # BLUEPRINT
@@ -45,6 +49,98 @@ notification_bp = Blueprint(
 @notification_bp.route("/notifications")
 @login_required
 def notifications_page():
+
+
+    # =====================================
+    # REVIEW REMINDER CHECK
+    # =====================================
+    
+    pending_orders = (
+
+        Order.query.filter_by(
+
+            user_id=current_user.user_id,
+
+            review_reminder_sent=False,
+
+            order_status="delivered"
+
+        )
+        .all()
+
+    )
+    
+    for order in pending_orders:
+        
+        if (
+
+            order.review_remind_at
+
+            and
+
+            datetime.utcnow()
+
+            >=
+
+            order.review_remind_at
+
+        ):
+            
+            existing_notification = (
+                
+                UserNotification.query.filter_by(
+
+                    user_id=current_user.user_id,
+
+                    order_id=order.order_id,
+
+                    notification_category=
+
+                    "review_reminder"
+
+                )
+
+                .first()
+
+            )
+            
+            if not existing_notification:
+                
+                reminder = UserNotification(
+
+                    user_id=current_user.user_id,
+
+                    title="💌 How was your sweet experience?",
+
+                    message=(
+
+                        "Your desserts were delivered. "
+
+                        "We'd love to hear your thoughts 🌸"
+
+                    ),
+                    
+                    notification_type="review",
+
+                    order_id=order.order_id,
+
+                    notification_category=
+
+                    "review_reminder"
+
+                )
+                
+                db.session.add(
+
+                    reminder
+
+                )
+                
+            order.review_reminder_sent = True
+
+    db.session.commit()
+
+
 
     # =====================================
     # USER NOTIFICATIONS
