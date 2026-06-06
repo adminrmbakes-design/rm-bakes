@@ -185,7 +185,23 @@ def submit_review(order_id):
             "product_rating"
         )
 
-        if product_name and product_rating:
+        if (
+
+            (product_name and product_rating)
+
+            or
+
+            (
+
+                order.is_custom_order
+
+                and
+
+                overall_rating > 0
+
+            )
+
+        ):
 
             review = ProductReview(
 
@@ -198,8 +214,15 @@ def submit_review(order_id):
                 is_custom_order=
                     order.is_custom_order,
 
-                product_name=
-                    product_name,
+                product_name=(
+
+                    product_name
+
+                    if product_name
+
+                    else "Custom Order"
+
+                ),
 
                 customer_id=
                     current_user.user_id,
