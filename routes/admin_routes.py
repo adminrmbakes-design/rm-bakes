@@ -1039,6 +1039,39 @@ Order:
     )
 
 
+    # =================================
+    # REVIEW NOTIFICATION
+    # =================================
+    
+    if (
+
+        new_status == "delivered"
+
+    ):
+
+        create_user_notification(
+
+            user_id=order.user_id,
+
+            title="💌 How was your sweet experience?",
+
+            message=(
+
+                "Your desserts were delivered successfully. "
+
+                "We'd love to hear your sweet story 🌸"
+
+            ),
+
+            notification_type="review",
+
+            order_id=order.order_id,
+
+            notification_category="review"
+
+        )
+
+
 
     return redirect(
 
