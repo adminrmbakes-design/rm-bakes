@@ -89,6 +89,8 @@
          OPTIONAL REVIEW
     ====================================== -->
 
+    {% if not order.is_custom_order %}
+    
     <div class="review-card">
 
         <h2 class="review-section-title">
@@ -127,6 +129,8 @@
 
     </div>
 
+    {% endif %}
+
 
 
     <!-- =====================================
@@ -136,7 +140,11 @@
     <div
         class="review-card"
         id="productReviewBlock"
+        {% if order.is_custom_order %}
+        style="display:block;"
+        {% else %}
         style="display:none;"
+        {% endif %}
     >
 
         <h2 class="review-section-title">
@@ -144,6 +152,8 @@
             💌 Tell us your sweet story
         </h2>
 
+        {% if not order.is_custom_order %}
+        
         <select
             id="product_name"
             class="review-select"
@@ -168,6 +178,8 @@
             {% endfor %}
 
         </select>
+
+        {% endif %}
 
         <div
             class="star-rating"
