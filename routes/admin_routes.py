@@ -65,7 +65,9 @@ from utils.notification_utils import (
 
 from orders_database import (
 
-    Order
+    Order,
+    ProductReview,
+    OrderFeedback
 
 )
 
@@ -1506,7 +1508,70 @@ def clear_admin_notifications():
     
     
     
-    
+# =========================================
+# REVIEW MANAGEMENT
+# =========================================
+
+@admin_bp.route(
+    "/admin/reviews"
+)
+@admin_required
+def admin_reviews():
+
+    reviews = (
+
+        ProductReview.query
+
+        .order_by(
+            ProductReview.created_at.desc()
+        )
+
+        .all()
+
+    )
+
+    total_reviews = len(reviews)
+
+    average_rating = 0
+
+    if reviews:
+
+        average_rating = round(
+
+            sum(
+                review.rating
+                for review in reviews
+            )
+
+            / total_reviews,
+
+            1
+
+        )
+
+    return render_template(
+
+        "admin/admin_reviews.html",
+
+        reviews=reviews,
+
+        total_reviews=total_reviews,
+
+        average_rating=average_rating,
+
+        admin_username=session.get(
+            "admin_username"
+        ),
+
+        admin_role=session.get(
+            "admin_role"
+        )
+
+    )
+
+
+
+
 # =========================================
 # ADMIN LOGOUT
 # =========================================
