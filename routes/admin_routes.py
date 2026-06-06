@@ -1706,6 +1706,20 @@ def reply_review(review_id):
 
     )
 
+    if review.admin_reply:
+        
+        flash(
+            "This review already has a reply 💌",
+            "warning"
+        )
+        
+        return redirect(
+            url_for(
+                "admin.admin_reviews"
+            )
+        )
+    
+
     admin_reply = request.form.get(
 
         "admin_reply"
