@@ -1761,6 +1761,8 @@ def reply_review(review_id):
 
         notification_category="review"
 
+        order_id=review.order_id
+
     )
 
     db.session.add(notification)
