@@ -176,6 +176,37 @@ def product_details(product_id):
     ).all()
     
     review_count = len(reviews)
+
+    written_reviews = len(
+
+        [
+            review
+
+            for review in reviews
+            
+            if review.review_text
+
+            and review.review_text.strip()
+
+        ]
+
+    )
+    
+    rating_only_reviews = len(
+
+        [
+
+            review
+
+            for review in reviews
+
+            if not review.review_text
+
+            or not review.review_text.strip()
+
+        ]
+
+    )
     
     average_rating = (
         
@@ -231,6 +262,12 @@ def product_details(product_id):
 
         review_count=review_count,
 
-        average_rating=average_rating
+        average_rating=average_rating,
+
+        written_reviews=written_reviews,
+
+        rating_only_reviews=rating_only_reviews
+
+    )
 
     )
