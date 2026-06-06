@@ -230,7 +230,8 @@
 
                             <!-- Admin replies -->
 
-                            {% if notification.notification_category == "review" %}
+                            {% if notification.notification_category == "review"
+                            and notification.order_id %}
 
                             <a
 
