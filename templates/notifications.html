@@ -138,32 +138,27 @@
 
                         <!-- ORDER TYPE LABEL -->
 
-{% if
-    notification.custom_order_id
-    or
-    "DS" in notification.message
-%}
+                        {% if notification.custom_order_id or "DS" in notification.message %}
 
-<div
-    class="
-        notification-order-label
-        custom-label
-    "
->
+                        <div
+                            class="
+                            notification-order-label
+                            custom-label"
+                        >
 
-    ✨ Custom Order
+                            ✨ Custom Order
 
-</div>
+                        </div>
 
-{% else %}
+                        {% else %}
 
-<div class="notification-order-label">
+                        <div class="notification-order-label">
 
-    🍰 Menu Order
+                            🍰 Menu Order
 
-</div>
+                        </div>
 
-{% endif %}
+                        {% endif %}
 
 
 
@@ -229,6 +224,26 @@
                             {% endif %}
 
 
+                            <!-- Reminder Notifications button -->
+
+                            {% if notification.notification_category == "review_reminder" %}
+
+                            <a
+
+                                href="{{ url_for(
+                                'review.leave_review',
+                                order_id=notification.order_id
+                                ) }}"
+                                class="notification-action-btn"
+                            >
+
+                                Share Experience →
+
+                            </a>
+                            
+                            {% endif %}
+
+
 
                             <!-- VIEW CUSTOM ORDER -->
 
@@ -237,9 +252,9 @@
                                 <a
                                     
                                     href="{{ url_for(
-    'custom_order.custom_order_details',
-    custom_order_id=notification.custom_order_id
-) }}"
+                                    'custom_order.custom_order_details',
+                                    custom_order_id=notification.custom_order_id
+                                    ) }}"
                                     class="notification-action-btn custom-btn"
                                 >
 
