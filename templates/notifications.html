@@ -224,6 +224,44 @@
                             {% endif %}
 
 
+                            <!-- Review after delivered -->
+
+
+                            {% if notification.notification_category == "delivered_review" %}
+
+                            {% if notification.has_review %}
+
+                            <a
+                                href="{{ url_for(
+                                'review.my_review',
+                                order_id=notification.order_id
+                                ) }}"
+                                class="notification-action-btn"
+                            >
+
+                                My Experience →
+
+                            </a>
+
+                            {% else %}
+
+                            <a
+                                href="{{ url_for(
+                                'review.leave_review',
+                                order_id=notification.order_id
+                                ) }}"
+                                class="notification-action-btn"
+                            >
+
+                                Give Review →
+
+                            </a>
+
+                            {% endif %}
+
+                            {% endif %}
+
+
                             <!-- Reminder Notifications button -->
 
                             {% if notification.notification_category == "review_reminder" %}
