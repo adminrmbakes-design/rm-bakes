@@ -1957,3 +1957,39 @@ RM Bakes Control Center.
     )
 
 
+@admin_bp.route(
+    "/admin/add-review-reminder-columns"
+)
+def add_review_reminder_columns():
+
+    from sqlalchemy import text
+
+    try:
+
+        db.session.execute(
+            text(
+                """
+                ALTER TABLE orders
+                ADD COLUMN review_reminder_sent BOOLEAN DEFAULT FALSE
+                """
+            )
+        )
+
+        db.session.execute(
+            text(
+                """
+                ALTER TABLE orders
+                ADD COLUMN review_remind_at TIMESTAMP
+                """
+            )
+        )
+
+        db.session.commit()
+
+        return "Review reminder columns added successfully ✅"
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        return str(e)
