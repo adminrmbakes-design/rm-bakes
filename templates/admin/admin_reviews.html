@@ -255,7 +255,15 @@
 
             <div class="review-text">
 
+                {% if review.review_text and review.review_text.strip() %}
+
                 {{ review.review_text }}
+
+                {% else %}
+
+                🌷 Customer shared a rating but hasn't written a review yet.
+
+                {% endif %}
 
             </div>
 
