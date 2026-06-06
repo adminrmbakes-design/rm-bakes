@@ -444,3 +444,55 @@ def delete_review(review_id):
         )
     )
 
+
+
+# =========================================
+# MAYBE LATER REMINDER
+# =========================================
+
+@review_bp.route(
+    "/review-remind-later/<int:order_id>",
+    methods=["POST"]
+)
+@login_required
+def review_remind_later(order_id):
+
+    from datetime import (
+        datetime,
+        timedelta
+    )
+
+    order = Order.query.filter_by(
+
+        order_id=order_id,
+
+        user_id=current_user.user_id
+
+    ).first()
+
+    if not order:
+
+        return jsonify({
+
+            "success": False
+
+        })
+
+    order.review_remind_at = (
+
+        datetime.utcnow()
+
+        + timedelta(minutes=30)
+
+    )
+
+    order.review_reminder_sent = False
+
+    db.session.commit()
+
+    return jsonify({
+
+        "success": True
+
+    })
+
