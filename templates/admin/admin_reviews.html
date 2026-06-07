@@ -339,17 +339,45 @@
 
                 {% if review.is_custom_order %}
 
-                <a
-                    href="{{ url_for(
-                    'admin.order_details',
-                    order_id=review.order_id
-                    ) }}"
+                <button
+                    type="button"
                     class="action-btn"
+                    onclick="toggleCustomDetails(
+                        '{{ review.review_id }}'
+                    )"
                 >
 
-                    📋 View Order
+                    📋 View Details
 
-                </a>
+                </button>
+
+                <div
+                    id="custom-details-{{ review.review_id }}"
+                    style="display:none;"
+                    class="custom-order-details"
+                >
+
+                    <p>
+                        <strong>Request Code:</strong>
+                        {{ review.order_details.custom_request_code }}
+                    </p>
+
+                    <p>
+                        <strong>Flavor:</strong>
+                        {{ review.order_details.custom_flavor }}
+                    </p>
+
+                    <p>
+                        <strong>Description:</strong>
+                        {{ review.order_details.custom_description }}
+                    </p>
+
+                    <p>
+                        <strong>Special Notes:</strong>
+                        {{ review.order_details.custom_special_notes }}
+                    </p>
+
+                </div>
 
                 {% endif %}
 
