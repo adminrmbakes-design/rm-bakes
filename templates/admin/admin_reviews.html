@@ -357,10 +357,26 @@
                     class="custom-order-details"
                 >
 
-                    <p>
-                        <strong>Request Code:</strong>
-                        {{ review.order.custom_request_code }}
-                    </p>
+                    {% if review.order.inspiration_image %}
+
+                    <div style="margin-top:12px;">
+
+                        <strong>Inspiration Image:</strong>
+
+                        <br><br>
+
+                        <img
+                            src="{{ review.order.inspiration_image }}"
+                            alt="Inspiration Image"
+                            style="
+                            width:100%;
+                            max-width:300px;
+                            border-radius:18px;
+                            border:1px solid rgba(255,255,255,0.1);"
+                        >
+                    </div>
+
+                    {% endif %}
 
                     <p>
                         <strong>Flavor:</strong>
