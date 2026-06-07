@@ -337,6 +337,22 @@
 
             <div class="review-actions">
 
+                {% if review.is_custom_order %}
+
+                <a
+                    href="{{ url_for(
+                    'admin.order_details',
+                    order_id=review.order_id
+                    ) }}"
+                    class="action-btn"
+                >
+
+                    📋 View Order
+
+                </a>
+
+                {% endif %}
+
                 {% if review.admin_reply %}
 
                 <button
