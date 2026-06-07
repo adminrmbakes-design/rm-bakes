@@ -359,22 +359,22 @@
 
                     <p>
                         <strong>Request Code:</strong>
-                        {{ review.order_details.custom_request_code }}
+                        {{ review.order.custom_request_code }}
                     </p>
 
                     <p>
                         <strong>Flavor:</strong>
-                        {{ review.order_details.custom_flavor }}
+                        {{ review.order.custom_flavor }}
                     </p>
 
                     <p>
                         <strong>Description:</strong>
-                        {{ review.order_details.custom_description }}
+                        {{ review.order.custom_description }}
                     </p>
 
                     <p>
                         <strong>Special Notes:</strong>
-                        {{ review.order_details.custom_special_notes }}
+                        {{ review.order.custom_special_notes }}
                     </p>
 
                 </div>
@@ -1126,6 +1126,27 @@ function toggleReply(reviewId){
 
 }
 
+
+function toggleCustomDetails(reviewId){
+
+    const box = document.getElementById(
+        "custom-details-" + reviewId
+    );
+
+    if(box.style.display === "block"){
+
+        box.style.display = "none";
+
+    }else{
+
+        box.style.display = "block";
+
+    }
+
+}
+
+
+    
 </script>
 
 
