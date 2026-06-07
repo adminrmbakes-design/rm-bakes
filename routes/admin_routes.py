@@ -1695,6 +1695,14 @@ def admin_reviews():
 
             highest_rated_product = product_name
 
+    for review in reviews:
+        
+        if review.is_custom_order:
+            review.order = Order.query.filter_by(
+                order_id=review.order_id
+            ).first()
+        
+
     return render_template(
 
         "admin/admin_reviews.html",
