@@ -1940,6 +1940,32 @@ def delete_review_admin(review_id):
     )
 
 
+# ====== Custom orders view in "REVIEWS" =======
+
+@admin_bp.route(
+    "/admin/order-details/<int:order_id>"
+)
+@admin_required
+def admin_order_details(order_id):
+
+    order = Order.query.get_or_404(
+        order_id
+    )
+
+    try:
+
+        order.products = json.loads(
+            order.products_json
+        )
+
+    except:
+        order.products = []
+
+    return render_template(
+        "order_details.html",
+        order=order
+    )
+
 
 
 # =========================================
