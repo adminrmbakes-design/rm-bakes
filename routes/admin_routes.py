@@ -1626,6 +1626,12 @@ def admin_reviews():
 
     for review in reviews:
 
+        if review.product_name in [
+            "Custom Order",
+            "Rating Only"
+        ]:
+            continue
+
         product_name = review.product_name
 
         product_counter[product_name] = (
