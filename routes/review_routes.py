@@ -620,7 +620,9 @@ def review_remind_later(order_id):
             product_name=(
                 "Custom Order"
                 if order.is_custom_order
-                else "Rating Only"
+                else json.loads(
+                    order.products_json
+                )[0]["product_name"]
             ),
 
             customer_id=current_user.user_id,
