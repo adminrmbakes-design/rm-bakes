@@ -357,15 +357,20 @@
                     class="custom-order-details"
                 >
 
-                    {% if review.order.inspiration_image %}
+                    {% if review.order.custom_inspiration_image %}
 
-                    <div style="margin-top:12px;">
+                    <img
+                        src="{{ review.order.custom_inspiration_image }}"
+                        alt="Inspiration Image"
+                        style="
+                        width:100%;
+                        max-width:300px;
+                        border-radius:18px;"
+                    >
 
-                        <strong>Inspiration Image:</strong>
-
-                        <p>{{ review.order.inspiration_image }}</p>
-
-                    </div>
+                    <p> Image:
+                        {{ review.order.custom_inspiration_image }}
+                    </p>
 
                     {% endif %}
 
