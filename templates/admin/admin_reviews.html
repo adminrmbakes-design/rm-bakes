@@ -238,7 +238,7 @@
             order_filter='menu'
             ) }}"
             class="action-btn
-            {% if order_filter == 'all' %} active-filter {% endif %}"
+            {% if order_filter == 'menu' %} active-filter {% endif %}"
         >
 
             Menu Orders
@@ -250,33 +250,36 @@
             'admin.admin_reviews',
             order_filter='custom'
             ) }}"
-            class="action-btn
-            {% if order_filter == 'all' %} active-filter {% endif %}"
+            class="action-btn {% if order_filter == 'custom' %} active-filter {% endif %}"
         >
 
             Custom Orders
 
         </a>
 
+        <div>
+            <p class="filter-status">
+
+                {% if order_filter == "menu" %}
+
+                🍰 Showing Menu Order Reviews
+
+                {% elif order_filter == "custom" %}
+
+                ✨ Showing Custom Order Reviews
+
+                {% else %}
+
+                💬 Showing All Reviews
+
+               {% endif %}
+
+            </p>
+        </div>
+
+   
     </div>
-
-    <p class="filter-status">
-
-        {% if order_filter == "menu" %}
-
-        🍰 Showing Menu Order Reviews
-
-        {% elif order_filter == "custom" %}
-
-        ✨ Showing Custom Order Reviews
-
-        {% else %}
-
-        💬 Showing All Reviews
-
-        {% endif %}
-
-    </p>
+    
 
 
 
