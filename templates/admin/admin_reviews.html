@@ -374,10 +374,6 @@
                         border-radius:18px;"
                     >
 
-                    <p> Image:
-                        {{ review.order.custom_inspiration_image }}
-                    </p>
-
                     {% endif %}
 
                     <p>
@@ -423,6 +419,8 @@
 
                 {% endif %}
 
+                {% if not review.is_custom_order %}
+
                 <form
                     method="POST"
                     action="{{ url_for('admin.toggle_review_visibility', review_id=review.review_id) }}"
@@ -438,6 +436,8 @@
                     </button>
 
                 </form>
+
+                {% endif %}
 
                 <form
                     method="POST"
