@@ -1555,6 +1555,16 @@ def clear_admin_notifications():
 @admin_required
 def admin_reviews():
 
+    order_filter = request.args.get(
+        "order_filter",
+        "all"
+    )
+    
+    review_filter = request.args.get(
+        "review_filter",
+        "all"
+    )
+
     reviews = (
 
         ProductReview.query
@@ -1566,6 +1576,30 @@ def admin_reviews():
         .all()
 
     )
+
+    if order_filter == "menu":
+        
+        reviews = [
+
+            review
+
+            for review in reviews
+
+            if not review.is_custom_order
+
+        ]
+    
+    elif order_filter == "custom":
+        
+        reviews = [
+
+            review
+
+            for review in reviews
+
+            if review.is_custom_order
+
+        ]
 
     total_reviews = len(reviews)
 
