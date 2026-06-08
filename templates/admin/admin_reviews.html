@@ -353,8 +353,14 @@
 
                 <div
                     id="custom-details-{{ review.review_id }}"
-                    style="display:none;"
                     class="custom-order-details"
+                    style="
+                    display:none;
+                    overflow-wrap:break-word;
+                    word-wrap:break-word;
+                    word-break:break-word;
+                    width:100%;
+                    box-sizing:border-box;"
                 >
 
                     {% if review.order.custom_inspiration_image %}
