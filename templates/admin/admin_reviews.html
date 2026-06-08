@@ -214,6 +214,50 @@
     </div>
 
 
+    <!-- ==========================
+         FILTERS
+    =========================== -->
+
+    <div class="review-filters">
+
+        <a
+            href="{{ url_for(
+            'admin.admin_reviews'
+            ) }}"
+            class="action-btn"
+        >
+
+            All
+
+        </a>
+
+        <a
+            href="{{ url_for(
+            'admin.admin_reviews',
+            order_filter='menu'
+            ) }}"
+            class="action-btn"
+        >
+
+            Menu Orders
+
+        </a>
+
+        <a
+            href="{{ url_for(
+            'admin.admin_reviews',
+            order_filter='custom'
+            ) }}"
+            class="action-btn"
+        >
+
+            Custom Orders
+
+        </a>
+
+    </div>
+
+
 
     <!-- ==========================
          REVIEWS
@@ -747,7 +791,22 @@ body{
 }
 
 
+/* ==========================
+    FILTERS
+========================= */
 
+.review-filters{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    margin-bottom:20px;
+
+}
+    
 /* ==========================
    INTELLIGENCE
 ========================== */
