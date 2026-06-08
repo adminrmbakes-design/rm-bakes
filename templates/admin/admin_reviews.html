@@ -224,7 +224,8 @@
             href="{{ url_for(
             'admin.admin_reviews'
             ) }}"
-            class="action-btn"
+            class="action-btn 
+            {% if order_filter == 'all' %} active-filter {% endif %}"
         >
 
             All
@@ -236,7 +237,8 @@
             'admin.admin_reviews',
             order_filter='menu'
             ) }}"
-            class="action-btn"
+            class="action-btn
+            {% if order_filter == 'all' %} active-filter {% endif %}"
         >
 
             Menu Orders
@@ -248,7 +250,8 @@
             'admin.admin_reviews',
             order_filter='custom'
             ) }}"
-            class="action-btn"
+            class="action-btn
+            {% if order_filter == 'all' %} active-filter {% endif %}"
         >
 
             Custom Orders
@@ -256,6 +259,24 @@
         </a>
 
     </div>
+
+    <p class="filter-status">
+
+        {% if order_filter == "menu" %}
+
+        🍰 Showing Menu Order Reviews
+
+        {% elif order_filter == "custom" %}
+
+        ✨ Showing Custom Order Reviews
+
+        {% else %}
+
+        💬 Showing All Reviews
+
+        {% endif %}
+
+    </p>
 
 
 
@@ -857,6 +878,38 @@ body{
         );
 }
 
+.active-filter{
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6b9d,
+            #ff8fab
+        ) !important;
+
+    color:white !important;
+
+    border:none !important;
+
+    box-shadow:
+        0 0 20px rgba(
+            255,
+            107,
+            157,
+            0.35
+        );
+
+}
+
+.filter-status{
+
+    margin-bottom:20px;
+
+    opacity:0.8;
+
+    font-size:14px;
+
+}
     
     
 /* ==========================
