@@ -583,6 +583,7 @@
             data-target-product="{{ coupon.target_product or '' }}"
             data-target-category="{{ coupon.target_category or '' }}"
             data-popularity-text="{{ coupon.popularity_text or '' }}"
+            data-expiry-date="{{ coupon.expiry_date or '' }}"
         >
             
             <div class="coupon-code">
@@ -882,6 +883,14 @@
 
             <br><br>
 
+            <input
+                id="edit_expiry_date"
+                type="datetime-local"
+                name="expiry_date"
+            >
+
+            <br><br>
+
             <select
                 id="edit_scope"
                 name="scope"
@@ -1158,6 +1167,21 @@ function openEditModal(couponId){
     document.getElementById(
         "edit_popularity_text"
     ).value = card.dataset.popularityText;
+
+    if(card.dataset.expiryDate){
+
+        document.getElementById(
+            "edit_expiry_date"
+        ).value =
+
+            card.dataset.expiryDate
+            .substring(0,16);
+
+    }
+
+    document.getElementById(
+        "edit_expiry_date"
+    ).value = "";
 
     document.getElementById(
         "edit-form"
