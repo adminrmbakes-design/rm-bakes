@@ -742,27 +742,55 @@ function updateScope(){
             "scope"
         ).value;
 
-    document.getElementById(
-        "product-section"
-    ).style.display = "none";
+    const productSection =
+        document.getElementById(
+            "product-section"
+        );
 
-    document.getElementById(
-        "category-section"
-    ).style.display = "none";
+    const categorySection =
+        document.getElementById(
+            "category-section"
+        );
+
+    const productSelect =
+        document.querySelector(
+            '[name="target_product"]'
+        );
+
+    const categorySelect =
+        document.querySelector(
+            '[name="target_category"]'
+        );
+
+    productSection.style.display =
+        "none";
+
+    categorySection.style.display =
+        "none";
 
     if(scope==="product"){
 
-        document.getElementById(
-            "product-section"
-        ).style.display = "block";
+        productSection.style.display =
+            "block";
+
+        categorySelect.value = "";
 
     }
 
-    if(scope==="category"){
+    else if(scope==="category"){
 
-        document.getElementById(
-            "category-section"
-        ).style.display = "block";
+        categorySection.style.display =
+            "block";
+
+        productSelect.value = "";
+
+    }
+
+    else{
+
+        productSelect.value = "";
+
+        categorySelect.value = "";
 
     }
 
