@@ -901,6 +901,8 @@
 
             <br><br>
 
+            <div id="edit-product-section">
+
             <select
                 id="edit_target_product"
                 name="target_product"
@@ -922,8 +924,11 @@
 
                 {% endfor %}
             </select>
+            </div>
 
             <br><br>
+
+            <div id="edit-category-section">
 
             <select
                 id="edit_target_category"
@@ -947,6 +952,7 @@
                 {% endfor %}
 
             </select>
+            </div>
 
             <br><br>
 
@@ -1056,6 +1062,45 @@ document
 
 updateScope();
 
+function updateEditScope(){
+
+    const scope =
+        document.getElementById(
+            "edit_scope"
+        ).value;
+
+    const productSection =
+        document.getElementById(
+            "edit-product-section"
+        );
+
+    const categorySection =
+        document.getElementById(
+            "edit-category-section"
+        );
+
+    productSection.style.display =
+        "none";
+
+    categorySection.style.display =
+        "none";
+
+    if(scope==="product"){
+
+        productSection.style.display =
+            "block";
+
+    }
+
+    else if(scope==="category"){
+
+        categorySection.style.display =
+            "block";
+
+    }
+
+}
+
 function openEditModal(couponId){
 
     const card = document.querySelector(
@@ -1100,6 +1145,8 @@ function openEditModal(couponId){
         "edit_scope"
     ).value = card.dataset.scope;
 
+    updateEditScope();
+
     document.getElementById(
         "edit_target_product"
     ).value = card.dataset.targetProduct;
@@ -1131,6 +1178,15 @@ function closeEditModal(){
     ).style.display = "none";
 
 }
+
+document
+.getElementById(
+    "edit_scope"
+)
+.addEventListener(
+    "change",
+    updateEditScope
+);
 
 </script>
 
