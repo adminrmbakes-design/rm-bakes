@@ -175,6 +175,20 @@ class Coupon(db.Model):
     )
 
 
+    # ====================================
+    # Optimal text 
+    # ====================================
+
+  
+    popularity_text = db.Column(
+        
+        db.String(255),
+
+        nullable=True
+
+    )
+
+
 # =========================================
 # COUPON USAGE HISTORY
 # =========================================
@@ -260,19 +274,5 @@ class CouponUsage(db.Model):
         db.DateTime,
 
         default=datetime.utcnow
-
-    )
-
-
-    # ====================================
-    # Optimal text 
-    # ====================================
-
-  
-    popularity_text = db.Column(
-
-      db.String(255),
-
-      nullable=True
 
     )
