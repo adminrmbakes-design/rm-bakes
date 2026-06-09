@@ -567,7 +567,12 @@
 
         {% for coupon in coupons %}
 
-        <div class="coupon-card">
+        <div
+            class="coupon-card"
+            data-coupon-id="{{ coupon.coupon_id }}"
+            data-coupon-code="{{ coupon.coupon_code }}"
+            data-coupon-title="{{ coupon.coupon_title }}"
+        >
 
             <div class="coupon-code">
 
@@ -671,6 +676,8 @@
 
             <div class="actions">
 
+                <!-- Toggle button -->
+
                 <form
 
                     method="POST"
@@ -693,6 +700,19 @@
                     </button>
 
                 </form>
+
+                <!-- Edit button -->
+
+                <button
+                    type="button"
+                    onclick="openEditModal('{{ coupon.coupon_id }}')"
+                >
+
+                    ✏️ Edit
+
+                </button>
+
+                <!-- Delete button -->
 
                 <form
 
@@ -732,6 +752,84 @@
     </div>
 
 </div>
+
+<!-- Modal popup -->
+
+<div
+    id="edit-modal"
+    style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.7);
+        z-index:9999;
+        overflow:auto;
+        padding:30px;
+    "
+>
+
+    <div
+        style="
+            max-width:900px;
+            margin:auto;
+            background:#111;
+            padding:25px;
+            border-radius:24px;
+        "
+    >
+
+        <h2>
+
+            ✏️ Edit Coupon
+
+        </h2>
+
+        <br>
+
+        <form
+            id="edit-form"
+            method="POST"
+        >
+
+            <input
+                id="edit_coupon_code"
+                name="coupon_code"
+                placeholder="Coupon Code"
+            >
+
+            <br><br>
+
+            <input
+                id="edit_coupon_title"
+                name="coupon_title"
+                placeholder="Coupon Title"
+            >
+
+            <br><br>
+
+            <button
+                type="button"
+                onclick="closeEditModal()"
+            >
+
+                Cancel
+
+            </button>
+
+            <button
+                type="submit"
+            >
+
+                💾 Save Changes
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+    
 
 <script>
 
@@ -806,6 +904,42 @@ document
 );
 
 updateScope();
+
+function openEditModal(couponId){
+
+    const card = document.querySelector(
+
+        `[data-coupon-id="${couponId}"]`
+
+    );
+
+    document.getElementById(
+        "edit_coupon_code"
+    ).value = card.dataset.couponCode;
+
+    document.getElementById(
+        "edit_coupon_title"
+    ).value = card.dataset.couponTitle;
+
+    document.getElementById(
+        "edit-form"
+    ).action =
+
+        `/admin/coupons/update/${couponId}`;
+
+    document.getElementById(
+        "edit-modal"
+    ).style.display = "block";
+
+}
+
+function closeEditModal(){
+
+    document.getElementById(
+        "edit-modal"
+    ).style.display = "none";
+
+}
 
 </script>
 
