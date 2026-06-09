@@ -569,11 +569,22 @@
 
         <div
             class="coupon-card"
+
             data-coupon-id="{{ coupon.coupon_id }}"
             data-coupon-code="{{ coupon.coupon_code }}"
             data-coupon-title="{{ coupon.coupon_title }}"
+            data-coupon-description="{{ coupon.coupon_description or '' }}"
+            data-discount-type="{{ coupon.discount_type }}"
+            data-discount-value="{{ coupon.discount_value }}"
+            data-minimum-order="{{ coupon.minimum_order_amount or 0 }}"
+            data-usage-limit="{{ coupon.usage_limit or '' }}"
+            data-maximum-discount="{{ coupon.maximum_discount or '' }}"
+            data-scope="{{ coupon.scope }}"
+            data-target-product="{{ coupon.target_product or '' }}"
+            data-target-category="{{ coupon.target_category or '' }}"
+            data-popularity-text="{{ coupon.popularity_text or '' }}"
         >
-
+            
             <div class="coupon-code">
 
                 {{ coupon.coupon_code }}
@@ -784,6 +795,8 @@
 
         </h2>
 
+        <!-- Edit coupons -->
+
         <br>
 
         <form
@@ -803,6 +816,144 @@
                 id="edit_coupon_title"
                 name="coupon_title"
                 placeholder="Coupon Title"
+            >
+
+            <br><br>
+
+            <textarea
+                id="edit_coupon_description"
+                name="coupon_description"
+                placeholder="Description"
+            ></textarea>
+
+            <br><br>
+
+            <select
+                id="edit_discount_type"
+                name="discount_type"
+            >
+                <option value="percentage">
+                    Percentage
+                </option>
+
+                <option value="fixed_amount">
+                    Fixed Amount
+                </option>
+            </select>
+
+            <br><br>
+
+            <input
+                id="edit_discount_value"
+                type="number"
+                step="0.01"
+                name="discount_value"
+                placeholder="Discount Value"
+            >
+
+                <br><br>
+
+            <input
+                id="edit_minimum_order"
+                type="number"
+                step="0.01"
+                name="minimum_order_amount"
+                placeholder="Minimum Order"
+            >
+
+            <br><br>
+
+            <input
+                id="edit_usage_limit"
+                type="number"
+                name="usage_limit"
+                placeholder="Usage Limit"
+            >
+
+            <br><br>
+
+            <input
+                id="edit_maximum_discount"
+                type="number"
+                step="0.01"
+                name="maximum_discount"
+                placeholder="Maximum Discount"
+            >
+
+            <br><br>
+
+            <select
+                id="edit_scope"
+                name="scope"
+            >
+                <option value="cart">
+                    Entire Cart
+                </option>
+
+                <option value="product">
+                    Product
+                </option>
+
+                <option value="category">
+                    Category
+                </option>
+            </select>
+
+            <br><br>
+
+            <select
+                id="edit_target_product"
+                name="target_product"
+            >
+
+                <option value="">
+                    Select Product
+                </option>
+
+                {% for product in products %}
+
+                <option
+                    value="{{ product.product_name }}"
+                >
+
+                    {{ product.product_name }}
+
+                </option>
+
+                {% endfor %}
+            </select>
+
+            <br><br>
+
+            <select
+                id="edit_target_category"
+                name="target_category"
+            >
+
+                <option value="">
+                    Select Category
+                </option>
+
+                {% for category in categories %}
+
+                <option
+                    value="{{ category }}"
+                >
+
+                    {{ category }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <br><br>
+
+            <input
+                id="edit_popularity_text"
+                name="popularity_text"
+                placeholder="Popularity Text"
             >
 
             <br><br>
@@ -920,6 +1071,46 @@ function openEditModal(couponId){
     document.getElementById(
         "edit_coupon_title"
     ).value = card.dataset.couponTitle;
+
+    document.getElementById(
+        "edit_coupon_description"
+    ).value = card.dataset.couponDescription;
+
+    document.getElementById(
+        "edit_discount_type"
+    ).value = card.dataset.discountType;
+
+    document.getElementById(
+        "edit_discount_value"
+    ).value = card.dataset.discountValue;
+
+    document.getElementById(
+        "edit_minimum_order"
+    ).value = card.dataset.minimumOrder;
+
+    document.getElementById(
+        "edit_usage_limit"
+    ).value = card.dataset.usageLimit;
+
+    document.getElementById(
+        "edit_maximum_discount"
+    ).value = card.dataset.maximumDiscount;
+
+    document.getElementById(
+        "edit_scope"
+    ).value = card.dataset.scope;
+
+    document.getElementById(
+        "edit_target_product"
+    ).value = card.dataset.targetProduct;
+
+    document.getElementById(
+        "edit_target_category"
+    ).value = card.dataset.targetCategory;
+
+    document.getElementById(
+        "edit_popularity_text"
+    ).value = card.dataset.popularityText;
 
     document.getElementById(
         "edit-form"
