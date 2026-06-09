@@ -12,6 +12,9 @@ from database import db
 from database import User
 from database import UserNotification
 
+# Coupon database
+from coupons_database import *
+
 # =========================================
 # ORDER MODELS
 # =========================================
