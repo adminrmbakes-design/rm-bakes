@@ -487,21 +487,57 @@
 
                 <div id="product-section">
 
-                    <input
-                        type="text"
+                    <select
                         name="target_product"
-                        placeholder="Target Product"
                     >
+
+                        <option value="">
+
+                            Select Product
+
+                        </option>
+
+                        {% for product in products %}
+
+                        <option
+                            value="{{ product.product_name }}"
+                        >
+
+                            {{ product.product_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
 
                 </div>
 
                 <div id="category-section">
 
-                    <input
-                        type="text"
+                    <select
                         name="target_category"
-                        placeholder="Target Category"
                     >
+
+                        <option value="">
+
+                            Select Category
+
+                        </option>
+
+                        {% for category in categories %}
+
+                        <option
+                            value="{{ category }}"
+                        >
+
+                            {{ category }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
 
                 </div>
 
