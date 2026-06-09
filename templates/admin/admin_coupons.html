@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        Sweet Deals Control Center
+
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(255,200,0,0.08),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #040404,
+                    #0b0b0b,
+                    #111111
+                );
+
+            color:white;
+
+            font-family:'Inter',sans-serif;
+
+            padding:30px;
+
+        }
+
+        .container{
+
+            max-width:1400px;
+
+            margin:auto;
+
+        }
+
+        .page-title{
+
+            font-family:'Orbitron',sans-serif;
+
+            font-size:2rem;
+
+            margin-bottom:10px;
+
+        }
+
+        .page-subtitle{
+
+            color:rgba(255,255,255,0.6);
+
+            margin-bottom:30px;
+
+        }
+
+        .form-card{
+
+            background:rgba(255,255,255,0.04);
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            border-radius:24px;
+
+            padding:25px;
+
+            margin-bottom:35px;
+
+        }
+
+        .form-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px,1fr)
+                );
+
+            gap:16px;
+
+        }
+
+        input,
+        select{
+
+            width:100%;
+
+            padding:14px;
+
+            border:none;
+
+            border-radius:16px;
+
+            background:rgba(
+                255,
+                255,
+                255,
+                0.06
+            );
+
+            color:white;
+
+        }
+
+        button{
+
+            cursor:pointer;
+
+            border:none;
+
+            border-radius:16px;
+
+            padding:14px 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffb300,
+                    #ff9800
+                );
+
+            color:black;
+
+            font-weight:700;
+
+        }
+
+        .coupon-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(320px,1fr)
+                );
+
+            gap:22px;
+
+        }
+
+        .coupon-card{
+
+            background:rgba(
+                255,
+                255,
+                255,
+                0.04
+            );
+
+            border:1px solid rgba(
+                255,
+                255,
+                255,
+                0.08
+            );
+
+            border-radius:24px;
+
+            padding:24px;
+
+        }
+
+        .coupon-code{
+
+            font-family:'Orbitron',sans-serif;
+
+            font-size:1.2rem;
+
+            margin-bottom:12px;
+
+            color:#ffd54f;
+
+        }
+
+        .coupon-title{
+
+            font-size:1rem;
+
+            margin-bottom:15px;
+
+        }
+
+        .coupon-info{
+
+            color:rgba(
+                255,
+                255,
+                255,
+                0.65
+            );
+
+            line-height:1.9;
+        }
+
+        .status-active{
+
+            color:#00ff9d;
+        }
+
+        .status-inactive{
+
+            color:#ff5c7d;
+        }
+
+        .actions{
+
+            display:flex;
+
+            gap:10px;
+
+            margin-top:20px;
+
+            flex-wrap:wrap;
+        }
+
+        .toggle-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00ffd0,
+                    #00b894
+                );
+        }
+
+        .delete-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff3366,
+                    #ff003c
+                );
+
+            color:white;
+        }
+
+        .back-btn{
+
+            display:inline-block;
+
+            margin-bottom:25px;
+
+            text-decoration:none;
+
+            color:white;
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:rgba(
+                255,
+                255,
+                255,
+                0.06
+            );
+        }
+
+        .flash{
+
+            margin-bottom:20px;
+
+            padding:16px;
+
+            border-radius:18px;
+
+            background:
+                rgba(
+                    0,
+                    255,
+                    180,
+                    0.1
+                );
+
+            border:
+                1px solid
+                rgba(
+                    0,
+                    255,
+                    180,
+                    0.15
+                );
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <a
+        href="{{ url_for('admin.admin_dashboard') }}"
+        class="back-btn"
+    >
+
+        ← Back To Control Center
+
+    </a>
+
+    {% with messages =
+        get_flashed_messages(
+            with_categories=true
+        )
+    %}
+
+    {% if messages %}
+
+        {% for category,message in messages %}
+
+            <div class="flash">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    {% endwith %}
+
+    <h1 class="page-title">
+
+        🎟️ Sweet Deals Control Center
+
+    </h1>
+
+    <p class="page-subtitle">
+
+        Create, manage and monitor
+        RM Bakes promotional offers.
+
+    </p>
+
+    <!-- CREATE COUPON -->
+
+    <div class="form-card">
+
+        <form
+
+            method="POST"
+
+            action="{{ url_for(
+                'admin_coupon.create_coupon'
+            ) }}"
+
+        >
+
+            <div class="form-grid">
+
+                <input
+                    type="text"
+                    name="coupon_code"
+                    placeholder="Coupon Code"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="coupon_title"
+                    placeholder="Coupon Title"
+                    required
+                >
+
+                <select
+                    name="discount_type"
+                    required
+                >
+
+                    <option value="percentage">
+                        Percentage
+                    </option>
+
+                    <option value="fixed_amount">
+                        Fixed Amount
+                    </option>
+
+                </select>
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="discount_value"
+                    placeholder="Discount Value"
+                    required
+                >
+
+            </div>
+
+            <br>
+
+            <button type="submit">
+
+                🎉 Create Sweet Deal
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- COUPON LIST -->
+
+    <div class="coupon-grid">
+
+        {% for coupon in coupons %}
+
+        <div class="coupon-card">
+
+            <div class="coupon-code">
+
+                {{ coupon.coupon_code }}
+
+            </div>
+
+            <div class="coupon-title">
+
+                {{ coupon.coupon_title }}
+
+            </div>
+
+            <div class="coupon-info">
+
+                Discount Type:
+                {{ coupon.discount_type }}
+
+                <br>
+
+                Discount Value:
+                {{ coupon.discount_value }}
+
+                <br>
+
+                Times Used:
+                {{ coupon.times_used }}
+
+                <br>
+
+                Status:
+
+                {% if coupon.is_active %}
+
+                    <span
+                        class="status-active"
+                    >
+
+                        🟢 Active
+
+                    </span>
+
+                {% else %}
+
+                    <span
+                        class="status-inactive"
+                    >
+
+                        🔴 Inactive
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <div class="actions">
+
+                <form
+
+                    method="POST"
+
+                    action="{{ url_for(
+                        'admin_coupon.toggle_coupon',
+                        coupon_id=
+                        coupon.coupon_id
+                    ) }}"
+
+                >
+
+                    <button
+                        type="submit"
+                        class="toggle-btn"
+                    >
+
+                        🔄 Toggle
+
+                    </button>
+
+                </form>
+
+                <form
+
+                    method="POST"
+
+                    action="{{ url_for(
+                        'admin_coupon.delete_coupon',
+                        coupon_id=
+                        coupon.coupon_id
+                    ) }}"
+
+                    onsubmit="
+                        return confirm(
+                            'Delete coupon?'
+                        );
+                    "
+
+                >
+
+                    <button
+                        type="submit"
+                        class="delete-btn"
+                    >
+
+                        🗑 Delete
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
