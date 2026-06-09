@@ -1755,6 +1755,10 @@ def admin_reviews():
 
         highest_rated_product=highest_rated_product,
 
+        order_filter=order_filter,
+        
+        review_filter=review_filter,
+
         admin_username=session.get(
             "admin_username"
         ),
