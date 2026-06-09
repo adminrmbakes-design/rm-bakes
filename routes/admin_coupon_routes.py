@@ -99,12 +99,48 @@ def create_coupon():
         "coupon_title"
     )
 
+    coupon_description = request.form.get(
+        "coupon_description"
+    )
+
     discount_type = request.form.get(
         "discount_type"
     )
 
     discount_value = request.form.get(
         "discount_value"
+    )
+
+    minimum_order_amount = request.form.get(
+        "minimum_order_amount"
+    )
+
+    usage_limit = request.form.get(
+        "usage_limit"
+    )
+
+    maximum_discount = request.form.get(
+        "maximum_discount"
+    )
+
+    expiry_date = request.form.get(
+        "expiry_date"
+    )
+
+    scope = request.form.get(
+        "scope"
+    )
+
+    target_product = request.form.get(
+        "target_product"
+    )
+
+    target_category = request.form.get(
+        "target_category"
+    )
+
+    popularity_text = request.form.get(
+        "popularity_text"
     )
 
     existing_coupon = Coupon.query.filter_by(
@@ -131,17 +167,53 @@ def create_coupon():
 
         )
 
+    parsed_expiry_date = None
+
+    if expiry_date:
+
+        parsed_expiry_date = datetime.strptime(
+
+            expiry_date,
+
+            "%Y-%m-%dT%H:%M"
+
+        )
+
     coupon = Coupon(
 
         coupon_code=coupon_code,
 
         coupon_title=coupon_title,
 
+        coupon_description=coupon_description,
+
         discount_type=discount_type,
 
         discount_value=float(
             discount_value
-        )
+        ),
+
+        minimum_order_amount=float(
+            minimum_order_amount or 0
+        ),
+
+        usage_limit=int(
+            usage_limit
+        ) if usage_limit else None,
+
+        maximum_discount=float(
+            maximum_discount
+        ) if maximum_discount else None,
+
+        expiry_date=parsed_expiry_date,
+
+        scope=scope,
+
+        target_product=target_product,
+
+        target_category=target_category,
+
+        popularity_text=popularity_text
 
     )
 
@@ -166,6 +238,9 @@ def create_coupon():
         )
 
     )
+
+
+        
 
 
 # =========================================
