@@ -14,6 +14,8 @@ from datetime import datetime
 
 from database import db
 
+from database import Product
+
 from coupons_database import Coupon
 
 from utils.admin_guard import (
@@ -41,9 +43,7 @@ admin_coupon_bp = Blueprint(
 # =========================================
 
 @admin_coupon_bp.route(
-
     "/admin/coupons"
-
 )
 @admin_required
 def admin_coupons():
@@ -60,11 +60,37 @@ def admin_coupons():
 
     )
 
+    products = Product.query.order_by(
+        Product.product_name.asc()
+    ).all()
+
+    categories = sorted(
+
+        list(
+
+            set(
+
+                product.product_category
+
+                for product in products
+
+                if product.product_category
+
+            )
+
+        )
+
+    )
+
     return render_template(
 
         "admin/admin_coupons.html",
 
         coupons=coupons,
+
+        products=products,
+
+        categories=categories,
 
         admin_username=session.get(
             "admin_username"
