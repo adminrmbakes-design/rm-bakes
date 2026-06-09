@@ -466,7 +466,10 @@
                     name="expiry_date"
                 >
 
-                <select name="scope">
+                <select 
+                    name="scope"
+                    id="scope"
+                >
 
                     <option value="cart">
                         Entire Cart
@@ -482,17 +485,25 @@
 
                 </select>
 
-                <input
-                    type="text"
-                    name="target_product"
-                    placeholder="Target Product"
-                >
+                <div id="product-section">
 
-                <input
-                    type="text"
-                    name="target_category"
-                    placeholder="Target Category"
-                >
+                    <input
+                        type="text"
+                        name="target_product"
+                        placeholder="Target Product"
+                    >
+
+                </div>
+
+                <div id="category-section">
+
+                    <input
+                        type="text"
+                        name="target_category"
+                        placeholder="Target Category"
+                    >
+
+                </div>
 
                 <input
                     type="text"
@@ -686,6 +697,55 @@
 
 </div>
 
+<script>
+
+function updateScope(){
+
+    const scope =
+        document.getElementById(
+            "scope"
+        ).value;
+
+    document.getElementById(
+        "product-section"
+    ).style.display = "none";
+
+    document.getElementById(
+        "category-section"
+    ).style.display = "none";
+
+    if(scope==="product"){
+
+        document.getElementById(
+            "product-section"
+        ).style.display = "block";
+
+    }
+
+    if(scope==="category"){
+
+        document.getElementById(
+            "category-section"
+        ).style.display = "block";
+
+    }
+
+}
+
+document
+.getElementById(
+    "scope"
+)
+.addEventListener(
+    "change",
+    updateScope
+);
+
+updateScope();
+
+</script>
+
+    
 </body>
 
 </html>
