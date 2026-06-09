@@ -212,31 +212,7 @@ with app.app_context():
 
     db.create_all()
 
-    try:
-        
-        db.session.execute(
-
-            db.text(
-
-            """
-            ALTER TABLE coupons
-            ADD COLUMN popularity_text VARCHAR(255)
-            """
-
-            )
-
-        )
-        
-        db.session.commit()
-        print(
-        "✅ popularity_text added"
-        )
-   
-    except Exception:
-        pass
-
-
-    
+  
 
 # =========================================
 # RUN APP
