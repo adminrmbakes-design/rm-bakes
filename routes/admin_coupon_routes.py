@@ -266,7 +266,164 @@ def create_coupon():
     )
 
 
-        
+# =========================================
+# UPDATE COUPON
+# =========================================
+
+@admin_coupon_bp.route(
+
+    "/admin/coupons/update/<int:coupon_id>",
+
+    methods=["POST"]
+
+)
+@admin_required
+def update_coupon(coupon_id):
+
+    coupon = Coupon.query.get_or_404(
+
+        coupon_id
+
+    )
+
+    expiry_date = request.form.get(
+
+        "expiry_date"
+
+    )
+
+    parsed_expiry_date = None
+
+    if expiry_date:
+
+        parsed_expiry_date = datetime.strptime(
+
+            expiry_date,
+
+            "%Y-%m-%dT%H:%M"
+
+        )
+
+    coupon.coupon_code = request.form.get(
+
+        "coupon_code"
+
+    )
+
+    coupon.coupon_title = request.form.get(
+
+        "coupon_title"
+
+    )
+
+    coupon.coupon_description = request.form.get(
+
+        "coupon_description"
+
+    )
+
+    coupon.discount_type = request.form.get(
+
+        "discount_type"
+
+    )
+
+    coupon.discount_value = float(
+
+        request.form.get(
+            "discount_value"
+        ) or 0
+
+    )
+
+    coupon.minimum_order_amount = float(
+
+        request.form.get(
+            "minimum_order_amount"
+        ) or 0
+
+    )
+
+    coupon.usage_limit = (
+
+        int(
+            request.form.get(
+                "usage_limit"
+            )
+        )
+
+        if request.form.get(
+            "usage_limit"
+        )
+
+        else None
+
+    )
+
+    coupon.maximum_discount = (
+
+        float(
+            request.form.get(
+                "maximum_discount"
+            )
+        )
+
+        if request.form.get(
+            "maximum_discount"
+        )
+
+        else None
+
+    )
+
+    coupon.scope = request.form.get(
+
+        "scope"
+
+    )
+
+    coupon.target_product = request.form.get(
+
+        "target_product"
+
+    )
+
+    coupon.target_category = request.form.get(
+
+        "target_category"
+
+    )
+
+    coupon.popularity_text = request.form.get(
+
+        "popularity_text"
+
+    )
+
+    coupon.expiry_date = (
+
+        parsed_expiry_date
+
+    )
+
+    db.session.commit()
+
+    flash(
+
+        "Coupon updated successfully 🎉",
+
+        "success"
+
+    )
+
+    return redirect(
+
+        url_for(
+            "admin_coupon.admin_coupons"
+        )
+
+    )
+
 
 
 # =========================================
