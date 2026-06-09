@@ -121,7 +121,8 @@
         }
 
         input,
-        select{
+        select,
+        textarea{
 
             width:100%;
 
@@ -406,11 +407,23 @@
                     required
                 >
 
+                <textarea
+                    name="coupon_description"
+                    placeholder="Coupon Description"
+                    style="
+                          width:100%;
+                          min-height:120px;
+                          padding:14px;
+                          border:none;
+                          border-radius:16px;
+                          background:rgba(255,255,255,0.06);
+                          color:white;"
+                ></textarea>
+
                 <select
                     name="discount_type"
                     required
                 >
-
                     <option value="percentage">
                         Percentage
                     </option>
@@ -418,7 +431,6 @@
                     <option value="fixed_amount">
                         Fixed Amount
                     </option>
-
                 </select>
 
                 <input
@@ -427,6 +439,65 @@
                     name="discount_value"
                     placeholder="Discount Value"
                     required
+                >
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="minimum_order_amount"
+                    placeholder="Minimum Order Amount"
+                >
+
+                <input
+                    type="number"
+                    name="usage_limit"
+                    placeholder="Usage Limit"
+                >
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="maximum_discount"
+                    placeholder="Maximum Discount"
+                >
+
+                <input
+                    type="datetime-local"
+                    name="expiry_date"
+                >
+
+                <select name="scope">
+
+                    <option value="cart">
+                        Entire Cart
+                    </option>
+
+                    <option value="product">
+                        Specific Product
+                    </option>
+
+                    <option value="category">
+                        Specific Category
+                    </option>
+
+                </select>
+
+                <input
+                    type="text"
+                    name="target_product"
+                    placeholder="Target Product"
+                >
+
+                <input
+                    type="text"
+                    name="target_category"
+                    placeholder="Target Category"
+                >
+
+                <input
+                    type="text"
+                    name="popularity_text"
+                    placeholder="Popularity Text (Optional)"
                 >
 
             </div>
@@ -472,6 +543,51 @@
 
                 Discount Value:
                 {{ coupon.discount_value }}
+
+                <br>
+
+                Description:
+                {{ coupon.coupon_description or "-" }}
+
+                <br>
+
+                Minimum Order:
+                ₹{{ coupon.minimum_order_amount or 0 }}
+
+                <br>
+
+                Usage Limit:
+                {{ coupon.usage_limit or "Unlimited" }}
+
+                <br>
+
+                Maximum Discount:
+                {{ coupon.maximum_discount or "-" }}
+
+                <br>
+
+                Scope:
+                {{ coupon.scope }}
+
+                <br>
+
+                Target Product:
+                {{ coupon.target_product or "-" }}
+
+                <br>
+
+                Target Category:
+                {{ coupon.target_category or "-" }}
+
+                <br>
+
+                Popularity:
+                {{ coupon.popularity_text or "-" }}
+
+                <br>
+
+                Expiry:
+                {{ coupon.expiry_date or "-" }}
 
                 <br>
 
