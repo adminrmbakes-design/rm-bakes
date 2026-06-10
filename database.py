@@ -673,7 +673,7 @@ class GlobalNotification(db.Model):
     )
     
     
-    # =========================================
+# =========================================
 # FAVOURITES MODEL
 # =========================================
 
@@ -725,6 +725,51 @@ class Favourite(db.Model):
 
     )
 
+
+
+# =========================================
+# COUPON USAGE
+# =========================================
+
+class CouponUsage(db.Model):
+
+    __tablename__ = "coupon_usage"
+
+    usage_id = db.Column(
+
+        db.Integer,
+
+        primary_key=True
+
+    )
+
+    user_id = db.Column(
+
+        db.Integer,
+
+        db.ForeignKey(
+            "users.user_id"
+        ),
+
+        nullable=False
+
+    )
+
+    coupon_code = db.Column(
+
+        db.String(100),
+
+        nullable=False
+
+    )
+
+    used_at = db.Column(
+
+        db.DateTime,
+
+        default=datetime.utcnow
+
+    )
 
 
     # =====================================
