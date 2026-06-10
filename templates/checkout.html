@@ -168,6 +168,62 @@
         </div>
 
 
+        <!-- Coupons -->
+
+        <div
+            class="glass-card"
+            style="
+            margin-top:20px;
+            padding:20px;"
+        >
+            <h3>
+
+                🎁 Got a Sweet Deal?
+
+            </h3>
+
+            <br>
+
+            <input
+
+                type="text"
+
+                id="sweetDealCode"
+
+                placeholder="Enter Sweet Deal Code"
+
+                style="
+                width:100%;
+                padding:14px;
+                border-radius:14px;
+                margin-bottom:12px;"
+            >
+            <button
+
+                class="premium-btn"
+
+                type="button"
+
+                onclick="applySweetDeal()"
+
+            >
+
+                Unlock Sweet Deal ✨
+
+            </button>
+
+            <div
+
+                id="sweetDealResult"
+
+                style="margin-top:12px;"
+            >
+                
+            </div>
+      
+        </div>
+
+
 
         <!-- =================================
              DELIVERY DETAILS
@@ -509,8 +565,96 @@ const orderVideo =
         "orderVideo"
     );
 
+// ==== COUPONS ====
+    
+async function applySweetDeal(){
+
+    const couponCode =
+
+        document.getElementById(
+            "sweetDealCode"
+        ).value.trim();
+
+    if(!couponCode){
+
+        showToast(
+            "Enter a Sweet Deal code 😭"
+        );
+
+        return;
+
+    }
+
+    const response = await fetch(
+
+        "/apply-coupon",
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                coupon_code:
+                couponCode
+
+            })
+
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        showToast(
+            data.message
+        );
+
+        document.getElementById(
+            "sweetDealResult"
+        ).innerHTML =
+
+            `
+            <div
+                style="
+                    color:#79ffcb;
+                    margin-top:10px;
+                "
+            >
+
+                🎉 Sweet Deal Unlocked
+
+                <br>
+
+                Saved ₹${data.discount_amount}
+
+            </div>
+            `;
+
+    }
+
+    else{
+
+        showToast(
+            data.message
+        );
+
+    }
+
+}
 
 
+    
 // ========================================
 // PLACE ORDER
 // ========================================
