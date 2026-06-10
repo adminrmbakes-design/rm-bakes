@@ -13,6 +13,7 @@ from database import db
 from database import Cart
 from database import Product
 from database import CouponUsage
+from database import *
 
 from orders_database import Order
 
