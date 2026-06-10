@@ -1060,11 +1060,68 @@
 <div class="detail-box">
 
     <div class="detail-label">
-        Grand Total
+        Order Summary
     </div>
 
     <div class="detail-value">
-        ₹{{ order.grand_total }}
+
+        Subtotal:
+        ₹{{ order.subtotal }}
+
+        <br>
+
+        Delivery:
+        ₹{{ order.delivery_fee }}
+
+        {% if order.discount_amount and order.discount_amount > 0 %}
+
+        <br><br>
+
+        <span
+            style="
+                color:#ffb347;
+                font-weight:700;
+            "
+        >
+
+            🎁 Sweet Savings
+
+            -₹{{ order.discount_amount }}
+
+        </span>
+
+        <br>
+
+        <span
+            style="
+                color:#ffb347;
+                font-size:0.9rem;
+            "
+        >
+
+            ✨ Sweet Deal:
+            <br>
+            {{ order.coupon_code }}
+
+        </span>
+
+        {% endif %}
+
+        <br><br>
+
+        <span
+            style="
+                color:#79ffcb;
+                font-weight:800;
+                font-size:1.1rem;
+            "
+        >
+
+            Grand Total:
+            ₹{{ order.grand_total }}
+
+        </span>
+
     </div>
 
 </div>
