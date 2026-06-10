@@ -666,21 +666,35 @@ async function applySweetDeal(){
         ).innerHTML =
 
             `
-            <div
-                style="
-                    color:#79ffcb;
-                    margin-top:10px;
-                "
-            >
+<div
+    style="
+        color:#79ffcb;
+        margin-top:10px;
+    "
+>
 
-                🎉 Sweet Deal Unlocked
+    🎉 Sweet Deal Unlocked
 
-                <br>
+    <br>
 
-                Saved ₹${data.discount_amount}
+    Saved ₹${data.discount_amount}
 
-            </div>
-            `;
+    <br><br>
+
+    <button
+
+        class="premium-btn"
+
+        onclick="removeSweetDeal()"
+
+    >
+
+        Resign Sweet Deal 💔
+
+    </button>
+
+</div>
+`;
 
     }
 
@@ -694,6 +708,35 @@ async function applySweetDeal(){
 
 }
 
+
+ async function removeSweetDeal(){
+
+    const response = await fetch(
+
+        "/remove-coupon",
+
+        {
+
+            method:"POST"
+
+        }
+
+    );
+
+    const data =
+        await response.json();
+
+    if(data.success){
+
+        showToast(
+            data.message
+        );
+
+        location.reload();
+
+    }
+
+ }   
 
     
 // ========================================
