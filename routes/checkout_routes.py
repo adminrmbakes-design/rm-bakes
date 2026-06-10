@@ -333,11 +333,19 @@ def apply_coupon():
     # SAVE SESSION
     # =========================
 
+    print("\n========== APPLY ==========")
+    print("OLD SESSION:")
+    print(session.get("coupon_code"))
+
     session["coupon_code"] = (
 
         coupon.coupon_code
 
     )
+
+    print("NEW SESSION:")
+    print(session.get("coupon_code"))
+    print("=========================\n")
 
     session["discount_amount"] = (
 
@@ -380,6 +388,10 @@ def apply_coupon():
 @login_required
 def remove_coupon():
 
+    print("\n========== REMOVE ==========")
+    print("BEFORE:")
+    print(session.get("coupon_code"))
+
     session.pop(
         "coupon_code",
         None
@@ -389,6 +401,10 @@ def remove_coupon():
         "discount_amount",
         None
     )
+
+    print("AFTER:")
+    print(session.get("coupon_code"))
+    print("==========================\n")
 
     return jsonify({
 
