@@ -847,6 +847,49 @@
             </div>
 
 
+            {% if order.discount_amount and order.discount_amount > 0 %}
+
+            <div class="checkout-total-line">
+
+                <span>
+
+                    🎁 Sweet Savings
+
+                </span>
+
+                <div
+                    style="
+                    text-align:right;"
+                >
+
+                    <strong
+                        style="
+                        color:#ffb347;"
+                    >
+
+                        -₹{{ order.discount_amount }}
+
+                    </strong>
+
+                    <br>
+
+                    <small
+                        style="
+                        color:#ffb347;
+                        opacity:0.9;"
+                    >
+
+                        Using Sweet Deal ✨ :
+                        {{ order.coupon_code }}
+
+                    </small>
+
+                </div>
+            </div>
+
+            {% endif %}
+
+
 
             <div class="checkout-total-line">
 
