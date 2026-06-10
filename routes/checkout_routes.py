@@ -351,6 +351,22 @@ def apply_coupon():
     # SAVE SESSION
     # =========================
 
+    session["coupon_code"] = (
+
+        coupon.coupon_code
+
+    )
+    
+    session["discount_amount"] = (
+
+        round( 
+            discount_amount,
+            2
+        )
+
+    )
+    
+
     return jsonify({
 
         "success": True,
