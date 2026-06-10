@@ -36,6 +36,28 @@ checkout_bp = Blueprint(
     __name__
 )
 
+# =========================================
+# DELIVERY FEE HELPER
+# =========================================
+
+def calculate_delivery_fee(
+    subtotal
+):
+
+    if subtotal < 200:
+
+        return 70
+
+    elif subtotal < 400:
+
+        return 50
+
+    elif subtotal < 500:
+
+        return 30
+
+    return 0
+
 
 # =========================================
 # CHECKOUT PAGE
@@ -106,15 +128,26 @@ def checkout_page():
 
         })
 
-    delivery_fee = 40
+    delivery_fee = calculate_delivery_fee(subtotal) #Delivery fee function call
 
+    discount_amount = session.get("discount_amount",0)
+    
+    
     grand_total = (
 
         subtotal +
 
-        delivery_fee
+        delivery_fee -
+
+        discount_amount
 
     )
+
+    
+    if grand_total < 0:
+        
+        grand_total = 0
+        
 
     return render_template(
 
@@ -125,6 +158,8 @@ def checkout_page():
         subtotal=subtotal,
 
         delivery_fee=delivery_fee,
+
+        discount_amount=discount_amount,
 
         grand_total=grand_total
 
@@ -469,7 +504,7 @@ def place_order():
         # TOTALS
         # =================================
 
-        delivery_fee = 40
+        delivery_fee = calculate_delivery_fee(subtotal)
 
         grand_total = (
 
