@@ -213,43 +213,6 @@ with app.app_context():
 
     db.create_all()
 
-    # =====================================
-    # CREATE COUPON USAGE TABLE
-    # =====================================
-    
-    try:
-        db.session.execute(
-            db.text("""
-
-            CREATE TABLE IF NOT EXISTS coupon_usage (
-
-                usage_id SERIAL PRIMARY KEY,
-
-                user_id INTEGER NOT NULL,
-
-                coupon_code VARCHAR(100) NOT NULL,
-
-                used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-                FOREIGN KEY (user_id)
-
-                REFERENCES users(user_id)
-
-            );
-            """)
-        )
-        
-        db.session.commit()
-        print(
-        "✅ coupon_usage table created"
-        )
-    except Exception as e:
-        db.session.rollback()
-        print(
-        "❌ coupon_usage table error:",
-        e
-        )
-
 
 # =========================================
 # RUN APP
