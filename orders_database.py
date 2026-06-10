@@ -349,6 +349,22 @@ class Order(db.Model):
 
     )
 
+    discount_amount = db.Column(
+
+        db.Float,
+   
+        default=0
+
+    )
+    
+    coupon_code = db.Column(
+   
+        db.String(100),
+    
+        nullable=True
+
+    )
+
 
 
     grand_total = db.Column(
