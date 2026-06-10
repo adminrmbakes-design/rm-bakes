@@ -622,15 +622,31 @@ def place_order():
         # TOTALS
         # =================================
 
-        delivery_fee = calculate_delivery_fee(subtotal)
+        delivery_fee = calculate_delivery_fee(
+            subtotal
+        )
+
+        discount_amount = session.get(
+            "discount_amount",
+            0
+        )
+        
+        coupon_code = session.get(
+            "coupon_code"
+        )
 
         grand_total = (
 
             subtotal +
 
-            delivery_fee
-
+            delivery_fee -
+            
+            discount_amount
         )
+
+        if grand_total < 0:
+            
+            grand_total = 0
 
         # =================================
         # CREATE ORDER
@@ -678,6 +694,10 @@ def place_order():
 
             delivery_fee=delivery_fee,
 
+            discount_amount=discount_amount,
+
+            coupon_code=coupon_code,
+
             grand_total=grand_total
 
         )
@@ -685,6 +705,24 @@ def place_order():
         db.session.add(new_order)
 
         db.session.commit()
+
+        # =================================
+        # UPDATE COUPON USAGE
+        # =================================
+
+        if coupon_code:
+            
+            coupon = Coupon.query.filter_by(
+
+                coupon_code=coupon_code
+
+            ).first()
+            
+            if coupon:
+                
+                coupon.times_used += 1
+                
+                db.session.commit()
 
         # =================================
         # CREATE ADMIN NOTIFICATION
@@ -724,9 +762,32 @@ QUEUED
 
         db.session.commit()
 
+        # =================================
+        # CLEAR COUPON SESSION
+        # =================================
+
+        session.pop(
+            "coupon_code",
+            None
+        )
+
+        session.pop(
+            "discount_amount",
+            None
+        )
+
+        session.pop(
+            "discount_target",
+            None
+        )
+
+        #==== Debug ====
+
         print("\nORDER SAVED")
         print(order_number)
         print()
+
+        #===============
 
         return jsonify({
 
