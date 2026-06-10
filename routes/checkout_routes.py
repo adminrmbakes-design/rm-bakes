@@ -164,6 +164,9 @@ def checkout_page():
         applied_coupon=session.get(
             "coupon_code"),
 
+        discount_target=session.get(
+            "discount_target"),
+
         grand_total=grand_total
 
     )
@@ -409,6 +412,24 @@ def apply_coupon():
         )
 
     )
+
+    if coupon.scope == "product":
+        
+        session["discount_target"] = (
+            f"On {coupon.target_product} 🍰"
+        )
+    
+    elif coupon.scope == "category":
+        
+        session["discount_target"] = (
+            f"On {coupon.target_category} Collection ✨"
+        )
+    
+    else:
+        
+        session["discount_target"] = (
+            "On Your Entire Cart 🎉"
+        )
     
 
     return jsonify({
@@ -443,10 +464,6 @@ def apply_coupon():
 @login_required
 def remove_coupon():
 
-    print("\n========== REMOVE ==========")
-    print("BEFORE:")
-    print(session.get("coupon_code"))
-
     session.pop(
         "coupon_code",
         None
@@ -457,10 +474,12 @@ def remove_coupon():
         None
     )
 
-    print("AFTER:")
-    print(session.get("coupon_code"))
-    print("==========================\n")
+    session.pop(
+        "discount_target",
+        None
+    )
 
+    
     return jsonify({
 
         "success": True,
