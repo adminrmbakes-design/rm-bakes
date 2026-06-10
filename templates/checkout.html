@@ -685,7 +685,12 @@ async function applySweetDeal(){
             data.message
         );
 
-        location.reload();
+        setTimeout(() => {
+
+            location.reload();
+
+        }, 1600);
+
     }
         
     else{
@@ -719,10 +724,14 @@ async function applySweetDeal(){
     if(data.success){
 
         showToast(
-            data.message
+            data.message  
         );
 
-        location.reload();
+        setTimeout(() => {
+
+            location.reload();
+
+        }, 1600);
 
     }
 
