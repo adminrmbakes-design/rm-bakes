@@ -241,11 +241,11 @@ def apply_coupon():
 
     if (
 
-        coupon.max_uses
+        coupon.usage_limit
 
         and
 
-        coupon.times_used >= coupon.max_uses
+        coupon.times_used >= coupon.usage_limit
 
     ):
         return jsonify({
