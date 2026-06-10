@@ -12,6 +12,7 @@ from flask_login import current_user
 from database import db
 from database import Cart
 from database import Product
+from database import CouponUsage
 
 from orders_database import Order
 
@@ -275,6 +276,28 @@ def apply_coupon():
 
             "message":
             "⏳ This Sweet Deal has already melted away."
+
+        })
+
+    #====== Usage Check ========
+
+    existing_usage = CouponUsage.query.filter_by(
+
+        user_id=current_user.user_id,
+
+        coupon_code=coupon.coupon_code
+
+    ).first()
+    
+    if existing_usage:
+        
+        return jsonify({
+
+            "success": False,
+
+            "message":
+
+            "👀 You've already enjoyed this Sweet Deal once."
 
         })
 
@@ -741,6 +764,19 @@ def place_order():
             if coupon:
                 
                 coupon.times_used += 1
+
+                usage = CouponUsage(
+
+                    user_id=current_user.user_id,
+
+                    coupon_code=coupon_code
+
+                )
+                
+                db.session.add(
+                    usage
+                )
+                
                 
                 db.session.commit()
 
