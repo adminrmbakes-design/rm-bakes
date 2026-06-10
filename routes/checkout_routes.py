@@ -3,6 +3,8 @@ from flask import render_template
 from flask import redirect
 from flask import url_for
 from flask import jsonify
+from flask import session
+from flask import request
 
 from flask_login import login_required
 from flask_login import current_user
@@ -12,6 +14,8 @@ from database import Cart
 from database import Product
 
 from orders_database import Order
+
+from coupons_database import Coupon
 
 from datetime import datetime
 
@@ -125,6 +129,211 @@ def checkout_page():
         grand_total=grand_total
 
     )
+
+# =========================================
+# APPLY COUPON
+# =========================================
+
+@checkout_bp.route(
+    "/apply-coupon",
+    methods=["POST"]
+)
+@login_required
+def apply_coupon():
+
+    coupon_code = (
+
+        request.json.get(
+            "coupon_code",
+            ""
+        )
+
+        .strip()
+
+        .upper()
+
+    )
+
+    coupon = Coupon.query.filter_by(
+
+        coupon_code=coupon_code
+
+    ).first()
+
+    if not coupon:
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "Sweet deal isn't available..😭"
+
+        })
+
+    if not coupon.is_active:
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "Sweet deal isn't active..🫠"
+
+        })
+
+    if (
+
+        coupon.expiry_date
+
+        and
+
+        coupon.expiry_date <
+        datetime.utcnow()
+
+    ):
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "Sweet deal expired..🥺"
+
+        })
+
+    # =========================
+    # CART TOTAL
+    # =========================
+
+    cart_items = Cart.query.filter_by(
+
+        user_id=current_user.user_id
+
+    ).all()
+
+    subtotal = 0
+
+    for item in cart_items:
+
+        product = Product.query.get(
+            item.product_id
+        )
+
+        if product:
+
+            subtotal += (
+
+                product.product_price *
+
+                item.product_quantity
+
+            )
+
+    # =========================
+    # MINIMUM ORDER
+    # =========================
+
+    if (
+
+        subtotal <
+
+        coupon.minimum_order_amount
+
+    ):
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+
+            f"Minimum order ₹{coupon.minimum_order_amount} required 😭"
+
+        })
+
+    # =========================
+    # CALCULATE DISCOUNT
+    # =========================
+
+    discount_amount = 0
+
+    if coupon.discount_type == "percentage":
+
+        discount_amount = (
+
+            subtotal *
+
+            coupon.discount_value
+
+        ) / 100
+
+    else:
+
+        discount_amount = (
+
+            coupon.discount_value
+
+        )
+
+    if (
+
+        coupon.maximum_discount
+
+        and
+
+        discount_amount >
+
+        coupon.maximum_discount
+
+    ):
+
+        discount_amount = (
+
+            coupon.maximum_discount
+
+        )
+
+    # =========================
+    # SAVE SESSION
+    # =========================
+
+    session["coupon_code"] = (
+
+        coupon.coupon_code
+
+    )
+
+    session["discount_amount"] = (
+
+        round(
+            discount_amount,
+            2
+        )
+
+    )
+
+    return jsonify({
+
+        "success": True,
+
+        "coupon_code":
+
+        coupon.coupon_code,
+
+        "discount_amount":
+
+        round(
+            discount_amount,
+            2
+        ),
+
+        "message":
+
+        "Coupon applied 🎉"
+
+    })
+
 
 
 # =========================================
