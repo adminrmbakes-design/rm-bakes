@@ -377,22 +377,46 @@ def update_coupon(coupon_id):
     )
 
     coupon.scope = request.form.get(
-
         "scope"
-
     )
+    
+    # ==========================
+    # PRODUCT COUPON
+    # ==========================
 
-    coupon.target_product = request.form.get(
+    if coupon.scope == "product":
+        
+        coupon.target_product = (
+            request.form.get(
+                "target_product"
+            )
+        )
+        
+        coupon.target_category = None
 
-        "target_product"
+    # ==========================
+    # CATEGORY COUPON
+    # ==========================
 
-    )
+    elif coupon.scope == "category":
+        
+        coupon.target_category = (
+            request.form.get(
+                "target_category"
+            )
+        )
+        
+        coupon.target_product = None
 
-    coupon.target_category = request.form.get(
+    # ==========================
+    # ENTIRE CART
+    # ==========================
 
-        "target_category"
-
-    )
+    else:
+        
+        coupon.target_product = None
+        coupon.target_category = None
+    # ---------------------------------
 
     coupon.popularity_text = request.form.get(
 
