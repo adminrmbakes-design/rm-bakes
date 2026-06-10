@@ -365,11 +365,39 @@ def apply_coupon():
 
         "message":
 
-        "Coupon applied 🎉"
+        "Sweet Deal applied 🎉"
 
     })
 
+# =========================================
+# REMOVE COUPON
+# =========================================
 
+@checkout_bp.route(
+    "/remove-coupon",
+    methods=["POST"]
+)
+@login_required
+def remove_coupon():
+
+    session.pop(
+        "coupon_code",
+        None
+    )
+
+    session.pop(
+        "discount_amount",
+        None
+    )
+
+    return jsonify({
+
+        "success": True,
+
+        "message":
+        "Sweet Deal removed 💔"
+
+    })
 
 # =========================================
 # PLACE ORDER
