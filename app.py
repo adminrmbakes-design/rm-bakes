@@ -212,57 +212,6 @@ with app.app_context():
 
     db.create_all()
 
-    try:
-        print(
-        "\n[COUPON MIGRATION]"
-        )
-        print(
-        "Adding coupon_code..."
-        )
-        db.session.execute(
-            db.text(
-            """
-            ALTER TABLE orders
-            ADD COLUMN coupon_code VARCHAR(100)
-            """
-            )
-        )
-        db.session.commit()
-        print(
-        "✅ coupon_code added"
-        )
-    except Exception as error:
-        print(
-        "⚠️ coupon_code:"
-        )
-        print(error)
-        
-    try:
-        print(
-        "\n[COUPON MIGRATION]"
-        )
-        print(
-        "Adding discount_amount..."
-        )
-        db.session.execute(
-            db.text(
-            """
-            ALTER TABLE orders
-            ADD COLUMN discount_amount FLOAT DEFAULT 0
-            """
-            )
-        )
-        db.session.commit()
-        print(
-        "✅ discount_amount added"
-        )
-    except Exception as error:
-        print(
-        "⚠️ discount_amount:"
-        )
-        print(error)
-
-  
 
 # =========================================
 # RUN APP
