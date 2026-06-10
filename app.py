@@ -11,6 +11,7 @@ import os
 from database import db
 from database import User
 from database import UserNotification
+from database import CouponUsage
 
 # Coupon database
 from coupons_database import *
