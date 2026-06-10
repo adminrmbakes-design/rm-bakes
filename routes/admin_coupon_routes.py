@@ -60,6 +60,67 @@ def admin_coupons():
 
     )
 
+    for coupon in coupons:
+        
+        if coupon.popularity_text:
+            
+            coupon.display_popularity = (
+
+                coupon.popularity_text
+
+            )
+        
+        else:
+            
+            if coupon.times_used == 0:
+                
+                coupon.display_popularity = (
+
+                    "🌙 Waiting for its first sweet moment"
+
+                )
+            
+            elif coupon.times_used == 1:
+                
+                coupon.display_popularity = (
+
+                    "✨ 1 dessert lover claimed this deal"
+
+                )
+            
+            elif coupon.times_used < 10:
+                
+                coupon.display_popularity = (
+
+                    f"🍰 {coupon.times_used} sweet moments created"
+
+                )
+            
+            elif coupon.times_used < 50:
+                
+                coupon.display_popularity = (
+
+                    f"🔥 {coupon.times_used} dessert lovers claimed this deal"
+
+                )
+            
+            elif coupon.times_used < 100:
+                
+                coupon.display_popularity = (
+                    
+                    f"💛 {coupon.times_used} happy dessert lovers saved more"
+
+                )
+            
+            else:
+                
+                coupon.display_popularity = (
+                    
+                    f"👑 {coupon.times_used}+ dessert lovers couldn't resist this deal"
+
+                )
+                
+
     products = Product.query.order_by(
         Product.product_name.asc()
     ).all()
