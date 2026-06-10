@@ -161,6 +161,9 @@ def checkout_page():
 
         discount_amount=discount_amount,
 
+        applied_coupon=session.get(
+            "coupon_code"),
+
         grand_total=grand_total
 
     )
@@ -175,6 +178,21 @@ def checkout_page():
 )
 @login_required
 def apply_coupon():
+
+    #If already applied coupon
+
+    if session.get(
+        "coupon_code"
+    ):
+        return jsonify({
+
+            "success": False,
+
+            "message":
+
+            "Sweet Deal already applied 😭"
+
+        })
 
     coupon_code = (
 
@@ -332,29 +350,6 @@ def apply_coupon():
     # =========================
     # SAVE SESSION
     # =========================
-
-    print("\n========== APPLY ==========")
-    print("OLD SESSION:")
-    print(session.get("coupon_code"))
-
-    session["coupon_code"] = (
-
-        coupon.coupon_code
-
-    )
-
-    print("NEW SESSION:")
-    print(session.get("coupon_code"))
-    print("=========================\n")
-
-    session["discount_amount"] = (
-
-        round(
-            discount_amount,
-            2
-        )
-
-    )
 
     return jsonify({
 
