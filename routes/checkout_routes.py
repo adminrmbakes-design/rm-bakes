@@ -237,6 +237,26 @@ def apply_coupon():
             "🌙 Sweet Deal tucked away for now!"
 
         })
+        
+
+    if (
+
+        coupon.max_uses
+
+        and
+
+        coupon.times_used >= coupon.max_uses
+
+    ):
+        return jsonify({
+
+            "success": False,
+
+            "message":
+
+            "🌸 This Sweet Deal has already found all its happy homes."
+
+        })
 
     if (
 
