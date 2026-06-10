@@ -726,6 +726,20 @@ class Favourite(db.Model):
     )
 
 
+    # =====================================
+    # RELATIONSHIP
+    # =====================================
+
+    product = db.relationship(
+
+        "Product",
+
+        backref="favourites",
+
+        lazy=True
+
+    )
+
 
 # =========================================
 # COUPON USAGE
@@ -768,20 +782,5 @@ class CouponUsage(db.Model):
         db.DateTime,
 
         default=datetime.utcnow
-
-    )
-
-
-    # =====================================
-    # RELATIONSHIP
-    # =====================================
-
-    product = db.relationship(
-
-        "Product",
-
-        backref="favourites",
-
-        lazy=True
 
     )
