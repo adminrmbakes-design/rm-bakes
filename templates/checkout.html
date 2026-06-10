@@ -146,6 +146,28 @@
 
             </div>
 
+            {% if discount_amount > 0 %}
+
+            <div class="checkout-total-line">
+
+                <span>
+
+                    🎁 Sweet Savings
+
+                </span>
+
+                <strong
+                    style="
+                    color:#79ffcb;"
+                >
+                    -₹{{ discount_amount }}
+
+                </strong>
+
+            </div>
+
+            {% endif %}
+
 
 
             <div class="checkout-total-line">
