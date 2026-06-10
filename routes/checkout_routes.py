@@ -190,7 +190,7 @@ def apply_coupon():
 
             "message":
 
-            "Sweet Deal already applied 😭"
+            "✨ This Sweet Deal is already brightening your order!"
 
         })
 
@@ -220,7 +220,7 @@ def apply_coupon():
             "success": False,
 
             "message":
-            "Sweet deal isn't available..😭"
+            "🌙 That Sweet Deal couldn't be found!"
 
         })
 
@@ -231,7 +231,7 @@ def apply_coupon():
             "success": False,
 
             "message":
-            "Sweet deal isn't active..🫠"
+            "🌙 Sweet Deal tucked away for now!"
 
         })
 
@@ -251,7 +251,7 @@ def apply_coupon():
             "success": False,
 
             "message":
-            "Sweet deal expired..🥺"
+            "⏳ This Sweet Deal has already melted away."
 
         })
 
@@ -267,21 +267,65 @@ def apply_coupon():
 
     subtotal = 0
 
-    for item in cart_items:
+    eligible_amount = 0
 
+    for item in cart_items:
         product = Product.query.get(
             item.product_id
         )
+        
+        if not product:
+            continue
+            
+        line_total = (
 
-        if product:
+            product.product_price *
 
-            subtotal += (
+            item.product_quantity
 
-                product.product_price *
+        )
+        subtotal += line_total
+        
+        # =====================
+        # ENTIRE CART
+        # =====================
+        
+        if coupon.scope == "cart":
+            
+            eligible_amount += line_total
+        
 
-                item.product_quantity
+        # =====================
+        # PRODUCT COUPON
+        # =====================
+        
+        elif coupon.scope == "product":
+            
+            if (
+                product.product_name ==
+                coupon.target_product
+            ):
+                eligible_amount += line_total
+                
+        # =====================
+        # CATEGORY COUPON
+        # =====================
+        
+        elif coupon.scope == "category":
+            
+            if (
+                product.product_category ==
+                coupon.target_category
 
-            )
+            ):
+                eligible_amount += line_total
+
+    if eligible_amount <= 0:
+        
+        return jsonify({
+            "success": False,
+            "message": "✨ This Sweet Deal isn't applicable to your cart 🍰"
+        })
 
     # =========================
     # MINIMUM ORDER
@@ -301,7 +345,7 @@ def apply_coupon():
 
             "message":
 
-            f"Minimum order ₹{coupon.minimum_order_amount} required 😭"
+            f"🌟 Just a little more of sweetness is needed to unlock this offer! \nMinimun of ₹{coupon.minimum_order_amount}"
 
         })
 
@@ -315,7 +359,7 @@ def apply_coupon():
 
         discount_amount = (
 
-            subtotal *
+            eligible_amount *
 
             coupon.discount_value
 
@@ -384,7 +428,7 @@ def apply_coupon():
 
         "message":
 
-        "Sweet Deal applied 🎉"
+        "🍰 Your sweet surprise is waiting at checkout! 🎉"
 
     })
 
@@ -422,7 +466,7 @@ def remove_coupon():
         "success": True,
 
         "message":
-        "Sweet Deal removed 💔"
+        "✨ No worries, your treats are still waiting!"
 
     })
 
@@ -460,7 +504,7 @@ def place_order():
                 "success": False,
 
                 "message":
-                "Complete your profile details first 😭"
+                "Fill your profile with sweetnes..🧁"
 
             })
 
@@ -479,7 +523,7 @@ def place_order():
                 "success": False,
 
                 "message":
-                "Your cart is empty 😭"
+                "Your cart feels Lonely..🚶"
 
             })
 
