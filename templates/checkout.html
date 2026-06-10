@@ -212,6 +212,12 @@
 
                 id="sweetDealCode"
 
+                value="{{ applied_coupon or '' }}"
+
+                {% if applied_coupon %}
+                disabled
+                {% endif %}
+
                 placeholder="Enter Sweet Deal Code"
 
                 style="
@@ -223,6 +229,8 @@
                 color:white;
                 border:1px solid rgba(255,255,255,0.15);"
             >
+            
+            {% if not applied_coupon %}
             <button
 
                 class="premium-btn"
@@ -236,6 +244,22 @@
                 Unlock Sweet Deal ✨
 
             </button>
+            {% endif %}
+
+            {% if applied_coupon %}
+
+            <button
+
+                class="premium-btn"
+
+                onclick="removeSweetDeal()"
+            >
+
+                Resign Sweet Deal 💔
+
+            </button>
+
+            {% endif %}
 
             <div
 
@@ -661,43 +685,9 @@ async function applySweetDeal(){
             data.message
         );
 
-        document.getElementById(
-            "sweetDealResult"
-        ).innerHTML =
-
-            `
-<div
-    style="
-        color:#79ffcb;
-        margin-top:10px;
-    "
->
-
-    🎉 Sweet Deal Unlocked
-
-    <br>
-
-    Saved ₹${data.discount_amount}
-
-    <br><br>
-
-    <button
-
-        class="premium-btn"
-
-        onclick="removeSweetDeal()"
-
-    >
-
-        Resign Sweet Deal 💔
-
-    </button>
-
-</div>
-`;
-
+        location.reload();
     }
-
+        
     else{
 
         showToast(
