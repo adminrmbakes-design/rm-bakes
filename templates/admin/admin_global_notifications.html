@@ -382,7 +382,8 @@
 
 
         .form-group input,
-        .form-group textarea{
+        .form-group textarea,
+        .form-group select{
 
             border:none;
 
@@ -993,6 +994,49 @@
 
                 </div>
 
+                <!-- NOTIFICATION TYPE -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Notification Type
+
+                    </label>
+
+                    <select
+                        name="notification_type"
+                        id="notificationType"
+                    >
+
+                        <option value="announcement">
+                            📢 Announcement
+                        </option>
+
+                        <option value="coupon">
+                            🎟 Coupon
+                        </option>
+
+                        <option value="new_product">
+                            🍰 New Product
+                        </option>
+
+                        <option value="launching_soon">
+                            🚀 Launching Soon
+                        </option>
+
+                        <option value="seasonal">
+                            🎄 Seasonal Special
+                        </option>
+
+                        <option value="out_of_stock">
+                            😭 Out Of Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
 
 
                 <!-- MESSAGE -->
@@ -1011,6 +1055,156 @@
                         placeholder="Flat 20% OFF on all Kunafa products 😭🔥"
                         required
                     ></textarea>
+
+                </div>
+
+                <!-- DYNAMIC FIELDS -->
+
+                <!-- 1. Coupons field -->
+                <div
+                    id="couponFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Coupon Code
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="coupon_code"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- 2. Product field -->
+                <div
+                    id="productFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Product ID
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="product_id"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- 3. Seasonal field -->
+                <div
+                    id="seasonalFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Starts At
+
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="starts_at"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Expires At
+
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="expires_at"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- Common field -->
+                <div class="form-group">
+
+                    <label>
+
+                        Action Button Text
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="action_text"
+                        placeholder="View Dessert"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Action Link
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="action_link"
+                        placeholder="/products"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Priority
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="priority"
+                        value="0"
+                    >
+
+                </div>
+                
+                <div class="form-group">
+
+                    <label>
+                        
+                        <input
+                            type="checkbox"
+                            name="is_featured"
+                        >
+
+                        Featured Notification
+
+                    </label>
 
                 </div>
 
@@ -1229,6 +1423,80 @@
         {% endif %}
 
     </div>
+
+<!-- JS -->
+<script>
+
+const typeSelect =
+    document.getElementById(
+        "notificationType"
+    );
+
+const couponFields =
+    document.getElementById(
+        "couponFields"
+    );
+
+const productFields =
+    document.getElementById(
+        "productFields"
+    );
+
+const seasonalFields =
+    document.getElementById(
+        "seasonalFields"
+    );
+
+function updateFields(){
+
+    couponFields.style.display =
+        "none";
+
+    productFields.style.display =
+        "none";
+
+    seasonalFields.style.display =
+        "none";
+
+    if(
+        typeSelect.value === "coupon"
+    ){
+
+        couponFields.style.display =
+            "block";
+
+    }
+
+    else if(
+        typeSelect.value ===
+        "new_product"
+    ){
+
+        productFields.style.display =
+            "block";
+
+    }
+
+    else if(
+        typeSelect.value ===
+        "seasonal"
+    ){
+
+        seasonalFields.style.display =
+            "block";
+
+    }
+
+}
+
+typeSelect.addEventListener(
+    "change",
+    updateFields
+);
+
+updateFields();
+
+</script>
 
 </body>
 
