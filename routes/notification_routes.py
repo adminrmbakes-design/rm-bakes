@@ -162,32 +162,29 @@ def notifications_page():
 
    global_notifications = (
 
-    GlobalNotification.query.filter(
+       GlobalNotification.query.filter(
 
-        GlobalNotification.is_active == True,
+           GlobalNotification.is_active == True,
 
-        (
-            GlobalNotification.expires_at == None
-        )
+           GlobalNotification.expires_at == None
 
-        |
+           (
+               GlobalNotification.expires_at >
+               datetime.utcnow()
+           )
 
-        (
-            GlobalNotification.expires_at >
-            datetime.utcnow()
-        )
+       )
+       
+       .order_by(
 
-    )
-    .order_by(
+           GlobalNotification.is_featured.desc(),
 
-        GlobalNotification.is_featured.desc(),
+           GlobalNotification.priority.desc(),
 
-        GlobalNotification.priority.desc(),
+           GlobalNotification.created_at.desc()
 
-        GlobalNotification.created_at.desc()
-
-    )
-    .all()
+       )
+       .all()
    
    )
 
