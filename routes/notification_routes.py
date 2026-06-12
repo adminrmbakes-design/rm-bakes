@@ -183,7 +183,7 @@ def notifications_page():
     return render_template(
         "notifications.html",
         user_notifications=user_notifications,
-        global_notifications=global_notifications,
+        global_notification=global_notification,
         unread_notifications_count=unread_notifications_count
     )
 
