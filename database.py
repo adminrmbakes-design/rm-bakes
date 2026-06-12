@@ -612,64 +612,83 @@ class GlobalNotification(db.Model):
 
     __tablename__ = "global_notifications"
 
-
-
     notification_id = db.Column(
-
         db.Integer,
-
         primary_key=True
-
     )
-
-
 
     title = db.Column(
-
         db.String(200),
-
         nullable=False
-
     )
-
-
 
     message = db.Column(
-
         db.Text,
-
         nullable=False
-
     )
-
-
 
     banner_image = db.Column(
-
         db.String(300),
-
         nullable=False
-
     )
 
+    # =====================================
+    # FUTURE-PROOF FIELDS
+    # =====================================
 
+    notification_type = db.Column(
+        db.String(50),
+        default="announcement"
+    )
+
+    action_text = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    action_link = db.Column(
+        db.String(300),
+        nullable=True
+    )
+
+    product_id = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
+    coupon_code = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    priority = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    starts_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    expires_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    is_featured = db.Column(
+        db.Boolean,
+        default=False
+    )
 
     is_active = db.Column(
-
         db.Boolean,
-
         default=True
-
     )
 
-
-
     created_at = db.Column(
-
         db.DateTime,
-
         default=datetime.utcnow
-
     )
     
     
