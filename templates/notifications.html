@@ -182,6 +182,21 @@
 
                         </small>
 
+                        <!-- Action link and text -->
+
+                        {% if notification.action_text
+                        and notification.action_link %}
+
+                        <a
+                            href="{{ notification.action_link }}"
+                            class="global-action-btn"
+                        >
+
+                            {{ notification.action_text }} →
+
+                        </a>
+
+                        {% endif %}
 
 
                         <!-- ACTIONS -->
@@ -398,6 +413,46 @@
                         <!-- CONTENT -->
 
                         <div class="global-content">
+
+                            <div class="notification-type-badge">
+
+                                {% if notification.notification_type == "coupon" %}
+
+                                🎟 Coupon
+
+                                {% elif notification.notification_type == "new_product" %}
+
+                                🍰 New Product
+
+                                {% elif notification.notification_type == "launching_soon" %}
+
+                                🚀 Launching Soon
+
+                                {% elif notification.notification_type == "seasonal" %}
+
+                                🎄 Seasonal
+
+                                {% elif notification.notification_type == "out_of_stock" %}
+
+                                😭 Out Of Stock
+
+                                {% else %}
+
+                                📢 Announcement
+
+                                {% endif %}
+                            
+                            </div>
+
+                            {% if notification.is_featured %}
+
+                            <div class="featured-badge">
+
+                                ⭐ Featured
+
+                            </div>
+
+                            {% endif %}
 
                             <h2>
 
@@ -1208,6 +1263,74 @@ function clearNotifications(){
 
 }
 
+/* Global notifications badge */
+
+.notification-type-badge{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    font-size:0.75rem;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+
+}
+
+.featured-badge{
+
+    display:inline-block;
+
+    margin-left:8px;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:
+
+        rgba(255,215,0,0.15);
+
+    color:#ffd700;
+
+    font-size:0.75rem;
+
+    font-weight:700;
+
+}
+
+.global-action-btn{
+
+    display:inline-block;
+
+    margin-top:18px;
+
+    text-decoration:none;
+
+    padding:12px 18px;
+
+    border-radius:16px;
+
+    font-weight:700;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ffb347,
+            #ffcc33
+        );
+
+    color:black;
+
+}
 
 
 /* EMPTY STATE */
