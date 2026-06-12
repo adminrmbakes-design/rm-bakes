@@ -177,13 +177,9 @@
                         {% if notification.notification_type == "coupon"
                         and notification.coupon_code %}
 
-                        <div class="notification-info-box">
+                        <div class="coupon-code-box">
 
-                            🎟 Coupon Code:
-                            
-                            <strong>
-                                {{ notification.coupon_code }}
-                            </strong>
+                            🎟 {{ notification.coupon_code }}
 
                         </div>
 
@@ -244,9 +240,9 @@
 
                         <!-- Action link and text -->
 
-                        {% if notification.action_text
+                        {% if notification.notification_type != "coupon"
+                        and notification.action_text
                         and notification.action_link %}
-
                         <a
                             href="{{ notification.action_link }}"
                             class="global-action-btn"
@@ -1413,6 +1409,32 @@ function clearNotifications(){
 
 }
 
+.coupon-code-box{
+
+    margin-top:16px;
+
+    padding:16px;
+
+    border-radius:16px;
+
+    text-align:center;
+
+    font-size:1.2rem;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffb347,
+            #ffcc33
+        );
+
+    color:black;
+
+}
 
 /* EMPTY STATE */
 
