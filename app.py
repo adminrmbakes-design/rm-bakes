@@ -211,9 +211,133 @@ app.register_blueprint(admin_coupon_bp)
 # CREATE DATABASE TABLES
 # =========================================
 
+from sqlalchemy import text
+
 with app.app_context():
 
     db.create_all()
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN notification_type VARCHAR(50)
+            DEFAULT 'announcement'
+        """))
+
+        print("✅ notification_type added")
+
+    except Exception as e:
+
+        print("⏭ notification_type exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN action_text VARCHAR(100)
+        """))
+
+        print("✅ action_text added")
+
+    except Exception:
+
+        print("⏭ action_text exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN action_link VARCHAR(300)
+        """))
+
+        print("✅ action_link added")
+
+    except Exception:
+
+        print("⏭ action_link exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN product_id INTEGER
+        """))
+
+        print("✅ product_id added")
+
+    except Exception:
+
+        print("⏭ product_id exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN coupon_code VARCHAR(100)
+        """))
+
+        print("✅ coupon_code added")
+
+    except Exception:
+
+        print("⏭ coupon_code exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN priority INTEGER DEFAULT 0
+        """))
+
+        print("✅ priority added")
+
+    except Exception:
+
+        print("⏭ priority exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN starts_at TIMESTAMP
+        """))
+
+        print("✅ starts_at added")
+
+    except Exception:
+
+        print("⏭ starts_at exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN expires_at TIMESTAMP
+        """))
+
+        print("✅ expires_at added")
+
+    except Exception:
+
+        print("⏭ expires_at exists")
+
+    try:
+
+        db.session.execute(text("""
+            ALTER TABLE global_notifications
+            ADD COLUMN is_featured BOOLEAN DEFAULT FALSE
+        """))
+
+        print("✅ is_featured added")
+
+    except Exception:
+
+        print("⏭ is_featured exists")
+
+    db.session.commit()
+
+    print("🚀 GlobalNotification migration complete")
 
 
 # =========================================
