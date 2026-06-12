@@ -136,10 +136,27 @@ def create_global_notification(
 
     banner_image,
 
+    notification_type="announcement",
+
+    action_text=None,
+
+    action_link=None,
+
+    product_id=None,
+
+    coupon_code=None,
+
+    priority=0,
+
+    starts_at=None,
+
+    expires_at=None,
+
+    is_featured=False,
+
     is_active=True
 
 ):
-
 
 
     notification = GlobalNotification(
@@ -150,10 +167,27 @@ def create_global_notification(
 
         banner_image=banner_image,
 
+        notification_type=notification_type,
+
+        action_text=action_text,
+
+        action_link=action_link,
+
+        product_id=product_id,
+
+        coupon_code=coupon_code,
+
+        priority=priority,
+
+        starts_at=starts_at,
+
+        expires_at=expires_at,
+
+        is_featured=is_featured,
+
         is_active=is_active
 
     )
-
 
 
     db.session.add(
