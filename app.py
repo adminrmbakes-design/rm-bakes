@@ -130,31 +130,33 @@ def load_user(user_id):
 # =========================================
 
 @app.context_processor
-def inject_notification_count():
+def notification_counts():
 
-    unread_notifications_count = 0
+    from database import (
+        UserNotification,
+        GlobalNotification
+    )
 
     if current_user.is_authenticated:
 
-        unread_notifications_count = (
-
+        count = (
             UserNotification.query.filter_by(
-
                 user_id=current_user.user_id,
-
                 is_read=False,
-
                 is_cleared=False
-
             ).count()
+        )
 
+    else:
+
+        count = (
+            GlobalNotification.query.filter_by(
+                is_active=True
+            ).count()
         )
 
     return dict(
-
-        unread_notifications_count=
-            unread_notifications_count
-
+        notification_badge_count=count
     )
 
 # =========================================
