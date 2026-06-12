@@ -1374,7 +1374,7 @@ def admin_global_notifications():
             Type:
             {notification_type}
             
-            Published globally."""
+            Published globally.""",
 
             notification_type="announcement"
 
