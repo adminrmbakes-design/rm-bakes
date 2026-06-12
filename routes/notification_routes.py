@@ -174,13 +174,11 @@ def notifications_page():
             GlobalNotification.expires_at >
             datetime.utcnow()
         )
-    )
-    .order_by(
-            GlobalNotification.created_at.desc(),
-            GlobalNotification.priority.desc(),
-            GlobalNotification.created_at.desc()
-        )
-        .all()
+    ).order_by(
+        GlobalNotification.created_at.desc(),
+        GlobalNotification.priority.desc(),
+        GlobalNotification.created_at.desc()
+    ).all()
 
     return render_template(
         "notifications.html",
