@@ -43,6 +43,7 @@
 
         <!-- CLEAR BUTTON -->
 
+        {% if current_user.is_authenticated %}
         <button
             class="clear-btn"
             id="clearOrdersBtn"
@@ -52,6 +53,7 @@
             🗑 Clear All
 
         </button>
+        {% endif %}
 
     </div>
 
@@ -61,8 +63,9 @@
 
     <div class="notification-tabs">
 
+        {% if current_user.is_authenticated %}
         <button
-            class="tab-btn active"
+            class="tab-btn active {% if current_user.is_authenticated %}active{% endif %}"
             id="ordersTabBtn"
             onclick="showTab('orders')"
         >
@@ -70,11 +73,12 @@
             Orders
 
         </button>
+        {% endif %}
 
 
 
         <button
-            class="tab-btn"
+            class="tab-btn {% if not current_user.is_authenticated %}active{% endif %}"
             id="rmBakesTabBtn"
             onclick="showTab('rmbakes')"
         >
@@ -90,7 +94,7 @@
     <!-- ORDERS TAB -->
 
 <div
-    class="tab-content active"
+    class="tab-content {% if current_user.is_authenticated %}active{% endif %}"
     id="ordersTab"
 >
 
@@ -366,7 +370,7 @@
     <!-- RM BAKES TAB -->
 
     <div
-        class="tab-content"
+        class="tab-content {% if not current_user.is_authenticated %}active{% endif %}"
         id="rmBakesTab"
     >
 
