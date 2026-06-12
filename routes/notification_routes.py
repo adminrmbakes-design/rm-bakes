@@ -160,33 +160,23 @@ def notifications_page():
     # GLOBAL NOTIFICATIONS
     # =====================================
 
-   global_notifications = (
-
-       GlobalNotification.query.filter(
-
-           GlobalNotification.is_active == True,
-
-           GlobalNotification.expires_at == None
-
-           (
-               GlobalNotification.expires_at >
-               datetime.utcnow()
-           )
-
-       )
-       
-       .order_by(
-
-           GlobalNotification.is_featured.desc(),
-
-           GlobalNotification.priority.desc(),
-
-           GlobalNotification.created_at.desc()
-
-       )
-       .all()
-   
-   )
+    global_notifications = (
+        GlobalNotification.query
+        .filter(
+            GlobalNotification.is_active == True,
+            (
+                (GlobalNotification.expires_at == None)
+                |
+                (GlobalNotification.expires_at > datetime.utcnow())
+            )
+        )
+        .order_by(
+            GlobalNotification.is_featured.desc(),
+            GlobalNotification.priority.desc(),
+            GlobalNotification.created_at.desc()
+        )
+        .all()
+    )
 
     return render_template(
         "notifications.html",
