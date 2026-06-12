@@ -1171,8 +1171,81 @@ def admin_global_notifications():
             "banner"
         )
 
+        notification_type = request.form.get(
+            "notification_type",
+            "announcement"
+        )
+        
+        action_text = request.form.get(
+            "action_text"
+        )
+        
+        action_link = request.form.get(
+            "action_link"
+        )
+        
+        coupon_code = request.form.get(
+            "coupon_code"
+        )
+        
+        product_id = request.form.get(
+            "product_id"
+        )
+        
+        priority = int(
+            
+            request.form.get(
+                "priority",0
+            )
+        )
+        
+        is_featured = (
 
+            request.form.get(
+                "is_featured"
+            )
+            == "on"
+        )
+        
+        starts_at = request.form.get(
+            "starts_at"
+        )
 
+        expires_at = request.form.get(
+            "expires_at"
+        )
+
+        if product_id:
+            
+            product_id = int(
+                product_id
+            )
+            
+        else:
+            
+            product_id = None
+
+        if starts_at:
+            
+            starts_at = datetime.fromisoformat(
+                starts_at
+        )
+            
+        else:
+            
+            starts_at = None
+            
+        if expires_at:
+            
+            expires_at = datetime.fromisoformat(
+                expires_at
+            )
+        
+        else:
+            expires_at = None
+
+        
+        
         if not title or not message or not banner:
 
             flash(
@@ -1238,15 +1311,42 @@ def admin_global_notifications():
         # =================================
 
         new_notification = GlobalNotification(
-
+            
             title=title,
 
             message=message,
 
             banner_image=banner_url,
 
-            is_active=True
+            notification_type=
+            notification_type,
 
+            action_text=
+            action_text,
+
+            action_link=    
+            action_link,
+
+            coupon_code=
+            coupon_code,
+
+            product_id=
+            product_id,
+
+            priority=
+            priority,
+
+            starts_at=
+            starts_at,
+
+            expires_at=
+            expires_at,
+
+            is_featured=
+            is_featured,
+
+            is_active=True
+        
         )
 
 
@@ -1268,14 +1368,13 @@ def admin_global_notifications():
             title="Global Announcement Published",
 
             message=f"""
-
-Announcement:
-
-{title}
-
-was published globally.
-
-""",
+            Title:
+            {title}
+            
+            Type:
+            {notification_type}
+            
+            Published globally."""
 
             notification_type="announcement"
 
