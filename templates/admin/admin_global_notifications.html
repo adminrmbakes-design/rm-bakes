@@ -1485,19 +1485,30 @@ function updateFields(){
     }
 
     else if(
-        typeSelect.value ===
-        "new_product"
+        
+        typeSelect.value === "new_product"
+        
+        ||
+
+        typeSelect.value === "launching_soon"
+
+        ||
+
+        typeSelect.value === "seasonal"
+    
     ){
 
         productFields.style.display =
             "block";
-
     }
 
     else if(
         typeSelect.value ===
         "seasonal"
     ){
+        
+        productFields.style.display =
+             "block";
 
         seasonalFields.style.display =
             "block";
