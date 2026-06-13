@@ -1244,6 +1244,29 @@ def admin_global_notifications():
         else:
             expires_at = None
 
+
+        # =================================
+        # AUTO ACTION LINKS
+        # =================================
+
+        if notification_type == "coupon":
+            
+            action_text = None
+            action_link = None
+
+        elif (
+            notification_type == "new_product"
+            and product_id
+        ):
+            
+            action_link = (
+                f"/product/{product_id}"
+            )
+            
+            if not action_text:
+                
+                action_text = "View Dessert"
+
         
         
         if not title or not message or not banner:
@@ -1403,8 +1426,16 @@ def admin_global_notifications():
 
 
     # =====================================
-    # FETCH ANNOUNCEMENTS
+    # FETCH ANNOUNCEMENTS AND PRODUCTS
     # =====================================
+
+    products = (
+        Product.query
+        .order_by(
+            Product.product_name.asc()
+        )
+        .all()
+    )
 
     notifications = (
 
@@ -1427,6 +1458,8 @@ def admin_global_notifications():
         "admin/admin_global_notifications.html",
 
         notifications=notifications,
+
+        products=products,
 
         admin_username=session.get(
             "admin_username"
