@@ -1255,7 +1255,11 @@ def admin_global_notifications():
             action_link = None
 
         elif (
-            notification_type == "new_product"
+            notification_type in [
+                "new_product",
+                "launching_soon",
+                "seasonal"
+            ]
             and product_id
         ):
             
