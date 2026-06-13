@@ -780,6 +780,52 @@
         }
 
 
+        /* ====================================
+           LIVE PREVIEW
+        =================================== */
+
+        .section-block{
+
+            padding:24px;
+
+            border-radius:24px;
+
+            background:
+                rgba(255,255,255,0.03);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .form-section-title{
+
+            margin-bottom:20px;
+
+            font-size:1.2rem;
+
+        }
+
+        .live-preview{
+
+            margin-top:20px;
+
+        }
+
+        .preview-card{
+
+            margin-top:15px;
+
+            padding:24px;
+
+            border-radius:24px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+        }
+
+
 
         /* ====================================
            MOBILE
@@ -975,6 +1021,14 @@
                 class="announcement-form"
             >
 
+                <div class="section-block">
+
+                    <h3 class="form-section-title">
+
+                        📢 Basic Information
+
+                    </h3>
+
                 <!-- TITLE -->
 
                 <div class="form-group">
@@ -1059,6 +1113,16 @@
                     ></textarea>
 
                 </div>
+
+                </div>
+
+                <div class="section-block">
+
+                    <h3 class="form-section-title">
+
+                        🎯 Notification Target
+
+                    </h3>
 
                 <!-- DYNAMIC FIELDS -->
 
@@ -1162,8 +1226,12 @@
                     </div>
 
                 </div>
+                    
+                </div>
 
                 <!-- Common field -->
+                <div  id="actionFields">
+                    
                 <div class="form-group">
 
                     <label>
@@ -1196,6 +1264,16 @@
 
                 </div>
 
+                </div>
+
+                <div class="section-block">
+                    
+                    <h3 class="form-section-title">
+
+                        ⏰ Scheduling
+
+                    </h3>
+
                 <div class="form-group">
 
                     <label>
@@ -1226,9 +1304,18 @@
                     </label>
 
                 </div>
+                
+                </div>
 
 
+                <div class="section-block">
 
+                    <h3 class="form-section-title">
+
+                        🖼 Banner
+
+                    </h3>
+                    
                 <!-- IMAGE -->
 
                 <div class="form-group">
@@ -1248,8 +1335,41 @@
 
                 </div>
 
+                </div>
 
 
+
+                <!-- LIVE PREVIEW -->
+
+                <div class="live-preview">
+
+                    <h3>
+
+                        👀 Live Preview
+
+                    </h3>
+
+                    <div
+                        id="previewCard"
+                        class="preview-card"
+                    >
+
+                        <h4 id="previewTitle">
+
+                            Announcement Title
+
+                        </h4>
+
+                        <p id="previewMessage">
+
+                            Description preview...
+
+                        </p>
+
+                    </div>
+
+                </div>
+                
                 <!-- BUTTON -->
 
                 <button
@@ -1466,56 +1586,78 @@ const seasonalFields =
         "seasonalFields"
     );
 
+const titleInput =
+    document.querySelector(
+        'input[name="title"]'
+    );
+
+const messageInput =
+    document.querySelector(
+        'textarea[name="message"]'
+    );
+
+titleInput.addEventListener(
+    "input",
+    () => {
+
+        document.getElementById(
+            "previewTitle"
+        ).innerText = titleInput.value;
+
+    }
+);
+
+messageInput.addEventListener(
+    "input",
+    () => {
+
+        document.getElementById(
+            "previewMessage"
+        ).innerText = messageInput.value;
+
+    }
+);
+
 function updateFields(){
 
-    couponFields.style.display =
-        "none";
+    couponFields.style.display = "none";
+    productFields.style.display = "none";
+    seasonalFields.style.display = "none";
 
-    productFields.style.display =
-        "none";
+    if(typeSelect.value === "coupon"){
 
-    seasonalFields.style.display =
-        "none";
-
-    if(
-        typeSelect.value === "coupon"
-    ){
-
-        couponFields.style.display =
-            "block";
+        couponFields.style.display = "block";
 
     }
 
     else if(
-        
         typeSelect.value === "new_product"
-        
         ||
-
         typeSelect.value === "launching_soon"
-
-        ||
-
-        typeSelect.value === "seasonal"
-    
     ){
 
-        productFields.style.display =
-            "block";
+        productFields.style.display = "block";
+
     }
 
     else if(
-        typeSelect.value ===
-        "seasonal"
+        typeSelect.value === "seasonal"
     ){
-        
-        productFields.style.display =
-             "block";
 
-        seasonalFields.style.display =
-            "block";
+        productFields.style.display = "block";
+
+        seasonalFields.style.display = "block";
 
     }
+
+actionFields.style.display = "block";
+
+if(typeSelect.value === "coupon"){
+
+    actionFields.style.display =
+        "none";
+
+}
 
 }
 
