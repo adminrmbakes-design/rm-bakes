@@ -188,6 +188,18 @@ class Coupon(db.Model):
 
     )
 
+    # ========================
+    # BANNER IMAGE
+    # ========================
+    
+    coupon_banner = db.Column(
+        
+        db.String(500),
+
+        nullable=False
+
+    )
+
 
 # =========================================
 # COUPON USAGE HISTORY
