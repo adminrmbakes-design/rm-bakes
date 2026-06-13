@@ -215,75 +215,11 @@ app.register_blueprint(admin_coupon_bp)
 
 
 with app.app_context():
+    
+    
+    db.create_all()
 
-    try:
-
-        print(
-            "\n🚀 Creating database tables..."
-        )
-
-        db.create_all()
-
-        print(
-            "✅ Tables verified"
-        )
-
-        result = db.session.execute(
-
-            text("""
-
-                SELECT column_name
-
-                FROM information_schema.columns
-
-                WHERE table_name='coupons'
-
-                AND column_name='coupon_banner'
-
-            """)
-
-        )
-
-        column_exists = result.fetchone()
-
-        if not column_exists:
-
-            print(
-                "⚡ Adding coupon_banner column..."
-            )
-
-            db.session.execute(
-
-                text("""
-
-                    ALTER TABLE coupons
-
-                    ADD COLUMN coupon_banner VARCHAR(500)
-
-                """)
-
-            )
-
-            db.session.commit()
-
-            print(
-                "✅ coupon_banner column added"
-            )
-
-        else:
-
-            print(
-                "ℹ️ coupon_banner already exists"
-            )
-
-    except Exception as e:
-
-        db.session.rollback()
-
-        print(
-            f"❌ Database upgrade failed: {e}"
-        )
-
+       
 # =========================================
 # RUN APP
 # =========================================
