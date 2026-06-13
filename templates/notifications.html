@@ -481,12 +481,20 @@
                             {% if notification.notification_type == "new_product"
                             and notification.product_id %}
 
+                            {% if notification.product_name %}
+
                             <div class="notification-info-box">
 
-                                🍰 Product ID:
-                            
-                                {{ notification.product_id }}
+                                🍰 Product:
+
+                                <strong>
+
+                                    {{ notification.product_name }}
+
+                                </strong>
                             </div>
+
+                            {% endif %}
 
                             {% endif %}
 
