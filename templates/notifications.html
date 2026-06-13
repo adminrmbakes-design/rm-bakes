@@ -182,22 +182,7 @@
 
                         </small>
 
-                        <!-- Action link and text -->
-
-                        {% if notification.notification_type != "coupon"
-                        and notification.action_text
-                        and notification.action_link %}
-                        <a
-                            href="{{ notification.action_link }}"
-                            class="global-action-btn"
-                        >
-
-                            {{ notification.action_text }} →
-
-                        </a>
-
-                        {% endif %}
-
+                        
 
                         <!-- ACTIONS -->
 
@@ -533,6 +518,24 @@
                             </div>
                         
                             {% endif %}
+
+                            <!-- Action link and text -->
+
+                            {% if notification.notification_type != "coupon"
+                            and notification.action_text
+                            and notification.action_link %}
+                        
+                            <a
+                                href="{{ notification.action_link }}"
+                                class="global-action-btn"
+                            >
+
+                                {{ notification.action_text }} →
+
+                            </a>
+
+                            {% endif %}
+
 
                         </div>
 
