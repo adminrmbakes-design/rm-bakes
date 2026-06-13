@@ -4,6 +4,8 @@ from flask_login import current_user
 
 import os
 
+from sqlalchemy import text
+
 # =========================================
 # DATABASE
 # =========================================
