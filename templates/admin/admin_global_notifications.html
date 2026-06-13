@@ -1097,10 +1097,27 @@
 
                         </label>
 
-                        <input
-                            type="number"
-                            name="product_id"
-                        >
+                        <select name="product_id">
+
+                            <option value="">
+
+                                Select Product
+
+                            </option>
+
+                            {% for product in products %}
+
+                            <option
+                                value="{{ product.product_id }}"
+                            >
+
+                                {{ product.product_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
 
                     </div>
 
