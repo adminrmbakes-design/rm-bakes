@@ -420,6 +420,16 @@
                           color:white;"
                 ></textarea>
 
+                <br><br>
+
+                <label>
+
+                    Add Banner Image (Mandatory)
+
+                </label>
+
+                <br><br>
+
                 <input
                     type="file"
                     name="coupon_banner"
@@ -815,6 +825,27 @@
 
         </h2>
 
+        <!-- Image Preview -->
+
+        <div
+            style="
+            margin-bottom:20px;
+            text-align:center;"
+        >
+
+            <img
+                id="edit_coupon_banner_preview"
+                src=""
+                style="
+                width:100%;
+                max-height:250px;
+                object-fit:cover;
+                border-radius:18px;
+                display:none;"
+            >
+
+        </div>
+
         <!-- Edit coupons -->
 
         <br>
@@ -822,6 +853,7 @@
         <form
             id="edit-form"
             method="POST"
+            enctype="multipart/form-data"
         >
 
             <input
@@ -845,6 +877,14 @@
                 name="coupon_description"
                 placeholder="Description"
             ></textarea>
+
+            <br><br>
+
+            <label>
+
+                Replace Banner (Optional)
+
+            </label>
 
             <br><br>
 
@@ -1139,6 +1179,8 @@ function updateEditScope(){
 
 function openEditModal(couponId){
 
+    const banner = card.dataset.couponBanner;
+
     const card = document.querySelector(
 
         `[data-coupon-id="${couponId}"]`
@@ -1194,6 +1236,28 @@ function openEditModal(couponId){
     document.getElementById(
         "edit_popularity_text"
     ).value = card.dataset.popularityText;
+
+    const bannerPreview =
+
+    document.getElementById(
+        "edit_coupon_banner_preview"
+    );
+
+    if(banner){
+
+        bannerPreview.src = banner;
+
+        bannerPreview.style.display =
+            "block";
+
+    }
+
+    else{
+
+        bannerPreview.style.display =
+            "none";
+
+    }
 
     if(card.dataset.expiryDate){
 
