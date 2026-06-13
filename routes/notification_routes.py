@@ -178,6 +178,22 @@ def notifications_page():
         .all()
     )
 
+    for notification in global_notifications:
+        
+        notification.product_name = None
+        
+        if notification.product_id:
+            
+            product = Product.query.get(
+                notification.product_id
+            )
+            
+            if product:
+                
+                notification.product_name = (
+                    product.product_name
+                )
+
     return render_template(
         "notifications.html",
         user_notifications=user_notifications,
