@@ -10,6 +10,10 @@ from flask import (
 
 )
 
+import cloudinary.uploader
+
+import cloudinary_config
+
 from datetime import datetime
 
 from database import db
@@ -230,6 +234,10 @@ def create_coupon():
         "popularity_text"
     )
 
+    coupon_banner = request.files.get(
+        "coupon_banner"
+    )
+
     existing_coupon = Coupon.query.filter_by(
 
         coupon_code=coupon_code
@@ -254,6 +262,26 @@ def create_coupon():
 
         )
 
+    if not coupon_banner:
+        
+        flash(
+            
+            "Coupon banner is required 😭",
+
+            "danger"
+
+        )
+        
+        return redirect(
+
+            url_for(
+                
+                "admin_coupon.admin_coupons"
+            
+            )
+
+        )
+
     parsed_expiry_date = None
 
     if expiry_date:
@@ -266,6 +294,20 @@ def create_coupon():
 
         )
 
+    upload_result = cloudinary.uploader.upload(
+
+        coupon_banner,
+
+        folder="rm_bakes/coupons"
+
+    )
+    
+    banner_url = (
+
+        upload_result["secure_url"]
+
+    )
+
     coupon = Coupon(
 
         coupon_code=coupon_code,
@@ -273,6 +315,8 @@ def create_coupon():
         coupon_title=coupon_title,
 
         coupon_description=coupon_description,
+
+        coupon_banner=banner_url,
 
         discount_type=discount_type,
 
@@ -340,6 +384,10 @@ def create_coupon():
 )
 @admin_required
 def update_coupon(coupon_id):
+
+    new_coupon_banner = request.files.get(
+        "coupon_banner"
+    )
 
     coupon = Coupon.query.get_or_404(
 
@@ -490,6 +538,29 @@ def update_coupon(coupon_id):
         parsed_expiry_date
 
     )
+
+    if (
+
+        new_coupon_banner
+
+        and
+
+        new_coupon_banner.filename
+
+    ):
+        upload_result = cloudinary.uploader.upload(
+
+            new_coupon_banner,
+
+            folder="rm_bakes/coupons"
+
+        )
+        
+        coupon.coupon_banner = (
+
+            upload_result["secure_url"]
+
+        )
 
     db.session.commit()
 
