@@ -576,7 +576,8 @@
 
         <div
             class="coupon-card"
-
+            
+            data-coupon-banner="{{ coupon.coupon_banner or '' }}"
             data-coupon-id="{{ coupon.coupon_id }}"
             data-coupon-code="{{ coupon.coupon_code }}"
             data-coupon-title="{{ coupon.coupon_title }}"
@@ -598,6 +599,17 @@
                 {{ coupon.coupon_code }}
 
             </div>
+
+            <img
+                src="{{ coupon.coupon_banner }}"
+                alt="{{ coupon.coupon_title }}"
+                style="
+                width:100%;
+                height:180px;
+                object-fit:cover;
+                border-radius:18px;
+                margin-bottom:15px;"
+            >
 
             <div class="coupon-title">
 
@@ -836,6 +848,14 @@
 
             <br><br>
 
+            <input
+                type="file"
+                name="coupon_banner"
+                accept="image/*"
+            >
+            
+            <br>
+            
             <select
                 id="edit_discount_type"
                 name="discount_type"
