@@ -19,7 +19,8 @@ from database import (
 
     db,
     UserNotification,
-    GlobalNotification
+    GlobalNotification,
+    Product
 
 )
 
