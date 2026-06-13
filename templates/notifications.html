@@ -172,62 +172,6 @@
 
                         </p>
 
-                        <!-- Coupons -->
-
-                        {% if notification.notification_type == "coupon"
-                        and notification.coupon_code %}
-
-                        <div class="coupon-code-box">
-
-                            🎟 {{ notification.coupon_code }}
-
-                        </div>
-
-                        {% endif %}
-                        
-
-                        <!-- Products -->
-
-                        {% if notification.notification_type == "new_product"
-                        and notification.product_id %}
-
-                        <div class="notification-info-box">
-
-                            🍰 Product ID:
-                            
-                            {{ notification.product_id }}
-
-                        </div>
-
-                        {% endif %}
-
-
-                        <!-- Seasonal -->
-
-                        {% if notification.notification_type == "seasonal" %}
-
-                        <div class="notification-info-box">
-
-                            {% if notification.starts_at %}
-
-                            📅 Starts:
-                            {{ notification.starts_at.strftime('%d %b %Y') }}
-
-                            {% endif %}
-
-                            <br>
-
-                            {% if notification.expires_at %}
-
-                            ⏳ Ends:
-                            {{ notification.expires_at.strftime('%d %b %Y') }}
-
-                            {% endif %}
-
-                        </div>
-                        
-                        {% endif %}
-
 
 
                         <!-- DATE -->
@@ -531,6 +475,64 @@
                                 {{ notification.created_at.strftime('%d %b %Y • %I:%M %p') }}
 
                             </small>
+
+
+                            <!-- Coupons -->
+                            
+                            {% if notification.notification_type == "coupon"
+                            and notification.coupon_code %}
+
+                            <div class="coupon-code-box">
+
+                                🎟 {{ notification.coupon_code }}
+
+                            </div>
+                            
+                            {% endif %}
+                        
+
+                            <!-- Products -->
+                            
+                            {% if notification.notification_type == "new_product"
+                            and notification.product_id %}
+
+                            <div class="notification-info-box">
+
+                                🍰 Product ID:
+                            
+                                {{ notification.product_id }}
+                            </div>
+
+                            {% endif %}
+
+
+                            <!-- Seasonal -->
+                            
+                            {% if notification.notification_type == "seasonal" %}
+
+                            <div class="notification-info-box">
+
+                                {% if notification.starts_at %}
+
+                                📅 Starts:
+                                <br>
+                                {{ notification.starts_at.strftime('%d %b %Y') }}
+
+                                {% endif %}
+
+                                <br>
+
+                                {% if notification.expires_at %}
+
+                                ⏳ Ends:
+                                <br>
+                                {{ notification.expires_at.strftime('%d %b %Y') }}
+
+                                {% endif %}
+
+                            </div>
+                        
+                            {% endif %}
 
                         </div>
 
