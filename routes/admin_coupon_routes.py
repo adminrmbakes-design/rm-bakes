@@ -20,6 +20,8 @@ from database import db
 
 from database import Product
 
+from database import GlobalNotification
+
 from coupons_database import Coupon
 
 from utils.admin_guard import (
@@ -382,7 +384,7 @@ def create_coupon():
         
     if coupon.minimum_order_amount:
         notification_message += (
-            f"\n\nMinimum order ₹{coupon.minimum_order_amount}."
+            f"\n\nAdd minimum SWEET EXPERIENCES of ₹{coupon.minimum_order_amount}."
         )
 
     db.session.add(
@@ -602,6 +604,38 @@ def update_coupon(coupon_id):
 
     )
 
+    # =====================================
+    # FIND LINKED NOTIFICATION
+    # =====================================
+    
+    notification = GlobalNotification.query.filter_by(
+        coupon_code=coupon.coupon_code
+    ).first()
+
+    # =====================================
+    # UPDATED NOTIFICATION MESSAGE
+    # =====================================
+
+    if coupon.discount_type == "percentage":
+        
+        notification_message = (
+            f"🎉 Enjoy {int(coupon.discount_value)}% OFF "
+            f"with coupon code {coupon.coupon_code}."
+        )
+    
+    else:
+        
+        notification_message = (
+            f"💸 Save ₹{int(coupon.discount_value)} "
+            f"with coupon code {coupon.coupon_code}."
+        )
+        
+        if coupon.minimum_order_amount:
+            
+            notification_message += (
+                f"\n\nAdd minimum SWEET EXPERIENCES of ₹{int(coupon.minimum_order_amount)}."
+            )
+
     if (
 
         new_coupon_banner
@@ -623,6 +657,28 @@ def update_coupon(coupon_id):
 
             upload_result["secure_url"]
 
+        )
+
+    if notification:
+        
+        notification.title = (
+            f"🎟️ {coupon.coupon_title}"
+        )
+        
+        notification.message = (
+            notification_message
+        )
+        
+        notification.banner_image = (
+            coupon.coupon_banner
+        )
+        
+        notification.expires_at = (
+            coupon.expiry_date
+        )
+        
+        notification.is_active = (
+            coupon.is_active
         )
 
     db.session.commit()
