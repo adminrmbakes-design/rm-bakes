@@ -381,13 +381,8 @@ def create_coupon():
         )
         
     if coupon.minimum_order_amount:
-        
         notification_message += (
-
-            f"\n\nMinimum order ₹"
-
-            f"{int(coupon.minimum_order_amount)}."
-
+            f"\n\nMinimum order ₹{coupon.minimum_order_amount}."
         )
 
     db.session.add(
