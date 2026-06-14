@@ -28,6 +28,10 @@ from utils.admin_guard import (
 
 )
 
+from utils.notification_utils import (
+    create_global_notification
+)
+
 
 # =========================================
 # BLUEPRINT
@@ -348,11 +352,75 @@ def create_coupon():
 
     )
 
+    # =====================================
+    # AUTO NOTIFICATION MESSAGE
+    # =====================================
+
+    if coupon.discount_type == "percentage":
+
+        notification_message = (
+
+            f"🎉 Enjoy {int(coupon.discount_value)}% OFF "
+
+            f"with coupon code "
+
+            f"{coupon.coupon_code}."
+
+        )
+
+    else:
+
+        notification_message = (
+
+            f"💸 Save ₹{int(coupon.discount_value)} "
+
+            f"with coupon code "
+
+            f"{coupon.coupon_code}."
+
+        )
+        
+    if coupon.minimum_order_amount:
+        
+        notification_message += (
+
+            f"\n\nMinimum order ₹"
+
+            f"{int(coupon.minimum_order_amount)}."
+
+        )
+
     db.session.add(
         coupon
     )
 
     db.session.commit()
+
+    # =====================================
+    # CREATE GLOBAL NOTIFICATION
+    # =====================================
+
+    create_global_notification(
+
+        title=f"🎟️ {coupon.coupon_title}",
+
+        message=notification_message,
+
+        banner_image=coupon.coupon_banner,
+
+        notification_type="coupon",
+
+        coupon_code=coupon.coupon_code,
+
+        priority = 5
+        
+        expires_at=coupon.expiry_date,
+
+        is_featured=True,
+
+        is_active=coupon.is_active
+
+    )
 
     flash(
 
