@@ -28,6 +28,10 @@ from utils.admin_guard import (
 
 )
 
+from utils.notification_utils import (
+    create_global_notification
+)
+
 
 # =========================================
 # BLUEPRINT
@@ -207,6 +211,34 @@ def add_product():
         )
 
         db.session.commit()
+
+        # =====================================
+        # AUTO PRODUCT LAUNCH NOTIFICATION
+        # =====================================
+
+        create_global_notification(
+            
+            title=f"🍰 Fresh From The Oven! {new_product.product_name}",
+
+            message=new_product.product_description,
+
+            banner_image=new_product.product_image,
+
+            notification_type="new_product",
+
+            action_text="View Dessert",
+
+            action_link=f"/product/{new_product.product_id}",
+
+            product_id=new_product.product_id,
+
+            priority=5,
+
+            is_featured=True,
+
+            is_active=True
+
+        )
 
         flash(
 
