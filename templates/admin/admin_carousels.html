@@ -24,13 +24,90 @@ input,textarea,select{padding:16px;border:none;border-radius:16px;background:rgb
 .carousel-actions{display:flex;gap:10px}
 .carousel-actions button{flex:1;padding:12px;border:none;border-radius:12px}
 .preview-card{padding:20px;border-radius:20px;background:rgba(255,255,255,.06)}
+
+.flash-wrapper{
+
+    width:92%;
+
+    max-width:1450px;
+
+    margin:20px auto;
+
+}
+
+.flash{
+
+    padding:16px;
+
+    border-radius:16px;
+
+    margin-bottom:12px;
+
+    background:
+        rgba(0,255,170,0.12);
+
+    border:
+        1px solid rgba(0,255,170,0.2);
+
+}
+
+.dashboard-btn{
+
+    text-decoration:none;
+
+    padding:12px 20px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00f5ff,
+            #00d4ff
+        );
+
+    color:black;
+
+    font-weight:700;
+
+}
 </style>
 </head>
 <body>
 
+<!-- =====================================
+     FLASH MESSAGES
+===================================== -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+
+<div class="flash-wrapper">
+
+    {% for category, message in messages %}
+
+    <div class="flash">
+
+        {{ message }}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+{% endwith %}
+
+  
 <div class="topbar">
 <h2>🎠 RM Bakes Carousel Manager</h2>
-<a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
+<a
+    href="{{ url_for('admin.admin_dashboard') }}"
+    class="dashboard-btn"
+>
+    ← Dashboard
+</a>
 </div>
 
 <div class="page-wrapper">
@@ -178,7 +255,8 @@ Enable
 </form>
 
 <form method="POST"
-action="{{ url_for('admin_carousel.delete_carousel', carousel_id=carousel.carousel_id) }}">
+action="{{ url_for('admin_carousel.delete_carousel', carousel_id=carousel.carousel_id) }}"
+onsubmit="return confirm('Delete this carousel? 😭')">
 
 <button type="submit">
 Delete
