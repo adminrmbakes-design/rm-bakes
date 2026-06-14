@@ -385,6 +385,8 @@
 
             method="POST"
 
+            enctype="multipart/form-data"
+
             action="{{ url_for(
                 'admin_coupon.create_coupon'
             ) }}"
@@ -1179,13 +1181,14 @@ function updateEditScope(){
 
 function openEditModal(couponId){
 
-    const banner = card.dataset.couponBanner;
-
     const card = document.querySelector(
 
         `[data-coupon-id="${couponId}"]`
 
     );
+
+    const banner = card.dataset.couponBanner;
+
 
     document.getElementById(
         "edit_coupon_code"
@@ -1270,9 +1273,6 @@ function openEditModal(couponId){
 
     }
 
-    document.getElementById(
-        "edit_expiry_date"
-    ).value = "";
 
     document.getElementById(
         "edit-form"
