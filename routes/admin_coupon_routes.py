@@ -789,31 +789,34 @@ def toggle_coupon(coupon_id):
 def delete_coupon(coupon_id):
 
     coupon = Coupon.query.get_or_404(
-
         coupon_id
-
     )
 
+    notification = (
+        GlobalNotification.query.filter_by(
+            coupon_code=coupon.coupon_code
+        ).first()
+    )
+
+    if notification:
+
+        db.session.delete(
+            notification
+        )
+
     db.session.delete(
-
         coupon
-
     )
 
     db.session.commit()
 
     flash(
-
         "Coupon deleted 🗑",
-
         "success"
-
     )
 
     return redirect(
-
         url_for(
             "admin_coupon.admin_coupons"
         )
-
     )
