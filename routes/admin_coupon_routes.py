@@ -384,7 +384,7 @@ def create_coupon():
         
     if coupon.minimum_order_amount:
         notification_message += (
-            f"\n\nAdd minimum SWEET EXPERIENCES of ₹{coupon.minimum_order_amount}."
+            f"\n\n🧁 Fill your cart with goodies worth ₹{int(coupon.minimum_order_amount)} or more."
         )
 
     db.session.add(
@@ -616,12 +616,7 @@ def update_coupon(coupon_id):
         coupon_code=old_coupon_code
     ).first()
 
-    print("=" * 50)
-    print("LOOKING FOR:", old_coupon_code)
-    print("FOUND:", notification)
-    print("=" * 50)
-
-    # =====================================
+    #===================
     # UPDATED NOTIFICATION MESSAGE
     # =====================================
 
@@ -642,7 +637,7 @@ def update_coupon(coupon_id):
     if coupon.minimum_order_amount:
         
         notification_message += (
-            f"\n\nAdd minimum SWEET EXPERIENCES of ₹{int(coupon.minimum_order_amount)}."
+            f"\n\n🧁 Fill your cart with goodies worth ₹{int(coupon.minimum_order_amount)} or more."
         )
 
     if (
@@ -694,16 +689,10 @@ def update_coupon(coupon_id):
             coupon.is_active
         )
 
-        print("=" * 50)
-        print("NOTIFICATION FOUND")
-        print("Old coupon:", old_coupon_code)
-        print("New coupon:", coupon.coupon_code)
-        print("Notification ID:", notification.notification_id)
-        print("=" * 50)
-
+    
     db.session.commit()
 
-    print("COUPON UPDATE COMMITTED")
+   
 
     flash(
 
@@ -749,15 +738,32 @@ def toggle_coupon(coupon_id):
 
     )
 
+    notification = (
+        GlobalNotification.query.filter_by(
+            coupon_code=coupon.coupon_code
+        ).first()
+    )
+    
+    if notification:
+        notification.is_active = (
+            coupon.is_active
+        )
+
     db.session.commit()
 
-    flash(
-
-        "Coupon status updated ✨",
-
-        "success"
-
-    )
+    if coupon.is_active:
+        
+        flash(
+            "Coupon activated 🎉",
+            "success"
+        )
+    
+    else:
+        
+        flash(
+            "Coupon deactivated 😴",
+            "success"
+        )
 
     return redirect(
 
