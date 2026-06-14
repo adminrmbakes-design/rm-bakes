@@ -689,7 +689,16 @@ def update_coupon(coupon_id):
             coupon.is_active
         )
 
+        print("=" * 50)
+        print("NOTIFICATION FOUND")
+        print("Old coupon:", old_coupon_code)
+        print("New coupon:", coupon.coupon_code)
+        print("Notification ID:", notification.notification_id)
+        print("=" * 50)
+
     db.session.commit()
+
+    print("COUPON UPDATE COMMITTED")
 
     flash(
 
