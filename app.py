@@ -62,6 +62,7 @@ from routes.admin_product_routes import (admin_product_bp)
 from utils.image_helpers import (get_product_image)
 from routes.review_routes import (review_bp)
 from routes.admin_coupon_routes import (admin_coupon_bp)
+from routes.admin_carousel_routes import (admin_carousel_bp)
 
 # =========================================
 # CREATE APP
@@ -208,6 +209,8 @@ app.jinja_env.globals.update(
 app.register_blueprint(review_bp)
 
 app.register_blueprint(admin_coupon_bp)
+
+app.register_blueprint(admin_carousel_bp)
 
 
 # =========================================
