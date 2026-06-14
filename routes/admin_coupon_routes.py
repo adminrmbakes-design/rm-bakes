@@ -460,6 +460,10 @@ def update_coupon(coupon_id):
 
     )
 
+    #==== TEMP VARIABLE old_coupon_code ======
+
+    old_coupon_code = coupon.coupon_code
+
     expiry_date = request.form.get(
 
         "expiry_date"
@@ -609,7 +613,7 @@ def update_coupon(coupon_id):
     # =====================================
     
     notification = GlobalNotification.query.filter_by(
-        coupon_code=coupon.coupon_code
+        coupon_code=old_coupon_code
     ).first()
 
     # =====================================
@@ -630,11 +634,11 @@ def update_coupon(coupon_id):
             f"with coupon code {coupon.coupon_code}."
         )
         
-        if coupon.minimum_order_amount:
-            
-            notification_message += (
-                f"\n\nAdd minimum SWEET EXPERIENCES of ₹{int(coupon.minimum_order_amount)}."
-            )
+    if coupon.minimum_order_amount:
+        
+        notification_message += (
+            f"\n\nAdd minimum SWEET EXPERIENCES of ₹{int(coupon.minimum_order_amount)}."
+        )
 
     if (
 
@@ -660,6 +664,10 @@ def update_coupon(coupon_id):
         )
 
     if notification:
+
+        notification.coupon_code = (
+            coupon.coupon_code
+        )
         
         notification.title = (
             f"🎟️ {coupon.coupon_title}"
