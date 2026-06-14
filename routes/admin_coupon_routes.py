@@ -616,6 +616,11 @@ def update_coupon(coupon_id):
         coupon_code=old_coupon_code
     ).first()
 
+    print("=" * 50)
+    print("LOOKING FOR:", old_coupon_code)
+    print("FOUND:", notification)
+    print("=" * 50)
+
     # =====================================
     # UPDATED NOTIFICATION MESSAGE
     # =====================================
