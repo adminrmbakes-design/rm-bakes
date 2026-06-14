@@ -7,13 +7,14 @@ import os
 from sqlalchemy import text
 
 # =========================================
-# DATABASE
+# DATABASE IMPORTS
 # =========================================
 
 from database import db
 from database import User
 from database import UserNotification
 from database import CouponUsage
+from database import Carousel
 
 # Coupon database
 from coupons_database import *
