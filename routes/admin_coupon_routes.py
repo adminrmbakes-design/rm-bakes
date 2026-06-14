@@ -407,7 +407,7 @@ def create_coupon():
 
         coupon_code=coupon.coupon_code,
 
-        priority = 5
+        priority = 5,
         
         expires_at=coupon.expiry_date,
 
