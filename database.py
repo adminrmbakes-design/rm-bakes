@@ -470,6 +470,30 @@ def search_products(query):
         )
 
     ).all()
+
+
+# =========================================
+# ACTIVE CAROUSELS
+# =========================================
+
+def get_active_carousels():
+
+    return (
+
+        Carousel.query
+
+        .filter_by(
+            carousel_is_active=True
+        )
+
+        .order_by(
+            Carousel.carousel_priority.desc(),
+            Carousel.carousel_created_at.desc()
+        )
+
+        .all()
+
+    )
     
     
 # =========================================
@@ -687,6 +711,82 @@ class GlobalNotification(db.Model):
     )
 
     created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+
+# =========================================
+# HOMEPAGE CAROUSEL
+# =========================================
+
+class Carousel(db.Model):
+
+    __tablename__ = "carousel"
+
+    carousel_id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    carousel_title = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    carousel_description = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    carousel_banner_image = db.Column(
+        db.String(500),
+        nullable=False
+    )
+
+    carousel_category = db.Column(
+        db.String(50),
+        nullable=False,
+        default="announcement"
+    )
+
+    carousel_visibility = db.Column(
+        db.String(50),
+        nullable=False,
+        default="home_only"
+    )
+
+    carousel_action_text = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
+    carousel_action_link = db.Column(
+        db.String(500),
+        nullable=True
+    )
+
+    carousel_priority = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    carousel_starts_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    carousel_expires_at = db.Column(
+        db.DateTime,
+        nullable=True
+    )
+
+    carousel_is_active = db.Column(
+        db.Boolean,
+        default=True
+    )
+
+    carousel_created_at = db.Column(
         db.DateTime,
         default=datetime.utcnow
     )
