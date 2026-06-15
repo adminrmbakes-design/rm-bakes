@@ -2969,3 +2969,40 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     }
 
 }
+
+/* ========================================
+   DEVICE VISIBILITY
+======================================== */
+
+.mobile-quick-actions{
+
+    display:none;
+}
+
+
+
+.desktop-only{
+
+    display:block;
+}
+
+@media(max-width:992px){
+
+    .hero-layout{
+
+        display:block;
+    }
+
+    .desktop-only{
+
+        display:none;
+    }
+
+    .mobile-quick-actions{
+
+        display:block;
+
+        margin-top:30px;
+    }
+
+}
