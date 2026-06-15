@@ -2708,58 +2708,58 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     color:#ffb870;
 }
 
+
 /* ========================================
-   HOMEPAGE CAROUSEL
+   RM BAKES CAROUSEL V3
 ======================================== */
 
 .rm-home-carousel{
 
-    margin-bottom:60px;
+    width:100%;
 }
 
 
 
 .rm-carousel-card{
 
-    display:flex;
+    background:
+        rgba(255,255,255,0.05);
 
-    flex-direction:column;
+    border:
+        1px solid rgba(255,255,255,0.08);
 
-    align-items:center;
+    border-radius:32px;
 
-    text-align:center;
+    overflow:hidden;
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.25);
 }
 
 
 
 /* IMAGE */
 
-.rm-carousel-image{
+.rm-carousel-image-wrapper{
 
     width:100%;
 
-    height:auto;
-
-    display:block;
-
-    border-radius:32px;
-
-    margin-bottom:35px;
-
-    box-shadow:
-        0 12px 40px rgba(0,0,0,0.28);
-
-    transition:0.4s ease;
+    background:#120c10;
 }
 
 
 
-.rm-carousel-image:hover{
+.rm-carousel-image{
 
-    transform:translateY(-3px);
+    width:100%;
 
-    box-shadow:
-        0 18px 50px rgba(255,190,120,0.18);
+    display:block;
+
+    max-height:420px;
+
+    object-fit:contain;
 }
 
 
@@ -2768,237 +2768,154 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
 .rm-carousel-content{
 
-    max-width:900px;
+    padding:30px;
 
-    margin:auto;
+    text-align:center;
 }
 
 
 
-/* INDICATORS */
+.rm-carousel-badge{
 
-.rm-home-carousel .carousel-indicators{
+    display:inline-block;
 
-    position:relative;
+    padding:12px 24px;
 
-    margin-top:30px;
-
-    margin-bottom:0;
-}
-
-
-
-.rm-home-carousel .carousel-indicators button{
-
-    width:14px;
-
-    height:14px;
-
-    border-radius:50%;
-
-    border:none;
-
-    margin:0 6px;
+    border-radius:999px;
 
     background:
-        rgba(255,255,255,0.3);
+        rgba(87,214,193,0.12);
+
+    border:
+        1px solid rgba(87,214,193,0.18);
+
+    color:#57d6c1;
+
+    font-weight:600;
+
+    margin-bottom:20px;
 }
 
 
 
-.rm-home-carousel .carousel-indicators .active{
+.rm-carousel-title{
 
-    background:#d4a762;
+    font-size:3.2rem;
 
-    box-shadow:
-        0 0 15px rgba(212,167,98,0.6);
+    font-weight:800;
+
+    color:#d4a762;
+
+    margin-bottom:16px;
+
+    line-height:1.1;
 }
 
 
 
-/* CONTROLS */
+.rm-carousel-description{
 
-.rm-home-carousel .carousel-control-prev,
-.rm-home-carousel .carousel-control-next{
+    max-width:650px;
 
-    width:60px;
+    margin:auto;
 
-    opacity:0.8;
+    color:#d8c9bc;
+
+    font-size:1.05rem;
+
+    line-height:1.8;
 }
 
 
 
-.rm-home-carousel .carousel-control-prev-icon,
-.rm-home-carousel .carousel-control-next-icon{
+.rm-carousel-btn{
 
-    width:50px;
-
-    height:50px;
-
-    border-radius:50%;
-
-    background-color:
-        rgba(0,0,0,0.45);
-
-    backdrop-filter:blur(10px);
-}
-
-
-
-/* SMOOTHER SLIDE */
-
-.carousel-item{
-
-    transition:
-        transform 0.8s ease-in-out;
-}
-
-
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .rm-home-carousel{
-
-        margin-bottom:40px;
-    }
-
-    .rm-carousel-image{
-
-        border-radius:24px;
-
-        margin-bottom:25px;
-    }
-
-    .rm-home-carousel .hero-title{
-
-        font-size:42px;
-    }
-
-    .rm-home-carousel .hero-text{
-
-        font-size:16px;
-
-        padding:0 10px;
-    }
-
-    .rm-home-carousel .carousel-control-prev,
-    .rm-home-carousel .carousel-control-next{
-
-        display:none;
-    }
-
-}
-
-/* ========================================
-   CAROUSEL ACTIONS
-======================================== */
-
-.rm-carousel-actions{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-    align-items:flex-start;
-
-    gap:20px;
-
-    margin-top:40px;
-}
-
-
-
-.rm-carousel-actions .hero-button{
+    margin-top:25px;
 
     min-width:220px;
 }
 
 
 
-.rm-carousel-actions .dessert-studio-panel{
+/* INDICATORS */
 
-    max-width:420px;
+.rm-carousel-indicators{
+
+    position:relative;
+
+    margin-top:24px;
+
+    margin-bottom:0;
+}
+
+
+
+.rm-carousel-indicators button{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+    margin:0 6px;
+
+    border:none;
+
+    background:
+        rgba(255,255,255,0.25);
+}
+
+
+
+.rm-carousel-indicators .active{
+
+    background:#d4a762;
+
+    transform:scale(1.25);
+
+    box-shadow:
+        0 0 15px rgba(212,167,98,0.5);
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:992px){
+
+    .rm-carousel-title{
+
+        font-size:2.5rem;
+    }
+
 }
 
 
 
 @media(max-width:768px){
 
-    .rm-carousel-actions{
+    .rm-carousel-content{
 
-        flex-direction:column;
-
-        align-items:center;
+        padding:24px;
     }
 
-    .rm-carousel-actions .hero-button{
+    .rm-carousel-title{
+
+        font-size:2rem;
+    }
+
+    .rm-carousel-description{
+
+        font-size:0.95rem;
+    }
+
+    .rm-carousel-btn{
 
         width:100%;
     }
 
-    .rm-carousel-actions .dessert-studio-panel{
-
-        width:100%;
-    }
-
 }
-
-
-/* ========================================
-   HOMEPAGE HERO LAYOUT
-======================================== */
-
-.hero-layout{
-
-    display:grid;
-
-    grid-template-columns:
-        minmax(0,2fr)
-        minmax(320px,1fr);
-
-    gap:30px;
-
-    align-items:start;
-
-    margin-bottom:60px;
-}
-
-
-
-/* CAROUSEL SIZE */
-
-.rm-home-carousel{
-
-    margin-bottom:0;
-}
-
-.rm-carousel-image{
-
-    max-height:500px;
-
-    object-fit:contain;
-
-    margin-bottom:20px;
-}
-
-.rm-carousel-content{
-
-    max-width:700px;
-}
-
-
-
-/* SLIDE CTA */
-
-.rm-carousel-slide-action{
-
-    margin-top:25px;
-}
-
 
 
 /* ACTION PANEL */
