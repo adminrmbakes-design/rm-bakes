@@ -2,6 +2,74 @@
 
 {% block content %}
 
+<!-- CAROUSELS -->
+
+{% if active_carousels %}
+
+<section class="rm-home-carousel">
+
+    <div
+        id="rmCarousel"
+        class="carousel slide"
+        data-bs-ride="carousel"
+    >
+
+        <div class="carousel-inner">
+
+            {% for carousel in active_carousels %}
+
+            <div
+                class="carousel-item {% if loop.first %}active{% endif %}"
+            >
+
+                <div class="rm-carousel-card">
+
+                    <img
+                        src="{{ carousel.carousel_banner_image }}"
+                        alt="{{ carousel.carousel_title }}"
+                        class="rm-carousel-image"
+                    >
+
+                    <div class="rm-carousel-content">
+
+                        <span class="hero-badge">
+
+                            {{ carousel.carousel_category|replace('_',' ')|title }}
+
+                        </span>
+
+                        <h1 class="hero-title">
+
+                            {{ carousel.carousel_title }}
+
+                        </h1>
+
+                        {% if carousel.carousel_description %}
+
+                        <p class="hero-text">
+
+                            {{ carousel.carousel_description }}
+
+                        </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
 
 <!-- HERO SECTION -->
 
