@@ -2718,7 +2718,7 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     display:grid;
 
     grid-template-columns:
-        minmax(0, 1.35fr)
+        minmax(0,1fr)
         340px;
 
     gap:24px;
@@ -2727,7 +2727,6 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     margin:20px 0 40px;
 }
-
 
 /* CAROUSEL */
 
@@ -2744,71 +2743,73 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     border:
         1px solid rgba(255,255,255,0.08);
 
-    border-radius:32px;
+    border-radius:30px;
 
     overflow:hidden;
 
     backdrop-filter:blur(14px);
-}
 
+    height:100%;
+}
 
 
 /* IMPORTANT */
 
 .rm-carousel-image{
 
-    width:72%;
+    width:100%;
 
-    height:auto;
+    aspect-ratio:16/9;
+
+    object-fit:cover;
 
     display:block;
-
-    margin:20px auto 0;
-
-    border-radius:24px;
 }
-
 
 .rm-carousel-content{
 
-    padding:14px 20px 18px;
+    padding:18px 20px 20px;
 
     text-align:center;
 }
 
 .rm-carousel-title{
 
-    font-size:2rem;
-
-    color:#d4a762;
-
-    font-weight:800;
+    font-size:1.8rem;
 
     line-height:1.15;
 
-    margin:8px 0;
+    font-weight:800;
+
+    margin-bottom:10px;
+
+    color:#d4a762;
 }
 
 .rm-carousel-description{
 
-    color:#d8c9bc;
+    font-size:0.9rem;
 
-    max-width:480px;
+    line-height:1.5;
+
+    max-width:420px;
 
     margin:auto;
 
-    font-size:0.95rem;
-
-    line-height:1.6;
+    color:#d8c9bc;
 }
 
 .rm-carousel-badge{
 
-    padding:8px 18px;
+    display:inline-block;
 
-    font-size:0.85rem;
+    padding:6px 16px;
+
+    font-size:0.8rem;
 
     border-radius:999px;
+
+    margin-bottom:12px;
 }
 
 
@@ -2816,11 +2817,13 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     margin-top:14px;
 
-    padding:12px 24px;
+    padding:12px 22px;
 
-    min-width:180px;
+    min-width:170px;
 
-    font-size:0.95rem;
+    font-size:0.9rem;
+
+    border-radius:16px;
 }
 
 
@@ -2831,23 +2834,20 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     position:relative;
 
-    margin-top:20px;
+    margin-top:12px;
+
+    margin-bottom:0;
 }
 
 .rm-carousel-indicators button{
 
-    width:10px;
+    width:8px;
 
-    height:10px;
+    height:8px;
 
     border-radius:50%;
 
-    border:none;
-
-    margin:0 4px;
-
-    background:
-        rgba(255,255,255,0.3);
+    margin:0 3px;
 }
 
 .rm-carousel-indicators .active{
@@ -2868,7 +2868,8 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     .rm-carousel-title{
 
-        font-size:1.7rem;
+       font-size:1.5rem;
+    
     }
 
    .rm-carousel-image{
