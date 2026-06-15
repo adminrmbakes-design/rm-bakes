@@ -16,6 +16,21 @@
 
         <div class="carousel-inner">
 
+            <div class="carousel-indicators">
+
+                {% for carousel in active_carousels %}
+
+                <button
+                    type="button"
+                    data-bs-target="#rmCarousel"
+                    data-bs-slide-to="{{ loop.index0 }}"
+                    class="{% if loop.first %}active{% endif %}"
+                ></button>
+
+                {% endfor %}
+
+            </div>
+
             {% for carousel in active_carousels %}
 
             <div
