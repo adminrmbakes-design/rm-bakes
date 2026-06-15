@@ -212,70 +212,7 @@ app.register_blueprint(admin_coupon_bp)
 
 app.register_blueprint(admin_carousel_bp)
 
-# =========================================
-# PRODUCT MARKETING DATABASE UPGRADE
-# =========================================
 
-def add_product_marketing_columns():
-
-    try:
-
-        print(
-            "\n🚀 Checking Product Marketing Columns..."
-        )
-
-        with db.engine.connect() as connection:
-
-            connection.execute(
-
-                text(
-                    """
-                    ALTER TABLE products
-                    ADD COLUMN IF NOT EXISTS
-                    product_is_launching BOOLEAN
-                    DEFAULT FALSE;
-                    """
-                )
-
-            )
-
-            connection.execute(
-
-                text(
-                    """
-                    ALTER TABLE products
-                    ADD COLUMN IF NOT EXISTS
-                    product_is_seasonal BOOLEAN
-                    DEFAULT FALSE;
-                    """
-                )
-
-            )
-
-            connection.execute(
-
-                text(
-                    """
-                    ALTER TABLE products
-                    ADD COLUMN IF NOT EXISTS
-                    product_is_festive BOOLEAN
-                    DEFAULT FALSE;
-                    """
-                )
-
-            )
-
-            connection.commit()
-
-        print(
-            "✅ Product Marketing Columns Ready"
-        )
-
-    except Exception as e:
-
-        print(
-            f"❌ Product Marketing Upgrade Error: {e}"
-        )
         
 # =========================================
 # CREATE DATABASE TABLES
@@ -287,7 +224,7 @@ with app.app_context():
     
     db.create_all()
 
-    add_product_marketing_columns()
+    
 # =========================================
 # RUN APP
 # =========================================
