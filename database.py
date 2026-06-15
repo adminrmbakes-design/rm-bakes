@@ -293,6 +293,34 @@ class Product(db.Model):
         default="cakes"
 
     )
+    
+    # =====================================
+    # PRODUCT MARKETING FLAGS
+    # =====================================
+
+    product_is_launching = db.Column(
+        
+        db.Boolean,
+
+        default=False
+
+    )
+
+    product_is_seasonal = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
+    product_is_festive = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
 
 
 
