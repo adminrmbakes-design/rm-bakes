@@ -2718,16 +2718,15 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     display:grid;
 
     grid-template-columns:
-        minmax(0, 2fr)
-        360px;
+        minmax(0, 1.35fr)
+        340px;
 
-    gap:30px;
+    gap:24px;
 
     align-items:start;
 
-    margin:30px 0 50px;
+    margin:20px 0 40px;
 }
-
 
 
 /* CAROUSEL */
@@ -2758,46 +2757,70 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
 .rm-carousel-image{
 
-    width:100%;
+    width:72%;
 
     height:auto;
 
     display:block;
-}
 
+    margin:20px auto 0;
+
+    border-radius:24px;
+}
 
 
 .rm-carousel-content{
 
-    padding:24px;
+    padding:14px 20px 18px;
+
     text-align:center;
 }
 
 .rm-carousel-title{
 
-    font-size:3rem;
+    font-size:2rem;
 
     color:#d4a762;
 
     font-weight:800;
 
-    margin:12px 0;
+    line-height:1.15;
+
+    margin:8px 0;
 }
 
 .rm-carousel-description{
 
     color:#d8c9bc;
 
-    max-width:650px;
+    max-width:480px;
 
     margin:auto;
+
+    font-size:0.95rem;
+
+    line-height:1.6;
 }
 
+.rm-carousel-badge{
+
+    padding:8px 18px;
+
+    font-size:0.85rem;
+
+    border-radius:999px;
+}
 
 
 .rm-carousel-btn{
 
-    margin-top:20px;
+    margin-top:14px;
+
+    padding:12px 24px;
+
+    min-width:180px;
+
+    font-size:0.95rem;
 }
 
 
@@ -2845,8 +2868,14 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     .rm-carousel-title{
 
-        font-size:2.2rem;
+        font-size:1.7rem;
     }
+
+   .rm-carousel-image{
+
+      width:92%;
+   
+   }
 
 }
 
