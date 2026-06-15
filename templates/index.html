@@ -263,6 +263,66 @@
 
 </section>
 
+<!-- MOBILE QUICK ACTIONS -->
+
+<div class="mobile-quick-actions">
+
+    <div class="quick-actions-card">
+
+        <h3>
+            Quick Actions ✨
+        </h3>
+
+        <a
+            href="{{ url_for('product.products') }}"
+            class="quick-action-btn"
+        >
+            Explore Menu 🍰
+        </a>
+
+        <div class="quick-dessert-card">
+
+            <div class="dessert-studio-heading">
+
+                ✨ Dessert Studio
+
+            </div>
+
+            <div class="dessert-studio-subtext">
+
+                Design cinematic custom desserts
+                crafted exclusively for your moments.
+
+            </div>
+
+            <div class="dessert-studio-actions">
+
+                <a
+                    href="{{ url_for('custom_order.dessert_studio') }}"
+                    class="dessert-main-btn"
+                >
+                    Open Dessert Studio 🍰
+                </a>
+
+                {% if current_user.is_authenticated %}
+
+                <a
+                    href="{{ url_for('custom_order.my_custom_orders') }}"
+                    class="dessert-secondary-btn"
+                >
+                    View My Dessert Studio 🎂
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 {% endblock %}
 
