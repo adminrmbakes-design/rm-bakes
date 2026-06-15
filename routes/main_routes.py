@@ -14,6 +14,7 @@ from flask_login import (
 from database import (
 
     get_featured_products,
+    get_active_carousels,
     UserNotification
 
 )
@@ -41,10 +42,12 @@ main_bp = Blueprint(
 def home():
 
     # =====================================
-    # FEATURED PRODUCTS
+    # FEATURED PRODUCTS AND CAROUSEL
     # =====================================
 
     featured_products = get_featured_products()
+
+    active_carousels = get_active_carousels()
 
 
 
@@ -83,6 +86,8 @@ def home():
         "index.html",
 
         featured_products=featured_products,
+
+        active_carousels=active_carousels,
 
         unread_notifications_count=
             unread_notifications_count
