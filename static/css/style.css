@@ -2710,15 +2710,32 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
 
 /* ========================================
-   RM BAKES CAROUSEL V3
+   HOMEPAGE HERO
 ======================================== */
+
+.hero-layout{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        360px;
+
+    gap:30px;
+
+    align-items:start;
+
+    margin:30px 0 50px;
+}
+
+
+
+/* CAROUSEL */
 
 .rm-home-carousel{
 
     width:100%;
 }
-
-
 
 .rm-carousel-card{
 
@@ -2732,107 +2749,55 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     overflow:hidden;
 
-    backdrop-filter:blur(16px);
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,0.25);
+    backdrop-filter:blur(14px);
 }
 
 
 
-/* IMAGE */
-
-.rm-carousel-image-wrapper{
-
-    width:100%;
-
-    background:#120c10;
-}
-
-
+/* IMPORTANT */
 
 .rm-carousel-image{
 
     width:100%;
 
+    height:auto;
+
     display:block;
-
-    max-height:420px;
-
-    object-fit:contain;
 }
 
 
-
-/* CONTENT */
 
 .rm-carousel-content{
 
-    padding:30px;
-
+    padding:24px;
     text-align:center;
 }
 
-
-
-.rm-carousel-badge{
-
-    display:inline-block;
-
-    padding:12px 24px;
-
-    border-radius:999px;
-
-    background:
-        rgba(87,214,193,0.12);
-
-    border:
-        1px solid rgba(87,214,193,0.18);
-
-    color:#57d6c1;
-
-    font-weight:600;
-
-    margin-bottom:20px;
-}
-
-
-
 .rm-carousel-title{
 
-    font-size:3.2rem;
-
-    font-weight:800;
+    font-size:3rem;
 
     color:#d4a762;
 
-    margin-bottom:16px;
+    font-weight:800;
 
-    line-height:1.1;
+    margin:12px 0;
 }
 
-
-
 .rm-carousel-description{
+
+    color:#d8c9bc;
 
     max-width:650px;
 
     margin:auto;
-
-    color:#d8c9bc;
-
-    font-size:1.05rem;
-
-    line-height:1.8;
 }
 
 
 
 .rm-carousel-btn{
 
-    margin-top:25px;
-
-    min-width:220px;
+    margin-top:20px;
 }
 
 
@@ -2843,39 +2808,28 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     position:relative;
 
-    margin-top:24px;
-
-    margin-bottom:0;
+    margin-top:20px;
 }
-
-
 
 .rm-carousel-indicators button{
 
-    width:12px;
+    width:10px;
 
-    height:12px;
+    height:10px;
 
     border-radius:50%;
 
-    margin:0 6px;
-
     border:none;
 
+    margin:0 4px;
+
     background:
-        rgba(255,255,255,0.25);
+        rgba(255,255,255,0.3);
 }
-
-
 
 .rm-carousel-indicators .active{
 
     background:#d4a762;
-
-    transform:scale(1.25);
-
-    box-shadow:
-        0 0 15px rgba(212,167,98,0.5);
 }
 
 
@@ -2884,39 +2838,17 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
 @media(max-width:992px){
 
-    .rm-carousel-title{
+    .hero-layout{
 
-        font-size:2.5rem;
-    }
-
-}
-
-
-
-@media(max-width:768px){
-
-    .rm-carousel-content{
-
-        padding:24px;
+        grid-template-columns:1fr;
     }
 
     .rm-carousel-title{
 
-        font-size:2rem;
-    }
-
-    .rm-carousel-description{
-
-        font-size:0.95rem;
-    }
-
-    .rm-carousel-btn{
-
-        width:100%;
+        font-size:2.2rem;
     }
 
 }
-
 
 /* ACTION PANEL */
 
