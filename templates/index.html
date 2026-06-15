@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<!-- CAROUSELS -->
+<!-- CAROUSEL -->
 
 {% if active_carousels %}
 
-<section class="hero-layout">
+<div class="rm-home-carousel">
 
     <div
         id="rmCarousel"
@@ -16,21 +16,6 @@
 
         <div class="carousel-inner">
 
-            <div class="carousel-indicators">
-
-                {% for carousel in active_carousels %}
-
-                <button
-                    type="button"
-                    data-bs-target="#rmCarousel"
-                    data-bs-slide-to="{{ loop.index0 }}"
-                    class="{% if loop.first %}active{% endif %}"
-                ></button>
-
-                {% endfor %}
-
-            </div>
-
             {% for carousel in active_carousels %}
 
             <div
@@ -39,21 +24,25 @@
 
                 <div class="rm-carousel-card">
 
-                    <img
-                        src="{{ carousel.carousel_banner_image }}"
-                        alt="{{ carousel.carousel_title }}"
-                        class="rm-carousel-image"
-                    >
+                    <div class="rm-carousel-image-wrapper">
+
+                        <img
+                            src="{{ carousel.carousel_banner_image }}"
+                            alt="{{ carousel.carousel_title }}"
+                            class="rm-carousel-image"
+                        >
+
+                    </div>
 
                     <div class="rm-carousel-content">
 
-                        <span class="hero-badge">
+                        <span class="rm-carousel-badge">
 
                             {{ carousel.carousel_category|replace('_',' ')|title }}
 
                         </span>
 
-                        <h1 class="hero-title">
+                        <h1 class="rm-carousel-title">
 
                             {{ carousel.carousel_title }}
 
@@ -61,7 +50,7 @@
 
                         {% if carousel.carousel_description %}
 
-                        <p class="hero-text">
+                        <p class="rm-carousel-description">
 
                             {{ carousel.carousel_description }}
 
@@ -71,16 +60,12 @@
 
                         {% if carousel.carousel_action_link %}
 
-                        <div class="rm-carousel-slide-action">
-
-                            <a
-                                href="{{ carousel.carousel_action_link }}"
-                                class="btn btn-primary hero-button"
-                            >
-                                {{ carousel.carousel_action_text }}
-                            </a>
-
-                        </div>
+                        <a
+                            href="{{ carousel.carousel_action_link }}"
+                            class="btn btn-primary rm-carousel-btn"
+                        >
+                            {{ carousel.carousel_action_text }}
+                        </a>
 
                         {% endif %}
 
@@ -94,7 +79,24 @@
 
         </div>
 
+        <div class="carousel-indicators rm-carousel-indicators">
+
+            {% for carousel in active_carousels %}
+
+            <button
+                type="button"
+                data-bs-target="#rmCarousel"
+                data-bs-slide-to="{{ loop.index0 }}"
+                class="{% if loop.first %}active{% endif %}"
+            ></button>
+
+            {% endfor %}
+
+        </div>
+
     </div>
+
+</div>
 
 {% endif %}
 
