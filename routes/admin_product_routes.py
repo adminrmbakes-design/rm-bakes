@@ -612,6 +612,119 @@ def delete_product(product_id):
 
 
 # =========================================
+# FEATURED PRODUCTS
+# =========================================
+
+@admin_product_bp.route(
+
+    "/admin/products/featured"
+
+)
+@admin_required
+def featured_products():
+
+    featured_slots = (
+
+        FeaturedProduct.query
+
+        .order_by(
+            FeaturedProduct.slot_number
+        )
+
+        .all()
+
+    )
+
+    products = (
+
+        Product.query
+
+        .order_by(
+            Product.product_name
+        )
+
+        .all()
+
+    )
+
+    return render_template(
+
+        "admin/admin_featured_products.html",
+
+        featured_slots=featured_slots,
+
+        products=products
+
+    )
+
+
+# =========================================
+# UPDATE FEATURED SLOT
+# =========================================
+
+@admin_product_bp.route(
+
+    "/admin/products/featured/update",
+
+    methods=["POST"]
+
+)
+@admin_required
+def update_featured_product():
+
+    slot_number = int(
+
+        request.form.get(
+            "slot_number"
+        )
+
+    )
+
+    product_id = request.form.get(
+        "product_id"
+    )
+
+    slot = FeaturedProduct.query.filter_by(
+
+        slot_number=slot_number
+
+    ).first()
+
+    if slot:
+
+        if product_id:
+
+            slot.product_id = int(
+                product_id
+            )
+
+        else:
+
+            slot.product_id = None
+
+        db.session.commit()
+
+        flash(
+
+            "Featured product updated ⭐",
+
+            "success"
+
+        )
+
+    return redirect(
+
+        url_for(
+
+            "admin_product.featured_products"
+
+        )
+
+    )
+
+
+
+# =========================================
 # CATEGORIES
 # =========================================
 
