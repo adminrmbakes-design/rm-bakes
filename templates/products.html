@@ -854,15 +854,44 @@ after a long tiring day.
 
     overflow-x:auto;
 
-    padding-bottom:10px;
+    overflow-y:hidden;
 
-    scrollbar-width:none;
+    padding-bottom:12px;
+
+    scroll-behavior:smooth;
 
 }
 
+/* Desktop scrollbar */
+
 .collection-scroll::-webkit-scrollbar{
 
-    display:none;
+    height:8px;
+
+}
+
+.collection-scroll::-webkit-scrollbar-track{
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border-radius:999px;
+
+}
+
+.collection-scroll::-webkit-scrollbar-thumb{
+
+    background:
+        rgba(255,255,255,0.25);
+
+    border-radius:999px;
+
+}
+
+.collection-scroll::-webkit-scrollbar-thumb:hover{
+
+    background:
+        rgba(255,255,255,0.45);
 
 }
 
@@ -919,6 +948,32 @@ after a long tiring day.
 
 }
 
+.collection-chip.active{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff77aa,
+            #ffcc88
+        );
+
+    color:white;
+
+    box-shadow:
+
+        0 0 25px rgba(
+            255,
+            180,
+            120,
+            0.5
+        );
+
+    transform:
+        translateY(-2px);
+
+}
+
 .collection-chip span{
 
     margin-left:8px;
@@ -926,6 +981,46 @@ after a long tiring day.
     opacity:0.7;
 
     font-size:0.85rem;
+
+}
+
+.collection-chip{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.collection-chip::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:0;
+
+    transition:0.3s;
+
+    background:
+
+        radial-gradient(
+
+            circle at center,
+
+            rgba(255,255,255,0.15),
+
+            transparent 70%
+
+        );
+
+}
+
+.collection-chip:hover::before{
+
+    opacity:1;
 
 }
 
@@ -1400,16 +1495,64 @@ clearSearchBtn.addEventListener(
 
 document
 .querySelectorAll(".collection-chip")
-.forEach(card => {
+.forEach(chip => {
 
-    card.addEventListener("click", () => {
+    chip.addEventListener("click", () => {
 
         const category =
+            chip.dataset.category;
 
-            card.dataset.category;
+        /* Toggle OFF */
+
+        if(
+
+            currentCategory === category
+
+        ){
+
+            currentCategory = "all";
+
+            document
+            .querySelectorAll(
+                ".collection-chip"
+            )
+            .forEach(c => {
+
+                c.classList.remove(
+                    "active"
+                );
+
+            });
+
+            filterProducts();
+
+            showToast(
+                "Showing all desserts 🍰"
+            );
+
+            return;
+        }
+
+        /* New selection */
 
         currentCategory =
             category;
+
+        document
+        .querySelectorAll(
+            ".collection-chip"
+        )
+        .forEach(c => {
+
+            c.classList.remove(
+                "active"
+            );
+
+        });
+
+        chip.classList.add(
+            "active"
+        );
 
         filterProducts();
 
