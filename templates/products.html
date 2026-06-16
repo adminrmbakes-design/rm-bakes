@@ -15,10 +15,16 @@
         </div>
 
         <h1>
-            Desserts,
-Coffee Air &
-Midnight Peace ☕
+            Desserts & Coffee ☕
         </h1>
+
+        <div class="hero-subtitle">
+
+            Midnight comfort,
+            warm lights &
+            handcrafted desserts ✨
+
+        </div>
 
         <p>
             A cozy little world of cakes,
@@ -36,35 +42,22 @@ after a long tiring day.
 
         <div class="search-wrapper">
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search cakes, brownies, cheesecakes..."
-    >
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search desserts..."
+            >
 
-</div>
+            <button
+                id="clearSearchBtn"
+                class="search-clear">
 
-<div
-    class="clear-search-wrap"
-    id="clearSearchWrap"
-    style="display:none;">
+                ✕
 
-    <button
-        type="button"
-        id="clearSearchBtn">
+            </button>
 
-        ✖ Clear Search
-
-    </button>
-
-</div>
-
-        <button id="searchBtn">
-
-            Search 🔎
-
-        </button>
-
+        </div>
+        
     </div>
 
 
@@ -449,30 +442,28 @@ after a long tiring day.
 
     <!-- NO RESULTS -->
 
+<div
+    class="no-results"
+    id="noResults"
+    style="display:none;">
+
     <div
-        class="no-results"
-        id="noResults"
-        style="display:none;">
+        class="sad-emoji"
+        id="emptyStateEmoji">
 
-        <div class="sad-emoji">
-
-            😭
-
-        </div>
-
-        <h2>
-
-            Sorry, no results found
-
-        </h2>
-
-        <p>
-
-            We couldn't find desserts matching your search.
-
-        </p>
+        🍰
 
     </div>
+
+    <h2 id="emptyStateTitle">
+
+    </h2>
+
+    <p id="emptyStateMessage">
+
+    </p>
+
+</div>
     
     
     <!-- =====================================
@@ -697,6 +688,33 @@ after a long tiring day.
         transform:scale(1);
 
     }
+
+}
+
+.products-hero h1{
+
+    font-size:
+        clamp(
+            2.5rem,
+            6vw,
+            4.5rem
+        );
+
+    line-height:1;
+
+    margin-bottom:12px;
+
+    letter-spacing:-2px;
+
+}
+
+.hero-subtitle{
+
+    font-size:1.05rem;
+
+    opacity:0.85;
+
+    max-width:600px;
 
 }
 
@@ -1227,6 +1245,43 @@ after a long tiring day.
 
 }
 
+.search-wrapper{
+
+    position:relative;
+
+}
+
+.search-clear{
+
+    position:absolute;
+
+    right:18px;
+
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    border:none;
+
+    background:none;
+
+    color:white;
+
+    cursor:pointer;
+
+    opacity:0;
+
+    transition:0.25s;
+
+}
+
+.search-clear.show{
+
+    opacity:1;
+
+}
+    
 </style>
 
 
@@ -1250,6 +1305,24 @@ const productCards =
 
 const noResults =
     document.getElementById("noResults");
+
+const emptyStateEmoji =
+
+    document.getElementById(
+        "emptyStateEmoji"
+    );
+
+const emptyStateTitle =
+
+    document.getElementById(
+        "emptyStateTitle"
+    );
+
+const emptyStateMessage =
+
+    document.getElementById(
+        "emptyStateMessage"
+    );
 
 let currentCategory = "all";
 
@@ -1417,10 +1490,96 @@ const isFavourite =
 
     });
 
-    noResults.style.display =
-        visibleCount === 0
-        ? "flex"
-        : "none";
+    if(visibleCount === 0){
+
+        noResults.style.display = "flex";
+
+        // =========================
+        // FAVOURITES EMPTY
+        // =========================
+
+        if(favouritesOnly){
+
+            emptyStateEmoji.innerText =
+                "❤️";
+
+            emptyStateTitle.innerText =
+                "Your favourites shelf is empty";
+
+            emptyStateMessage.innerText =
+
+                "Save the desserts you love and they'll wait here for your next midnight craving ✨";
+        }
+
+            // =========================
+            // SEARCH EMPTY
+            // =========================
+
+        else if(
+
+            searchInput.value.trim()
+
+        ){
+
+            emptyStateEmoji.innerText =
+                "🔎";
+
+            emptyStateTitle.innerText =
+
+                "We searched every dessert shelf...";
+
+            emptyStateMessage.innerText =
+
+                "But your craving is hiding from us today! Try another search and let's see what's fresh from the oven 🍰";
+
+        }
+
+            // =========================
+            // CATEGORY EMPTY
+            // =========================
+
+        else if(
+
+            currentCategory !== "all"
+
+        ){
+
+            emptyStateEmoji.innerText =
+                "🧁";
+
+            emptyStateTitle.innerText =
+
+                "This collection is resting for now";
+
+            emptyStateMessage.innerText =
+
+                "The display counter looks a little empty, but the bakers are always preparing something special ✨";
+
+        }
+
+            // =========================
+            // GENERAL EMPTY
+            // =========================
+
+        else{
+
+            emptyStateEmoji.innerText =
+                "☕";
+
+            emptyStateTitle.innerText =
+                "The dessert counter feels quiet today";
+
+            emptyStateMessage.innerText =
+
+                "Warm lights are on, coffee is brewing, and new desserts will arrive soon 🌙";
+
+        }
+
+    }else{
+
+        noResults.style.display = "none";
+
+    }
 
 }
 
@@ -1430,39 +1589,58 @@ const isFavourite =
 // SEARCH
 // =========================
 
-searchBtn.addEventListener("click", () => {
-
-    filterProducts();
-
-    if(searchInput.value.trim() !== ""){
-
-        showToast(
-            `Showing "${searchInput.value}" 🔎`
-        );
-
-    }
-
-});
-
-
-
 searchInput.addEventListener(
-    "keyup",
+
+    "input",
+
     () => {
 
         filterProducts();
 
-        if(searchInput.value.trim() !== ""){
+        clearTimeout(
+            searchTimer
+        );
 
-            clearSearchWrap.style.display = "flex";
+        if(
+
+            searchInput.value.trim()
+
+        ){
+
+            clearSearchBtn.classList.add(
+                "show"
+            );
 
         }else{
 
-            clearSearchWrap.style.display = "none";
+            clearSearchBtn.classList.remove(
+                "show"
+            );
 
         }
 
+        searchTimer =
+
+            setTimeout(() => {
+
+                if(
+
+                    searchInput.value.trim()
+
+                ){
+
+                    showToast(
+
+                        `Showing "${searchInput.value}" 🔎`
+
+                    );
+
+                }
+
+            }, 800);
+
     }
+
 );
 
 
@@ -1472,20 +1650,25 @@ searchInput.addEventListener(
 // =========================
 
 clearSearchBtn.addEventListener(
+
     "click",
+
     () => {
 
         searchInput.value = "";
-        
-        clearSearchWrap.style.display = "none";
 
         filterProducts();
 
+        clearSearchBtn.classList.remove(
+            "show"
+        );
+
         showToast(
-            "Search cleared ✨"
+            "Showing all desserts 🍰"
         );
 
     }
+
 );
 
 
