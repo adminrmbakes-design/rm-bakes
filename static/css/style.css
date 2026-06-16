@@ -1375,13 +1375,14 @@ small {
     }
 
     .desktop-only {
-        display: none;
+       display: none !important;
     }
 
-    .mobile-quick-actions {
-        display: block;
-        margin-top: 30px;
-    }
+   .mobile-quick-actions {
+      display: block !important;
+      width: 100%;
+      margin-top: 50px;
+   }
 }
 
 /* ACTION PANEL */
@@ -1485,7 +1486,6 @@ small {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .featured-home-badge {
@@ -1541,19 +1541,6 @@ small {
     align-items: center;
     margin-top: 18px;
     gap: 12px;
-}
-
-.featured-price {
-    color: #ffd089;
-    font-size: 1.7rem;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.featured-unit {
-    color: rgba(255, 255, 255, 0.55);
-    font-size: 0.85rem;
-    margin-top: 4px;
 }
 
 .featured-view-btn{
