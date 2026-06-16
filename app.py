@@ -15,6 +15,7 @@ from database import User
 from database import UserNotification
 from database import CouponUsage
 from database import Carousel
+from database import create_featured_product_slots
 
 # Coupon database
 from coupons_database import *
@@ -223,7 +224,7 @@ with app.app_context():
     
     
     db.create_all()
-
+    create_featured_product_slots()
     
 # =========================================
 # RUN APP
