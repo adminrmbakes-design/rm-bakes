@@ -509,6 +509,50 @@ class AdminNotification(db.Model):
 # HELPERS
 # =========================================
 
+# ========================================
+# FEATURED PRODUCT SLOTS
+# ========================================
+
+def create_featured_product_slots():
+
+    try:
+
+        existing_slots = {
+
+            slot.slot_number
+
+            for slot in
+
+            FeaturedProduct.query.all()
+
+        }
+
+        for slot_number in range(1,7):
+
+            if slot_number not in existing_slots:
+
+                db.session.add(
+
+                    FeaturedProduct(
+
+                        slot_number=slot_number
+
+                    )
+
+                )
+
+        db.session.commit()
+
+        print(
+            "featured slots ready ✅"
+        )
+
+    except Exception as e:
+
+        print(
+            f"featured slot error: {e}"
+        )
+
 
 def get_featured_products(limit=6):
 
