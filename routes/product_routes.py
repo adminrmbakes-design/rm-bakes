@@ -146,6 +146,28 @@ def products():
         sorted(db_categories)
 
     )
+
+    # ========================================
+    # CATEGORY COUNTS
+    # ========================================
+
+    category_counts = {}
+
+    for category in categories:
+        
+        if category == "all":
+            
+            continue
+            
+        category_counts[category] = (
+
+            Product.query.filter_by(
+
+                product_category=category
+
+            ).count()
+
+        )
     
     
     favourite_ids = []
@@ -176,7 +198,7 @@ def products():
     return render_template(
 
         "products.html",
-
+        
         product_list=product_list,
 
         launching_products=
@@ -189,6 +211,9 @@ def products():
         festive_products,
 
         categories=categories,
+
+        category_counts=
+        category_counts,
 
         selected_category=
         selected_category,
