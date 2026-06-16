@@ -396,6 +396,23 @@
         }
 
 
+        .marketing-actions{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap:12px;
+
+        }
+
+        .marketing-actions .action-btn{
+
+            text-align:center;
+
+        }
+
 
         /* ====================================
            ACTIONS
@@ -900,7 +917,7 @@
 
 
 
-    <div class="card-actions">
+    <div class="card-actions marketing-actions">
 
         <a
             href="{{ url_for('admin.admin_global_notifications') }}"
@@ -928,6 +945,17 @@
         >
 
             🎠 Carousel Manager
+
+        </a>
+
+        <a
+            href="{{ url_for(
+            'admin_product.featured_products'
+            ) }}"
+            class="action-btn"
+        >
+
+            ⭐ Featured Products
 
         </a>
 
