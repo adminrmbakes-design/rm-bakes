@@ -1508,40 +1508,6 @@ document
 
 });
     
-// =========================
-// CATEGORY FILTER
-// =========================
-
-categoryButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        categoryButtons.forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-        button.classList.add("active");
-
-        currentCategory =
-            button.dataset.category;
-
-        filterProducts();
-
-        const buttonText =
-            button.innerText.trim();
-
-        categoryTitle.innerText =
-            buttonText;
-
-        showToast(
-            `Showing ${buttonText}`
-        );
-
-    });
-
-});
 
 /* =====================================
    FLOATING FLY TO CART
@@ -1862,7 +1828,7 @@ setTimeout(() => {
 
     filterProducts();
 
-}, 3100);
+}, 2100);
 
 
 
