@@ -285,6 +285,54 @@
 
         }
 
+        /* =====================================
+        PRODUCT MARKETING
+        ===================================== */
+
+        .marketing-options{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+        .marketing-item{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:12px;
+
+            padding:16px;
+
+            border-radius:18px;
+
+            cursor:pointer;
+
+            background:
+
+                rgba(255,255,255,0.05);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .marketing-item input{
+
+            width:18px;
+
+            height:18px;
+
+            cursor:pointer;
+
+        }
+
         textarea.form-control{
 
             min-height:140px;
@@ -593,6 +641,69 @@
                 class="form-control"
 
             >
+
+        </div>
+
+        <!-- =====================================
+        PRODUCT MARKETING
+        ===================================== -->
+
+        <div class="form-group">
+
+            <label>
+
+                Product Marketing
+
+            </label>
+
+            <div class="marketing-options">
+
+                <label class="marketing-item">
+
+                    <input
+                        type="checkbox"
+                        name="product_is_launching"
+
+                        {% if product.product_is_launching %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🚀 Launching Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="checkbox"
+                        name="product_is_seasonal"
+
+                        {% if product.product_is_seasonal %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🍂 Seasonal Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="checkbox"
+                        name="product_is_festive"
+
+                        {% if product.product_is_festive %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🎉 Festive Product
+
+                </label>
+
+            </div>
 
         </div>
 
