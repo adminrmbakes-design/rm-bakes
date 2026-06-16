@@ -36,31 +36,6 @@ after a long tiring day.
 
 
 
-    <!-- SEARCH -->
-
-    <div class="search-section">
-
-        <div class="search-wrapper">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search desserts..."
-            >
-
-            <button
-                id="clearSearchBtn"
-                class="search-clear">
-
-                ✕
-
-            </button>
-
-        </div>
-        
-    </div>
-
-
 <!-- =====================================
      FESTIVE COLLECTION
 ===================================== -->
@@ -258,6 +233,29 @@ after a long tiring day.
     {% endfor %}
 
 </div>
+
+ <!-- SEARCH -->
+
+    <div class="search-section">
+
+        <div class="search-heading">
+
+            🔎 Looking for something specific?
+
+        </div>
+
+        <div class="search-wrapper">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search desserts..."
+            >
+
+        </div>
+        
+    </div>
+
 
 <!-- =====================================
      COLLECTION SCROLLER
@@ -1251,34 +1249,15 @@ after a long tiring day.
 
 }
 
-.search-clear{
+.search-heading{
 
-    position:absolute;
+    font-size:1.15rem;
 
-    right:18px;
+    font-weight:700;
 
-    top:50%;
+    margin-bottom:14px;
 
-    transform:
-        translateY(-50%);
-
-    border:none;
-
-    background:none;
-
-    color:white;
-
-    cursor:pointer;
-
-    opacity:0;
-
-    transition:0.25s;
-
-}
-
-.search-clear.show{
-
-    opacity:1;
+    opacity:0.9;
 
 }
     
@@ -1293,12 +1272,6 @@ const searchInput =
 
 const searchBtn =
     document.getElementById("searchBtn");
-
-const clearSearchBtn =
-    document.getElementById("clearSearchBtn");
-
-const clearSearchWrap =
-    document.getElementById("clearSearchWrap");
 
 const productCards =
     document.querySelectorAll(".product-card");
@@ -1643,33 +1616,6 @@ searchInput.addEventListener(
 
 );
 
-
-
-// =========================
-// CLEAR SEARCH
-// =========================
-
-clearSearchBtn.addEventListener(
-
-    "click",
-
-    () => {
-
-        searchInput.value = "";
-
-        filterProducts();
-
-        clearSearchBtn.classList.remove(
-            "show"
-        );
-
-        showToast(
-            "Showing all desserts 🍰"
-        );
-
-    }
-
-);
 
 
 // =========================
