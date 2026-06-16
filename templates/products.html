@@ -20,9 +20,7 @@
 
         <div class="hero-subtitle">
 
-            Midnight comfort,
-            warm lights &
-            handcrafted desserts ✨
+            Midnight comfort • Warm lights • Handcrafted desserts ✨
 
         </div>
 
@@ -693,6 +691,84 @@ after a long tiring day.
 
     align-items:center;
 
+    position:relative;
+
+    overflow:hidden;
+
+    padding:50px 35px;
+
+    border-radius:36px;
+
+    margin-bottom:50px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.06),
+            rgba(255,255,255,0.02)
+        );
+
+    border:
+
+        1px solid rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+    backdrop-filter:blur(24px);
+
+}
+
+.products-hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:36px;
+
+    padding:2px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,180,220,0.5),
+            rgba(120,220,255,0.35),
+            rgba(255,220,120,0.5)
+        );
+
+    -webkit-mask:
+
+        linear-gradient(#fff 0 0)
+        content-box,
+
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask-composite:exclude;
+
+    pointer-events:none;
+
+}
+
+.products-hero{
+
+    box-shadow:
+
+        0 0 40px rgba(
+            255,
+            180,
+            220,
+            0.08
+        );
+
 }
 
 .products-hero h1{
@@ -1296,6 +1372,7 @@ let currentCategory = "all";
 
 let favouritesOnly = false;
 
+let searchTimer;
 
 
 // =========================
@@ -1569,24 +1646,7 @@ searchInput.addEventListener(
             searchTimer
         );
 
-        if(
-
-            searchInput.value.trim()
-
-        ){
-
-            clearSearchBtn.classList.add(
-                "show"
-            );
-
-        }else{
-
-            clearSearchBtn.classList.remove(
-                "show"
-            );
-
-        }
-
+        
         searchTimer =
 
             setTimeout(() => {
