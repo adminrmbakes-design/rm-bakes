@@ -82,7 +82,45 @@ def products():
     # ========================================
 
     product_list = query.all()
+    
+    # MARKETING COLLECTIONS
 
+
+    launching_products = (
+
+        Product.query
+
+        .filter_by(
+            product_is_launching=True
+        )
+
+        .all()
+
+    )
+
+    seasonal_products = (
+
+        Product.query
+
+        .filter_by(
+            product_is_seasonal=True
+        )
+        
+        .all()
+
+    )
+
+    festive_products = (
+
+        Product.query
+
+        .filter_by(
+            product_is_festive=True
+        )
+
+        .all()
+
+    )
 
 
 
@@ -134,19 +172,32 @@ def products():
     # RENDER TEMPLATE
     # ========================================
 
+
     return render_template(
 
         "products.html",
 
         product_list=product_list,
 
+        launching_products=
+        launching_products,
+
+        seasonal_products=
+        seasonal_products,
+
+        festive_products=
+        festive_products,
+
         categories=categories,
 
-        selected_category=selected_category,
+        selected_category=
+        selected_category,
 
-        search_query=search_query,
-        
-        favourite_ids=favourite_ids
+        search_query=
+        search_query,
+
+        favourite_ids=
+        favourite_ids
 
     )
 
