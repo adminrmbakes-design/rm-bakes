@@ -1,34 +1,543 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>
 
-        Featured Products
+        Featured Products Manager
 
     </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+        body{
+
+            min-height:100vh;
+
+            background:
+
+                radial-gradient(
+                    circle at top,
+                    rgba(0,255,200,0.08),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #040404,
+                    #0b0b0b,
+                    #111111
+                );
+
+            color:white;
+
+            font-family:'Inter',sans-serif;
+
+            padding:40px 20px;
+
+        }
+
+        .container{
+
+            max-width:1200px;
+
+            margin:auto;
+
+        }
+
+        .header{
+
+            text-align:center;
+
+            margin-bottom:40px;
+
+        }
+
+        .header h1{
+
+            font-size:2.2rem;
+
+            font-family:'Orbitron',sans-serif;
+
+            margin-bottom:12px;
+
+        }
+
+        .header p{
+
+            color:rgba(255,255,255,0.6);
+
+        }
+
+        .grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(350px,1fr)
+                );
+
+            gap:24px;
+
+        }
+
+        .slot-card{
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
+
+            border-radius:24px;
+
+            padding:24px;
+
+            backdrop-filter:blur(18px);
+
+            transition:0.3s;
+
+        }
+
+        .slot-card:hover{
+
+            transform:
+                translateY(-4px);
+
+            border-color:
+                rgba(
+                    255,
+                    215,
+                    0,
+                    0.25
+                );
+
+            box-shadow:
+                0 0 25px rgba(
+                    255,
+                    215,
+                    0,
+                    0.08
+                );
+
+        }
+
+        .slot-number{
+
+            font-size:0.85rem;
+
+            color:#f7c873;
+
+            font-weight:700;
+
+            margin-bottom:12px;
+
+        }
+
+        .current-product{
+
+            margin-bottom:20px;
+
+            padding:14px;
+
+            border-radius:16px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.04
+                );
+
+            color:white;
+
+        }
+
+        .current-product small{
+
+            display:block;
+
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.55
+                );
+
+            margin-bottom:6px;
+
+        }
+
+        form{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+        select{
+
+            width:100%;
+
+            padding:14px;
+
+            border-radius:14px;
+
+            border:none;
+
+            background:#1a1a1a;
+
+            color:white;
+
+            outline:none;
+
+        }
+
+        .button-group{
+
+            display:flex;
+
+            gap:12px;
+
+        }
+
+        .save-btn{
+
+            flex:1;
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:12px;
+
+            border-radius:14px;
+
+            font-weight:700;
+
+            color:black;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #ffd369,
+                    #f7c873
+                );
+
+        }
+
+        .remove-btn{
+
+            flex:1;
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:12px;
+
+            border-radius:14px;
+
+            color:white;
+
+            background:
+
+                rgba(
+                    255,
+                    0,
+                    80,
+                    0.18
+                );
+
+            border:
+
+                1px solid rgba(
+                    255,
+                    0,
+                    80,
+                    0.25
+                );
+
+        }
+
+        .back-btn{
+
+            display:inline-block;
+
+            margin-bottom:30px;
+
+            text-decoration:none;
+
+            color:#7affdf;
+
+        }
+
+        .flash{
+
+            margin-bottom:20px;
+
+            padding:16px;
+
+            border-radius:16px;
+
+            background:
+                rgba(
+                    0,
+                    255,
+                    180,
+                    0.08
+                );
+
+            border:
+                1px solid rgba(
+                    0,
+                    255,
+                    180,
+                    0.15
+                );
+
+            color:#8ffff0;
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-    <h1>
+<div class="container">
 
-        ⭐ Featured Products Manager
+    <a
+        href="{{ url_for('admin.admin_dashboard') }}"
+        class="back-btn"
+    >
 
-    </h1>
+        ← Back to Dashboard
 
-    {% for slot in featured_slots %}
+    </a>
 
-    <div>
+    {% with messages =
+        get_flashed_messages(
+            with_categories=true
+        )
+    %}
 
-        Slot {{ slot.slot_number }}
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+        <div class="flash">
+
+            {{ message }}
+
+        </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    {% endwith %}
+
+    <div class="header">
+
+        <h1>
+
+            ⭐ Featured Products
+
+        </h1>
+
+        <p>
+
+            Control which desserts appear
+            in the Homepage Featured Collection.
+
+        </p>
 
     </div>
 
-    {% endfor %}
+    <div class="grid">
+
+        {% for slot in featured_slots %}
+
+        <div class="slot-card">
+
+            <div class="slot-number">
+
+                Featured Slot #{{ slot.slot_number }}
+
+            </div>
+
+            <div class="current-product">
+
+                <small>
+
+                    Current Product
+
+                </small>
+
+                {% if slot.product_id %}
+
+                    {% set current_product =
+                        products
+                        | selectattr(
+                            "product_id",
+                            "equalto",
+                            slot.product_id
+                        )
+                        | first
+                    %}
+
+                    {{ current_product.product_name }}
+
+                {% else %}
+
+                    No Product Selected
+
+                {% endif %}
+
+            </div>
+
+            <form
+                method="POST"
+                action="{{ url_for('admin_product.update_featured_product') }}"
+            >
+
+                <input
+                    type="hidden"
+                    name="slot_number"
+                    value="{{ slot.slot_number }}"
+                >
+
+                <select name="product_id">
+
+                    <option value="">
+
+                        -- Select Product --
+
+                    </option>
+
+                    {% for product in products %}
+
+                    <option
+
+                        value="{{ product.product_id }}"
+
+                        {% if product.product_id == slot.product_id %}
+                        selected
+                        {% endif %}
+
+                    >
+
+                        {{ product.product_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <div class="button-group">
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+
+                        Save
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            {% if slot.product_id %}
+
+            <form
+                method="POST"
+                action="{{ url_for('admin_product.update_featured_product') }}"
+                style="margin-top:12px;"
+            >
+
+                <input
+                    type="hidden"
+                    name="slot_number"
+                    value="{{ slot.slot_number }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="product_id"
+                    value=""
+                >
+
+                <button
+                    type="submit"
+                    class="remove-btn"
+                >
+
+                    Remove Product
+
+                </button>
+
+            </form>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
 </body>
 
