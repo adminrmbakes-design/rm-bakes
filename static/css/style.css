@@ -3006,3 +3006,221 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
     }
 
 }
+
+
+/* =====================================
+   HOMEPAGE FEATURED PRODUCTS V2
+===================================== */
+
+.featured-home-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px,1fr)
+        );
+
+    gap:20px;
+
+    width:100%;
+}
+
+.featured-home-item{
+
+    width:100%;
+}
+
+.featured-home-card{
+
+    height:100%;
+
+    border-radius:32px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            rgba(15,10,15,0.95),
+            rgba(5,0,10,0.98)
+        );
+
+    border:
+        1px solid rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+
+    backdrop-filter:blur(24px);
+
+    transition:0.4s ease;
+
+    box-shadow:
+
+        0 0 35px rgba(
+            255,
+            180,
+            120,
+            0.06
+        );
+}
+
+.featured-home-card:hover{
+
+    transform:
+        translateY(-8px);
+
+    box-shadow:
+
+        0 20px 60px rgba(
+            255,
+            180,
+            120,
+            0.15
+        );
+}
+
+.featured-home-image-wrap{
+
+    overflow:hidden;
+
+    padding:14px;
+}
+
+.featured-home-image{
+
+    width:100%;
+
+    aspect-ratio:1/1;
+
+    object-fit:cover;
+
+    border-radius:24px;
+
+    display:block;
+
+    transition:0.5s ease;
+}
+
+.featured-home-card:hover
+.featured-home-image{
+
+    transform:scale(1.05);
+}
+
+.featured-home-content{
+
+    padding:0 20px 20px;
+}
+
+.featured-home-badge{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:0.75rem;
+
+    font-weight:700;
+
+    color:#ffd369;
+
+    background:
+
+        rgba(255,215,0,0.08);
+
+    border:
+        1px solid rgba(
+            255,
+            215,
+            0,
+            0.15
+        );
+
+    margin-bottom:12px;
+}
+
+.featured-home-card .product-name{
+
+    font-size:1.45rem;
+
+    line-height:1.2;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+    color:#fff8f0;
+
+    text-shadow:
+
+        0 0 15px rgba(
+            255,
+            190,
+            120,
+            0.2
+        );
+}
+
+.featured-home-card .product-description{
+
+    font-size:0.9rem;
+
+    line-height:1.55;
+
+    opacity:0.75;
+
+    margin-bottom:14px;
+}
+
+.featured-home-card .product-price{
+
+    font-size:1.6rem;
+
+    font-weight:800;
+
+    color:#ffd089;
+
+    margin:0;
+}
+
+.featured-home-card small{
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.55
+        );
+}
+
+.featured-home-card .btn-dark{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #8b5f4d,
+            #c99372
+        );
+
+    border:none;
+
+    border-radius:18px;
+
+    padding:12px 18px;
+
+    font-weight:700;
+
+    min-width:110px;
+}
