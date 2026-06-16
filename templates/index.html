@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
 <!-- HERO LAYOUT -->
 
 {% if active_carousels %}
@@ -160,6 +161,7 @@
 {% endif %}
 
     
+<div class="featured-divider"></div>
 
 <!-- FEATURED PRODUCTS -->
 
@@ -226,37 +228,38 @@
 
                         </p>
 
-                        <div class="mt-auto">
+                        <div class="featured-home-footer">
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="featured-price-block">
 
-                                <div>
+                                <div class="featured-price">
 
-                                    <h5 class="product-price">
-
-                                        ₹{{ product.product_price }}
-
-                                    </h5>
-
-                                    <small>
-
-                                        {{ product.product_unit }}
-
-                                    </small>
+                                    ₹{{ product.product_price }}
 
                                 </div>
 
-                                <a
-                                    href="{{ url_for('product.product_details', product_id=product.product_id) }}"
-                                    class="btn btn-dark"
-                                >
-                                    View →
-                                </a>
+                                <div class="featured-unit">
+
+                                    {{ product.product_unit }}
+
+                                </div>
 
                             </div>
 
-                        </div>
+                            <a
+                                href="{{ url_for(
+                                'product.product_details',
+                                product_id=product.product_id
+                                ) }}"
+                                class="featured-view-btn"
+                            >
 
+                                View →
+
+                            </a>
+
+                        </div>
+                        
                     </div>
 
                 </div>
