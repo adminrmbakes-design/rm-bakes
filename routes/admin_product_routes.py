@@ -18,7 +18,8 @@ from werkzeug.utils import secure_filename
 from database import (
 
     db,
-    Product
+    Product,
+    FeaturedProduct
 
 )
 
