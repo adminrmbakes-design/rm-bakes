@@ -3230,3 +3230,177 @@ h1,h2,h3,h4,h5,h6,p,label,span,small{
 
     min-width:110px;
 }
+
+
+.featured-home-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:18px;
+
+    gap:12px;
+}
+
+.featured-price{
+
+    color:#ffd089;
+
+    font-size:1.7rem;
+
+    font-weight:800;
+
+    line-height:1;
+}
+
+.featured-unit{
+
+    color:rgba(255,255,255,0.55);
+
+    font-size:0.85rem;
+
+    margin-top:4px;
+}
+
+.featured-view-btn{
+
+    text-decoration:none;
+
+    padding:12px 20px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5f4d,
+            #c99372
+        );
+
+    color:white !important;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    transition:.3s;
+}
+
+.featured-view-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(
+            201,
+            147,
+            114,
+            0.4
+        );
+}
+
+.section-title{
+
+    text-align:center !important;
+
+    font-size:3rem;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    color:#ffd089;
+
+    font-family:
+        "Poppins",
+        sans-serif;
+
+    text-shadow:
+
+        0 0 12px rgba(
+            255,
+            200,
+            120,
+            0.18
+        ),
+
+        0 0 25px rgba(
+            255,
+            180,
+            80,
+            0.12
+        );
+}
+
+.section-subtitle{
+
+    text-align:center;
+
+    margin-top:12px;
+}
+
+.section-title{
+
+    font-family:'Outfit',sans-serif;
+}
+
+.featured-divider{
+
+    width:180px;
+
+    height:2px;
+
+    margin:60px auto 50px;
+
+    border-radius:999px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+
+            transparent,
+
+            rgba(
+                255,
+                190,
+                120,
+                0.85
+            ),
+
+            transparent
+        );
+
+    box-shadow:
+
+        0 0 18px rgba(
+            255,
+            180,
+            120,
+            0.35
+        ),
+
+        0 0 35px rgba(
+            255,
+            140,
+            80,
+            0.15
+        );
+}
+
+.featured-home-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:100%;
+}
+
+.featured-home-footer{
+
+    margin-top:auto;
+}
