@@ -1516,15 +1516,23 @@ small {
     margin-bottom: 14px;
 }
 
-.featured-home-card .product-price {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #ffd089;
-    margin: 0;
+.featured-price-block{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
 }
 
-.featured-home-card small {
-    color: rgba(255, 255, 255, 0.55);
+.featured-price{
+    color:#ffd089;
+    font-size:1.55rem;
+    font-weight:800;
+    line-height:1;
+}
+
+.featured-unit{
+    color:rgba(255,255,255,.6);
+    font-size:.85rem;
+    font-weight:500;
 }
 
 .featured-home-footer {
@@ -1548,39 +1556,54 @@ small {
     margin-top: 4px;
 }
 
-.featured-view-btn {
-    text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #8b5f4d, #c99372);
-    color: white !important;
-    font-weight: 700;
-    white-space: nowrap;
-    transition: .3s;
+.featured-view-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:90px;
+    height:42px;
+    padding:0 16px;
+    border-radius:14px;
+    background:
+        linear-gradient(
+            135deg,
+            #8b5f4d,
+            #c99372
+        );
+    color:#fff !important;
+    font-size:.9rem;
+    font-weight:700;
+    text-decoration:none;
+    transition:.25s ease;
 }
 
-.featured-view-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(201, 147, 114, 0.4);
+.featured-view-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 0 15px rgba(
+            201,
+            147,
+            114,
+            .35
+        );
 }
 
-.section-title {
-    text-align: center !important;
-    font-size: 3rem;
-    font-weight: 900;
-    letter-spacing: -1px;
-    color: #ffd089;
-    font-family: "Poppins", sans-serif;
-    text-shadow: 0 0 12px rgba(255, 200, 120, 0.18), 0 0 25px rgba(255, 180, 80, 0.12);
+
+.section-title{
+    text-align:center;
+    font-size:3rem;
+    font-weight:900;
+    letter-spacing:-1px;
+    color:#ffd089;
+    font-family:'Outfit',sans-serif;
+    text-shadow:
+        0 0 12px rgba(255,200,120,.18),
+        0 0 25px rgba(255,180,80,.12);
 }
 
 .section-subtitle {
     text-align: center;
     margin-top: 12px;
-}
-
-.section-title {
-    font-family: 'Outfit', sans-serif;
 }
 
 .featured-divider {
@@ -1590,14 +1613,4 @@ small {
     border-radius: 999px;
     background: linear-gradient(90deg, transparent, rgba(255, 190, 120, 0.85), transparent);
     box-shadow: 0 0 18px rgba(255, 180, 120, 0.35), 0 0 35px rgba(255, 140, 80, 0.15);
-}
-
-.featured-home-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.featured-home-footer {
-    margin-top: auto;
 }
