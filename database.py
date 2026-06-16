@@ -358,6 +358,11 @@ class FeaturedProduct(db.Model):
 
     )
 
+    product = db.relationship(
+        "Product",
+        lazy=True
+    )
+
 
 
 # =========================================
@@ -554,10 +559,39 @@ def create_featured_product_slots():
         )
 
 
-def get_featured_products(limit=6):
+def get_featured_products():
 
-    return Product.query.limit(limit).all()
+    featured_slots = (
 
+        FeaturedProduct.query
+
+        .filter(
+            FeaturedProduct.product_id.isnot(None)
+        )
+
+        .order_by(
+            FeaturedProduct.slot_number
+        )
+
+        .all()
+
+    )
+
+    featured_products = []
+
+    for slot in featured_slots:
+
+        product = Product.query.get(
+            slot.product_id
+        )
+
+        if product:
+
+            featured_products.append(
+                product
+            )
+
+    return featured_products
 
 
 def get_products_by_category(category):
