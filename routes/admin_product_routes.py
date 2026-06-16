@@ -105,6 +105,36 @@ def add_product():
             "product_category"
         )
 
+        product_is_launching = (
+
+            request.form.get(
+                "product_is_launching"
+            )
+
+            == "on"
+
+        )
+        
+        product_is_seasonal = (
+
+            request.form.get(
+                "product_is_seasonal"
+            )
+
+            == "on"
+
+        )
+        
+        product_is_festive = (
+
+            request.form.get(
+                "product_is_festive"
+            )
+
+            == "on"
+
+        )
+
         new_category = request.form.get(
             "new_category"
         )
@@ -200,7 +230,16 @@ def add_product():
 
             product_tags=product_tags,
 
-            product_category=product_category
+            product_category=product_category,
+
+            product_is_launching=
+            product_is_launching,
+
+            product_is_seasonal=
+            product_is_seasonal,
+
+            product_is_festive=
+            product_is_festive,
 
         )
 
@@ -409,6 +448,40 @@ def edit_product(product_id):
         product.product_category = request.form.get(
 
             "product_category"
+
+        )
+
+
+        product.product_is_launching = (
+
+            request.form.get(
+                "product_is_launching"
+            )
+
+            == "on"
+
+        )
+
+
+        
+        product.product_is_seasonal = (
+
+            request.form.get(
+                "product_is_seasonal"
+            )
+
+            == "on"
+
+        )
+        
+        
+        product.product_is_festive = (
+
+            request.form.get(
+                "product_is_festive"
+            )
+
+            == "on"
 
         )
 
