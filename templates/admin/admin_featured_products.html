@@ -210,6 +210,24 @@
 
         }
 
+        .product-preview{
+            display:flex;
+            gap:14px;
+            align-items:center;
+        }
+
+        .preview-image{
+            width:70px;
+            height:70px;
+            object-fit:cover;
+            border-radius:14px;
+        }
+
+        .preview-price{
+            color:#f7c873;
+            font-weight:700;
+        }
+
         form{
 
             display:flex;
@@ -423,22 +441,44 @@
                 </small>
 
                 {% if slot.product_id %}
+                {% set current_product =
+                products
+                | selectattr(
+                "product_id",
+                "equalto",
+                slot.product_id
+                )
+                | first
+                %}
 
-                    {% set current_product =
-                        products
-                        | selectattr(
-                            "product_id",
-                            "equalto",
-                            slot.product_id
-                        )
-                        | first
-                    %}
+                <div class="product-preview">
 
-                    {{ current_product.product_name }}
+                    <img
+                        src="{{ get_product_image(current_product.product_image) }}"
+                        class="preview-image"
+                    >
 
-                {% else %}
+                    <div>
 
-                    No Product Selected
+                        <strong>
+                            {{ current_product.product_name }}
+                        </strong>
+
+                        <div class="preview-price">
+
+                            ₹{{ current_product.product_price }}
+
+                        </div>
+
+                        <small>
+
+                            {{ current_product.product_unit }}
+
+                        </small>
+
+                    </div>
+
+                </div>
 
                 {% endif %}
 
