@@ -68,83 +68,6 @@ after a long tiring day.
     </div>
 
 
-
-    <!-- CATEGORY FILTERS -->
-
-    <div class="category-tabs">
-
-        {% for category in categories %}
-
-        <button
-            class="category-btn {% if loop.first %}active{% endif %}"
-            data-category="{{ category|trim|lower }}">
-
-            {% if category == 'all' %}
-                ✨ All
-
-            {% elif category == 'Cakes' %}
-                🎂 Cakes
-
-            {% elif category == 'Jar Cakes' %}
-                🫙 Jar Cakes
-
-            {% elif category == 'Brownies' %}
-                🍫 Brownies
-
-            {% elif category == 'Brookies' %}
-                🍪 Brookies
-
-            {% elif category == 'Blondies' %}
-                🧈 Blondies
-
-            {% elif category == 'Cheese Cakes' %}
-                🍰 Cheese Cakes
-
-            {% elif category == 'RM Signature Cakes' %}
-                👑 Signature Cakes
-
-            {% elif category == 'Burnt Basque Cheese Cakes' %}
-                🔥 Basque Cakes
-
-            {% elif category == 'RM Special Brownies' %}
-                ⭐ Special Brownies
-
-            {% elif category == 'Cookies' %}
-                🍪 Cookies
-
-            {% else %}
-                🍴 {{ category }}
-
-            {% endif %}
-
-        </button>
-
-        {% endfor %}
-
-    </div>
-
-
-
-    <!-- CATEGORY HEADING -->
-
-    <div class="category-heading">
-
-        <h2 id="categoryTitle">
-
-            🍰 All Sweet Collection
-
-        </h2>
-
-        <p id="categoryDescription">
-
-            Every dessert crafted with warmth,
-            chocolate and midnight café vibes.
-
-        </p>
-
-    </div>
-
-
 <!-- =====================================
      FESTIVE COLLECTION
 ===================================== -->
@@ -398,6 +321,14 @@ CATEGORY EXPLORER
             <div class="category-name">
 
                 {{ category }}
+
+            </div>
+
+            <div class="category-count">
+
+                {{ category_counts[category] }}
+
+                Desserts
 
             </div>
 
@@ -1040,6 +971,16 @@ CATEGORY EXPLORER
 
 }
 
+.category-count{
+
+    margin-top:8px;
+
+    font-size:0.85rem;
+
+    opacity:0.7;
+
+}
+
 .category-card::before{
 
     content:"";
@@ -1289,15 +1230,6 @@ const productCards =
 
 const noResults =
     document.getElementById("noResults");
-
-const categoryButtons =
-    document.querySelectorAll(".category-btn");
-
-const categoryTitle =
-    document.getElementById("categoryTitle");
-
-const categoryDescription =
-    document.getElementById("categoryDescription");
 
 let currentCategory = "all";
 
@@ -1558,7 +1490,7 @@ document
 
         showToast(
 
-            `Browsing ${category} ✨`
+            `Showing ${category} desserts 🍰`
 
         );
 
