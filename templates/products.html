@@ -1875,7 +1875,27 @@ const isFavourite =
 
 }
 
+document
+.querySelectorAll(".category-section")
+.forEach(section => {
 
+    const visibleProducts =
+
+        section.querySelectorAll(
+            '.product-card:not([style*="display: none"])'
+        );
+
+    if(visibleProducts.length){
+
+        section.style.display = "block";
+
+    }else{
+
+        section.style.display = "none";
+
+    }
+
+});
 
 // =========================
 // SEARCH
