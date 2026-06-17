@@ -106,36 +106,23 @@ def add_product():
             "product_category"
         )
 
+        marketing_type = request.form.get(
+            "marketing_type",
+            "none"
+        )
+        
         product_is_launching = (
-
-            request.form.get(
-                "product_is_launching"
-            )
-
-            == "on"
-
+            marketing_type == "launching"
         )
         
         product_is_seasonal = (
-
-            request.form.get(
-                "product_is_seasonal"
-            )
-
-            == "on"
-
+            marketing_type == "seasonal"
         )
         
         product_is_festive = (
-
-            request.form.get(
-                "product_is_festive"
-            )
-
-            == "on"
-
+            marketing_type == "festive"
         )
-
+        
         new_category = request.form.get(
             "new_category"
         )
@@ -453,39 +440,22 @@ def edit_product(product_id):
         )
 
 
-        product.product_is_launching = (
-
-            request.form.get(
-                "product_is_launching"
-            )
-
-            == "on"
-
+        marketing_type = request.form.get(
+            "marketing_type",
+            "none"
         )
-
-
+        
+        product.product_is_launching = (
+            marketing_type == "launching"
+        )
         
         product.product_is_seasonal = (
-
-            request.form.get(
-                "product_is_seasonal"
-            )
-
-            == "on"
-
+            marketing_type == "seasonal"
         )
-        
         
         product.product_is_festive = (
-
-            request.form.get(
-                "product_is_festive"
-            )
-
-            == "on"
-
+            marketing_type == "festive"
         )
-
 
 
         new_image = request.files.get(
