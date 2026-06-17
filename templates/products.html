@@ -422,7 +422,12 @@ after a long tiring day.
                 <!-- PRODUCT CARD HERE -->
                 <!-- DESKTOP ONLY-->
 
-                <div class="desktop-dessert-card">
+                <div
+                    class="desktop-dessert-card"
+                    data-product-id="{{ product.product_id }}"
+                    data-name="{{ product.product_name|lower }}"
+                    data-category="{{ product.product_category|lower }}"
+                >
 
                     <div class="desktop-dessert-image-box">
 
@@ -536,7 +541,12 @@ after a long tiring day.
 
                 <!-- MOBILE ONLY -->
 
-                <div class="mobile-dessert-card">
+                <div
+                    class="mobile-dessert-card"
+                    data-product-id="{{ product.product_id }}"
+                    data-name="{{ product.product_name|lower }}"
+                    data-category="{{ product.product_category|lower }}"
+                >
 
                     <div class="mobile-status-row">
 
@@ -1649,9 +1659,6 @@ const searchInput =
 const searchBtn =
     document.getElementById("searchBtn");
 
-const productCards =
-    document.querySelectorAll(".product-card");
-
 const noResults =
     document.getElementById("noResults");
 
@@ -1812,8 +1819,7 @@ function filterProducts(){
                 mobileCards[index];
 
             const productName =
-                desktopCard.innerText
-                .toLowerCase();
+                desktopCard.dataset.name;
 
             const matchesSearch =
                 productName.includes(
@@ -1880,63 +1886,7 @@ function filterProducts(){
 
 }
 
-    productCards.forEach(card => {
-
-        const productName =
-            card.dataset.name || "";
-
-        const productCategory =
-            card.dataset.category || "";
-        
-        const productId =
-    parseInt(
-        card.dataset.productId
-    );
-
-
-
-const isFavourite =
-
-    favouriteIds.includes(
-        productId
-    );
-
-        const matchesSearch =
-            productName.includes(searchValue);
-
-        const matchesCategory =
-            currentCategory === "all" ||
-            productCategory === currentCategory;
-        
-        const matchesFavourite =
-
-    !favouritesOnly ||
-
-    isFavourite;
-
-        if(
-
-    matchesSearch &&
-
-    matchesCategory &&
-
-    matchesFavourite
-
-){
-
-            card.style.display = "flex";
-
-            visibleCount++;
-
-        }else{
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-
+    
     if(visibleCount === 0){
 
         noResults.style.display = "flex";
