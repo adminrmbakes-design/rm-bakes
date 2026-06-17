@@ -686,49 +686,6 @@ small {
     box-shadow: 0 0 20px rgba(255, 170, 120, 0.2);
 }
 
-/* ========================================
-   PRODUCTS PAGE REFINEMENT
-======================================== */
-
-.search-wrapper {
-    margin-top: 30px;
-    margin-bottom: 40px;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.view-btn,
-.add-cart-btn {
-    flex: 1;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 56px;
-    border-radius: 18px;
-    font-weight: 700;
-    transition: 0.3s ease;
-}
-
-.view-btn {
-    background: rgba(255, 255, 255, 0.06);
-    color: #7cf7e3 !important;
-    border: 1px solid rgba(124, 247, 227, 0.2);
-}
-
-.add-cart-btn {
-    background: linear-gradient(135deg, #6a4636, #9c6a52);
-    color: white !important;
-}
-
-.view-btn:hover,
-.add-cart-btn:hover {
-    transform: translateY(-2px);
-}
 
 .custom-toast {
     position: fixed;
@@ -873,17 +830,6 @@ small {
     display: block;
 }
 
-/* ========================================
-   FEATURED PRODUCTS IMAGE FIX
-======================================== */
-
-.products-grid .product-image,
-.product-card .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
 
 /* =========================
    CUSTOM TOAST
@@ -920,13 +866,6 @@ small {
     transform: translateX(-50%) translateY(0);
 }
 
-/* ========================================
-   PRODUCTS PAGE FINAL FIX
-======================================== */
-
-.products-page {
-    padding-bottom: 80px;
-}
 
 /* SEARCH SECTION */
 
@@ -970,6 +909,82 @@ small {
 
 
 
+/* =====================================
+   DESKTOP DESSERT CARD
+===================================== */
+
+.mobile-dessert-card{
+    display:none;
+}
+
+.desktop-dessert-card{
+    display:flex;
+    gap:30px;
+    align-items:center;
+    padding:22px;
+    border-radius:30px;
+    background:
+    linear-gradient(
+        135deg,
+        #17111a,
+        #09060d
+    );
+    margin-bottom:20px;
+}
+
+.desktop-dessert-image-box{
+    width:280px;
+    flex-shrink:0;
+}
+
+.desktop-dessert-image{
+    width:100%;
+    border-radius:22px;
+    display:block;
+}
+
+.desktop-dessert-content{
+    flex:1;
+}
+
+/* =====================================
+   MOBILE DESSERT CARD
+===================================== */
+
+.desktop-dessert-card{
+    display:none;
+}
+
+.mobile-dessert-card{
+    display:block;
+    padding:18px;
+    border-radius:26px;
+    background:
+    linear-gradient(
+        135deg,
+        #120d16,
+        #050308
+    );
+    margin-bottom:18px;
+}
+
+.mobile-dessert-image{
+    width:100%;
+    border-radius:20px;
+    display:block;
+}
+
+@media(min-width:769px){
+
+    .mobile-dessert-card{
+        display:none;
+    }
+
+    .desktop-dessert-card{
+        display:flex;
+    }
+
+}
 
 /* NO RESULTS */
 
