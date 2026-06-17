@@ -451,18 +451,22 @@ after a long tiring day.
 
                             {% endif %}
 
+                            {% if product.product_id in featured_product_ids %}
+
+                            <span class="desktop-featured-overlay">
+
+                                ⭐ Featured
+
+                            </span>
+
+                            {% endif %}
+
                         </div>
 
 
                         <div class="desktop-dessert-details">
 
                         <div class="desktop-status-row">
-
-                            {% if product.product_id in featured_product_ids %}
-                            <span class="desktop-featured-chip">
-                                ★ Featured
-                            </span>
-                            {% endif %}
 
                             {% if product.product_is_launching %}
                             <span class="desktop-launch-chip">
@@ -566,12 +570,6 @@ after a long tiring day.
 
                     <div class="mobile-status-row">
 
-                        {% if product.product_id in featured_product_ids %}
-                        <span class="mobile-featured-chip">
-                            ★ Featured
-                        </span>
-                        {% endif %}
-
                         {% if product.product_is_launching %}
                         <span class="mobile-launch-chip">
                             🚀 Launching
@@ -602,6 +600,16 @@ after a long tiring day.
                         <span class="mobile-favourite-heart">
 
                             ❤️
+
+                        </span>
+
+                        {% endif %}
+
+                        {% if product.product_id in featured_product_ids %}
+
+                        <span class="mobile-featured-overlay">
+
+                            ⭐ Featured
 
                         </span>
 
