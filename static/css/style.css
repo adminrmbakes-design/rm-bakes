@@ -913,6 +913,10 @@ small {
    DESKTOP DESSERT CARD
 ===================================== */
 
+.desktop-dessert-card{
+    display:flex;
+}
+
 .mobile-dessert-card{
     display:none;
 }
@@ -955,6 +959,7 @@ small {
     display:none;
 }
 
+
 .mobile-dessert-card{
     display:block;
     padding:18px;
@@ -975,13 +980,25 @@ small {
 }
 
 @media(min-width:769px){
-
+   
     .mobile-dessert-card{
         display:none;
     }
 
     .desktop-dessert-card{
         display:flex;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .desktop-dessert-card{
+        display:none !important;
+    }
+
+    .mobile-dessert-card{
+        display:block !important;
     }
 
 }
