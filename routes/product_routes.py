@@ -10,6 +10,8 @@ from database import Favourite
 
 from database import Product
 
+from database import FeaturedProduct
+
 from orders_database import ProductReview
 from sqlalchemy import func
 
@@ -188,6 +190,15 @@ def products():
 
          ]
 
+    featured_product_ids = [
+
+        slot.product_id
+
+        for slot in FeaturedProduct.query.filter(
+            FeaturedProduct.product_id.isnot(None)
+        ).all()
+    ]
+
 
 
     # ========================================
@@ -222,7 +233,10 @@ def products():
         search_query,
 
         favourite_ids=
-        favourite_ids
+        favourite_ids,
+
+        featured_product_ids=
+        featured_product_ids,
 
     )
 
