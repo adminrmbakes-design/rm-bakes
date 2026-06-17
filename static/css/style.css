@@ -908,29 +908,252 @@ small {
 }
 
 
-
 /* =====================================
-   LUXURY MOBILE PRODUCT CARD V3
+   RM DESKTOP PRODUCT CARD V4
 ===================================== */
 
-.mobile-dessert-card{
+.desktop-dessert-card{
 
-    border-radius:26px;
+    display:flex;
 
-    overflow:hidden;
+    align-items:center;
+
+    gap:30px;
+
+    padding:20px;
+
+    margin-bottom:22px;
+
+    border-radius:30px;
 
     background:
     linear-gradient(
         135deg,
-        rgba(20,12,20,.95),
-        rgba(8,5,12,.98)
+        rgba(10,8,18,.95),
+        rgba(5,5,10,.98)
     );
 
-    border:1px solid rgba(255,255,255,.06);
+    border:
+    1px solid rgba(255,255,255,.05);
 
-    padding:14px;
+    overflow:hidden;
+
+    transition:.35s ease;
+
+}
+
+.desktop-dessert-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 0 30px rgba(255,180,120,.08);
+
+}
+
+.desktop-dessert-image-box{
+
+    width:340px;
+
+    min-width:340px;
+
+}
+
+.desktop-dessert-image{
+
+    width:100%;
+
+    height:230px;
+
+    object-fit:cover;
+
+    border-radius:24px;
+
+    display:block;
+
+}
+
+.desktop-dessert-content{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.desktop-status-row{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-bottom:12px;
+
+}
+
+.desktop-tag-pill{
+
+    display:inline-flex;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    color:#bca89d;
+
+    font-size:.8rem;
+
+    margin-bottom:14px;
+
+}
+
+.desktop-dessert-title{
+
+    font-size:2.4rem;
+
+    line-height:1.05;
+
+    font-weight:900;
+
+    color:#fff5ec;
+
+    letter-spacing:-1px;
+
+    margin-bottom:14px;
+
+}
+
+.desktop-price-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
 
     margin-bottom:18px;
+
+}
+
+.desktop-price-value{
+
+    font-size:2rem;
+
+    font-weight:900;
+
+    color:#ffcf8d;
+
+}
+
+.desktop-unit-value{
+
+    color:#c3b1a7;
+
+    font-size:1rem;
+
+}
+
+.desktop-action-row{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.desktop-view-action{
+
+    padding:13px 22px;
+
+    border-radius:16px;
+
+    background:
+    rgba(70,210,255,.08);
+
+    border:
+    1px solid rgba(70,210,255,.15);
+
+    color:#75ebff;
+
+    font-weight:700;
+
+    text-align:center;
+
+    transition:.3s;
+
+}
+
+.desktop-view-action:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 0 24px rgba(70,210,255,.18);
+
+}
+
+.desktop-cart-action,
+.desktop-notify-action{
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:13px 22px;
+
+    border-radius:16px;
+
+    font-weight:800;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9e58,
+        #ffc470
+    );
+
+    transition:.3s;
+
+}
+
+.desktop-cart-action:hover,
+.desktop-notify-action:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 0 28px rgba(255,190,100,.22);
+
+}
+
+/* =====================================
+   RM MOBILE PRODUCT CARD V4
+===================================== */
+
+.mobile-dessert-card{
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(10,8,18,.96),
+        rgba(5,5,10,.99)
+    );
+
+    border-radius:30px;
+
+    padding:16px;
+
+    margin-bottom:22px;
+
+    border:
+    1px solid rgba(255,255,255,.05);
 
 }
 
@@ -950,7 +1173,7 @@ small {
 
     width:100%;
 
-    border-radius:18px;
+    border-radius:22px;
 
     display:block;
 
@@ -960,52 +1183,54 @@ small {
 
 .mobile-tag-pill{
 
-    width:fit-content;
+    display:inline-flex;
 
-    padding:6px 12px;
+    padding:8px 14px;
 
     border-radius:999px;
 
     background:
-        rgba(255,255,255,.05);
+    rgba(255,255,255,.04);
 
-    color:#cdb9aa;
+    color:#bca89d;
 
-    font-size:.75rem;
+    font-size:.8rem;
 
-    margin-bottom:10px;
+    margin-bottom:14px;
 
 }
 
 .mobile-dessert-title{
 
-    font-size:1.45rem;
+    font-size:2rem;
 
-    font-weight:800;
+    line-height:1.05;
 
-    line-height:1.2;
+    font-weight:900;
 
-    text-align:justify;
+    color:#fff5ec;
 
-    margin-bottom:10px;
+    letter-spacing:-1px;
+
+    margin-bottom:14px;
 
 }
 
 .mobile-price-value{
 
-    font-size:1.4rem;
+    font-size:2rem;
 
-    font-weight:800;
+    font-weight:900;
 
-    color:#ffd18c;
+    color:#ffcf8d;
 
 }
 
 .mobile-unit-value{
 
-    color:#bca89d;
+    margin-bottom:16px;
 
-    margin-bottom:14px;
+    color:#c3b1a7;
 
 }
 
@@ -1013,86 +1238,53 @@ small {
 
     display:flex;
 
-    gap:10px;
+    gap:12px;
 
 }
 
-.desktop-view-action,
 .mobile-view-action{
 
     flex:1;
 
     text-align:center;
 
-    padding:12px 14px;
+    padding:14px;
 
-    border-radius:14px;
-
-    text-decoration:none;
-
-    font-weight:700;
-
-    color:#7df0ff;
+    border-radius:18px;
 
     background:
-        rgba(125,240,255,.08);
+    rgba(70,210,255,.08);
 
     border:
-        1px solid rgba(125,240,255,.15);
+    1px solid rgba(70,210,255,.15);
 
-    transition:.3s ease;
+    color:#75ebff;
 
-}
-
-.desktop-view-action:hover,
-.mobile-view-action:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 20px rgba(125,240,255,.18);
+    font-weight:800;
 
 }
 
-.desktop-cart-action,
 .mobile-cart-action,
-.desktop-notify-action,
 .mobile-notify-action{
 
     flex:1;
 
     border:none;
 
-    cursor:pointer;
+    padding:14px;
 
-    padding:12px 14px;
+    border-radius:18px;
 
-    border-radius:14px;
-
-    font-weight:700;
+    font-weight:800;
 
     color:white;
 
     background:
-        linear-gradient(
-            135deg,
-            #ff9b4f,
-            #ffbf63
-        );
-
-    transition:.3s ease;
-
-}
-
-.desktop-cart-action:hover,
-.mobile-cart-action:hover,
-.desktop-notify-action:hover,
-.mobile-notify-action:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 24px rgba(255,191,99,.28);
+    linear-gradient(
+        135deg,
+        #ff9e58,
+        #ffc470
+    );
 
 }
 
@@ -1111,10 +1303,9 @@ small {
     display:none;
 }
 
-
 /* Mobile */
 
-@media(max-width:768px){
+@media (max-width:768px){
 
     .desktop-dessert-card{
         display:none;
