@@ -1320,6 +1320,34 @@ small {
 
 }
 
+.desktop-dessert-image-wrapper{
+
+    position:relative;
+
+}
+
+.desktop-favourite-heart{
+
+    position:absolute;
+
+    right:14px;
+
+    bottom:14px;
+
+    font-size:1.8rem;
+
+    z-index:10;
+
+    text-shadow:
+
+        0 0 10px #ff4da6,
+
+        0 0 25px #ff4da6,
+
+        0 0 45px #ff4da6;
+
+}
+
 /* =====================================
    RM MOBILE PRODUCT CARD V4
 ===================================== */
@@ -1508,6 +1536,34 @@ small {
         #ff9e58,
         #ffc470
     );
+
+}
+
+.mobile-dessert-image-wrapper{
+
+    position:relative;
+
+}
+
+.mobile-favourite-heart{
+
+    position:absolute;
+
+    right:12px;
+
+    bottom:12px;
+
+    font-size:1.6rem;
+
+    z-index:10;
+
+    text-shadow:
+
+        0 0 10px #ff4da6,
+
+        0 0 25px #ff4da6,
+
+        0 0 45px #ff4da6;
 
 }
 
