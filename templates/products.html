@@ -458,7 +458,7 @@ after a long tiring day.
 
                         <div class="desktop-status-row">
 
-                            {% if product.product_is_featured %}
+                            {% if product.product_id in featured_product_ids %}
                             <span class="desktop-featured-chip">
                                 ★ Featured
                             </span>
@@ -566,7 +566,7 @@ after a long tiring day.
 
                     <div class="mobile-status-row">
 
-                        {% if product.product_is_featured %}
+                        {% if product.product_id in featured_product_ids %}
                         <span class="mobile-featured-chip">
                             ★ Featured
                         </span>
