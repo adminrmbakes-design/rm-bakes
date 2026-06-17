@@ -1488,16 +1488,17 @@ small {
     flex-direction: column;
 }
 
-.featured-home-badge {
-    display: inline-block;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #ffd369;
-    background: rgba(255, 215, 0, 0.08);
-    border: 1px solid rgba(255, 215, 0, 0.15);
-    margin-bottom: 12px;
+.featured-home-badge{
+    display:block;
+    width:fit-content;
+    margin:0 auto 12px;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:.75rem;
+    font-weight:700;
+    color:#ffd369;
+    background:rgba(255,215,0,.08);
+    border:1px solid rgba(255,215,0,.15);
 }
 
 .featured-home-card .product-name {
@@ -1576,8 +1577,11 @@ small {
 }
 
 
-.section-title{
+.featured-title{
+    width:100%;
     text-align:center;
+    display:block;
+    margin:0 auto;
     font-size:3rem;
     font-weight:900;
     letter-spacing:-1px;
@@ -1588,9 +1592,10 @@ small {
         0 0 25px rgba(255,180,80,.12);
 }
 
-.section-subtitle {
-    text-align: center;
-    margin-top: 12px;
+.featured-subtitle{
+    text-align:center;
+    color:#d6c7bb;
+    margin-top:12px;
 }
 
 .featured-divider {
