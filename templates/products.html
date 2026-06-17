@@ -434,10 +434,24 @@ after a long tiring day.
                     data-category="{{ product.product_category|lower }}"
                 >
 
-                        <img
-                            src="{{ get_product_image(product.product_image) }}"
-                            class="desktop-dessert-image"
-                        >
+                        <div class="desktop-dessert-image-wrapper">
+
+                            <img
+                                src="{{ get_product_image(product.product_image) }}"
+                                class="desktop-dessert-image"
+                            >
+
+                            {% if product.product_id in favourite_ids %}
+
+                            <span class="desktop-favourite-heart">
+
+                                ❤️
+
+                            </span>
+
+                            {% endif %}
+
+                        </div>
 
 
                         <div class="desktop-dessert-details">
@@ -576,10 +590,24 @@ after a long tiring day.
 
                     </div>
 
-                    <img
-                        src="{{ get_product_image(product.product_image) }}"
-                        class="mobile-dessert-image"
-                    >
+                    <div class="mobile-dessert-image-wrapper">
+
+                        <img
+                            src="{{ get_product_image(product.product_image) }}"
+                            class="mobile-dessert-image"
+                        >
+
+                        {% if product.product_id in favourite_ids %}
+
+                        <span class="mobile-favourite-heart">
+
+                            ❤️
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
 
                     <div class="mobile-tag-pill">
 
