@@ -950,6 +950,30 @@ small {
 
 }
 
+.category-neon-divider{
+
+    width:180px;
+
+    height:2px;
+
+    margin:25px auto 35px auto;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        #ff66c4,
+        transparent
+    );
+
+    box-shadow:
+        0 0 10px #ff66c4,
+        0 0 25px #ff66c4;
+
+}
+
 
 /* =====================================
    RM DESKTOP PRODUCT CARD V4
@@ -957,31 +981,33 @@ small {
 
 .desktop-dessert-card{
 
-    display:flex;
+   display:flex;
 
-    align-items:center;
+   align-items:center;
 
-    gap:30px;
+   justify-content:center;
 
-    padding:20px;
+   gap:30px;
 
-    margin-bottom:22px;
+   padding:20px;
 
-    border-radius:30px;
+   margin-bottom:22px;
 
-    background:
-    linear-gradient(
-        135deg,
-        rgba(10,8,18,.95),
-        rgba(5,5,10,.98)
-    );
+   border-radius:30px;
 
-    border:
-    1px solid rgba(255,255,255,.05);
+   background:
+      linear-gradient(
+         135deg,
+         rgba(10,8,18,.95),
+         rgba(5,5,10,.98)
+      );
 
-    overflow:hidden;
+   border:
+      1px solid rgba(255,255,255,.05);
 
-    transition:.35s ease;
+   overflow:hidden;
+
+   transition:.35s ease;
 
 }
 
@@ -1022,7 +1048,11 @@ small {
 
     justify-content:center;
 
-    flex:1;
+    align-items:flex-start;
+
+    flex:0 0 420px;
+
+    padding-left:35px;
 
 }
 
@@ -1053,16 +1083,18 @@ small {
     border-radius:999px;
 
     background:
-    linear-gradient(
-        135deg,
-        rgba(100,220,255,.15),
-        rgba(100,160,255,.10)
-    );
+       linear-gradient(
+          135deg,
+          rgba(34,197,94,.15),
+          rgba(21,128,61,.10)
+       );
 
-    border:
-    1px solid rgba(100,220,255,.18);
+   border:1px solid rgba(34,197,94,.20);
 
-    color:#8ff3ff;
+   color:#8fffb0;
+
+   box-shadow:
+      0 0 18px rgba(34,197,94,.18);
 
     font-size:.82rem;
 
@@ -1354,17 +1386,20 @@ small {
 
     border-radius:999px;
 
-    background:
-    linear-gradient(
-        135deg,
-        rgba(100,220,255,.15),
-        rgba(100,160,255,.10)
-    );
 
-    border:
-    1px solid rgba(100,220,255,.18);
+   background:
+      linear-gradient(
+         135deg,
+         rgba(34,197,94,.15),
+         rgba(21,128,61,.10)
+      );
 
-    color:#8ff3ff;
+   border:1px solid rgba(34,197,94,.20);
+
+   color:#8fffb0;
+
+   box-shadow:
+      0 0 18px rgba(34,197,94,.18);
 
     font-size:.78rem;
 
