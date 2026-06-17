@@ -661,8 +661,27 @@
                 <label class="marketing-item">
 
                     <input
-                        type="checkbox"
-                        name="product_is_launching"
+                        type="radio"
+                        name="marketing_type"
+                        value="none"
+
+                        {% if not product.product_is_launching
+                        and not product.product_is_seasonal
+                        and not product.product_is_festive %}
+                        checked
+                        {% endif %}
+                    >
+
+                    ✨ Regular Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="radio"
+                        name="marketing_type"
+                        value="launching"
 
                         {% if product.product_is_launching %}
                         checked
@@ -676,8 +695,9 @@
                 <label class="marketing-item">
 
                     <input
-                        type="checkbox"
-                        name="product_is_seasonal"
+                        type="radio"
+                        name="marketing_type"
+                        value="seasonal"
 
                         {% if product.product_is_seasonal %}
                         checked
@@ -691,8 +711,9 @@
                 <label class="marketing-item">
 
                     <input
-                        type="checkbox"
-                        name="product_is_festive"
+                        type="radio"
+                        name="marketing_type"
+                        value="festive"
 
                         {% if product.product_is_festive %}
                         checked
