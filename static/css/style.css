@@ -910,211 +910,55 @@ small {
 
 
 /* =====================================
-   RM BAKES DESKTOP PRODUCT CARD V3
+   LUXURY MOBILE PRODUCT CARD V3
 ===================================== */
 
-.desktop-dessert-card{
-    display:flex;
-    align-items:center;
-    gap:22px;
+.mobile-dessert-card{
 
-    padding:18px;
+    border-radius:26px;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(20,12,20,.95),
+        rgba(8,5,12,.98)
+    );
+
+    border:1px solid rgba(255,255,255,.06);
+
+    padding:14px;
 
     margin-bottom:18px;
 
-    border-radius:28px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(28,18,15,0.95),
-            rgba(14,10,8,0.98)
-        );
-
-    border:
-        1px solid rgba(
-            255,255,255,0.06
-        );
-
-    backdrop-filter:blur(18px);
-
-    box-shadow:
-        0 10px 35px rgba(0,0,0,0.25);
-
-    transition:0.35s ease;
 }
 
-.desktop-dessert-card:hover{
+.mobile-status-row{
 
-    transform:translateY(-4px);
-
-    border-color:
-        rgba(255,190,120,0.18);
-
-    box-shadow:
-        0 18px 45px rgba(0,0,0,0.35),
-        0 0 24px rgba(255,180,120,0.08);
-}
-
-.desktop-dessert-image-box{
-    width:250px;
-    flex-shrink:0;
-}
-
-.desktop-dessert-content{
-    flex:1;
     display:flex;
-    flex-direction:column;
-    justify-content:center;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:12px;
+
 }
 
-.desktop-dessert-title{
-    font-size:1.65rem;
-    font-weight:800;
+.mobile-dessert-image{
 
-    color:#fff4e8;
+    width:100%;
 
-    line-height:1.2;
+    border-radius:18px;
 
-    margin:10px 0;
+    display:block;
 
-    text-align:justify;
+    margin-bottom:14px;
+
 }
 
-.desktop-price-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    margin-top:4px;
-}
-
-.desktop-price-value{
-    font-size:1.55rem;
-    font-weight:900;
-
-    color:#ffd089;
-}
-
-.desktop-unit-value{
-    font-size:0.9rem;
-
-    color:#bfae9e;
-
-    text-align:justify;
-}
-
-.desktop-action-row{
-    display:flex;
-    gap:12px;
-
-    margin-top:16px;
-}
-
-.desktop-view-action,
-.desktop-cart-action,
-.desktop-notify-action{
-
-    height:44px;
-
-    padding:0 18px;
-
-    border:none;
-
-    border-radius:14px;
-
-    display:inline-flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:0.9rem;
-    font-weight:700;
-
-    text-decoration:none;
-
-    cursor:pointer;
-
-    transition:0.3s ease;
-}
-
-.desktop-view-action{
-
-    background:
-        rgba(255,255,255,0.05);
-
-    color:#f5ede3;
-
-    border:
-        1px solid rgba(
-            255,255,255,0.08
-        );
-}
-
-.desktop-view-action:hover{
-
-    transform:translateY(-2px);
-
-    background:
-        rgba(255,255,255,0.08);
-}
-
-.desktop-cart-action{
-
-    background:
-        linear-gradient(
-            135deg,
-            #d4a762,
-            #ffcf8d
-        );
-
-    color:#1b120d;
-
-    box-shadow:
-        0 0 18px rgba(
-            255,
-            190,
-            120,
-            0.25
-        );
-}
-
-.desktop-cart-action:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 25px rgba(
-            255,
-            190,
-            120,
-            0.45
-        );
-}
-
-.desktop-notify-action{
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff9800,
-            #ffd54f
-        );
-
-    color:#231400;
-
-    box-shadow:
-        0 0 18px rgba(
-            255,
-            170,
-            0,
-            0.25
-        );
-}
-
-.desktop-tag-pill{
-
-    display:inline-flex;
+.mobile-tag-pill{
 
     width:fit-content;
 
@@ -1122,100 +966,47 @@ small {
 
     border-radius:999px;
 
-    font-size:0.75rem;
-
-    font-weight:600;
-
-    color:#ffd089;
-
     background:
-        rgba(
-            255,
-            208,
-            137,
-            0.08
-        );
+        rgba(255,255,255,.05);
 
-    border:
-        1px solid rgba(
-            255,
-            208,
-            137,
-            0.15
-        );
-}
+    color:#cdb9aa;
 
-/* =====================================
-   MOBILE PRODUCT CARD V3
-===================================== */
+    font-size:.75rem;
 
-.mobile-dessert-card{
+    margin-bottom:10px;
 
-    display:block;
-
-    padding:14px;
-
-    margin-bottom:16px;
-
-    border-radius:24px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(24,16,14,0.96),
-            rgba(10,8,7,0.98)
-        );
-
-    border:
-        1px solid rgba(
-            255,
-            255,
-            255,
-            0.06
-        );
-
-    backdrop-filter:blur(18px);
-
-    box-shadow:
-        0 8px 25px rgba(
-            0,
-            0,
-            0,
-            0.22
-        );
 }
 
 .mobile-dessert-title{
 
-    font-size:1.15rem;
+    font-size:1.45rem;
 
     font-weight:800;
 
-    line-height:1.3;
-
-    margin-top:10px;
+    line-height:1.2;
 
     text-align:justify;
+
+    margin-bottom:10px;
+
 }
 
 .mobile-price-value{
 
-    margin-top:8px;
+    font-size:1.4rem;
 
-    font-size:1.3rem;
+    font-weight:800;
 
-    font-weight:900;
+    color:#ffd18c;
 
-    color:#ffd089;
 }
 
 .mobile-unit-value{
 
     color:#bca89d;
 
-    font-size:0.85rem;
+    margin-bottom:14px;
 
-    text-align:justify;
 }
 
 .mobile-action-column{
@@ -1224,67 +1015,88 @@ small {
 
     gap:10px;
 
-    margin-top:14px;
 }
 
-.mobile-view-action,
+.desktop-view-action,
+.mobile-view-action{
+
+    flex:1;
+
+    text-align:center;
+
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    color:#7df0ff;
+
+    background:
+        rgba(125,240,255,.08);
+
+    border:
+        1px solid rgba(125,240,255,.15);
+
+    transition:.3s ease;
+
+}
+
+.desktop-view-action:hover,
+.mobile-view-action:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(125,240,255,.18);
+
+}
+
+.desktop-cart-action,
 .mobile-cart-action,
+.desktop-notify-action,
 .mobile-notify-action{
 
     flex:1;
 
-    height:42px;
-
     border:none;
+
+    cursor:pointer;
+
+    padding:12px 14px;
 
     border-radius:14px;
 
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    text-decoration:none;
-
-    font-size:0.85rem;
-
     font-weight:700;
 
-    transition:0.3s ease;
-}
-
-.mobile-tag-pill{
-
-    display:inline-flex;
-
-    width:fit-content;
-
-    padding:6px 12px;
-
-    border-radius:999px;
-
-    font-size:0.75rem;
-
-    font-weight:600;
-
-    color:#ffd089;
+    color:white;
 
     background:
-        rgba(
-            255,
-            208,
-            137,
-            0.08
+        linear-gradient(
+            135deg,
+            #ff9b4f,
+            #ffbf63
         );
 
-    border:
-        1px solid rgba(
-            255,
-            208,
-            137,
-            0.15
-        );
+    transition:.3s ease;
+
 }
+
+.desktop-cart-action:hover,
+.mobile-cart-action:hover,
+.desktop-notify-action:hover,
+.mobile-notify-action:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 24px rgba(255,191,99,.28);
+
+}
+
+
 /* =====================================
    PRODUCT CARD VISIBILITY
 ===================================== */
