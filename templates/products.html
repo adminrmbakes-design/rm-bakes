@@ -1656,9 +1656,6 @@ after a long tiring day.
 const searchInput =
     document.getElementById("searchInput");
 
-const searchBtn =
-    document.getElementById("searchBtn");
-
 const noResults =
     document.getElementById("noResults");
 
@@ -1821,6 +1818,16 @@ function filterProducts(){
             const productName =
                 desktopCard.dataset.name;
 
+            const productId =
+                parseInt(
+                    desktopCard.dataset.productId
+                );
+
+            const isFavourite =
+                favouriteIds.includes(
+                    productId
+                );
+
             const matchesSearch =
                 productName.includes(
                     searchValue
@@ -1834,9 +1841,20 @@ function filterProducts(){
                     currentCategory
                 );
 
+            const matchesFavourite =
+
+                !favouritesOnly ||
+
+                isFavourite;
+
             if(
+
                 matchesSearch &&
-                matchesCategory
+
+                matchesCategory &&
+
+                matchesFavourite
+
             ){
 
                 desktopCard.style.display =
@@ -1878,22 +1896,9 @@ function filterProducts(){
 
     });
 
-    noResults.style.display =
-
-        visibleCount
-        ? "none"
-        : "flex";
-
-}
-
-    
     if(visibleCount === 0){
 
         noResults.style.display = "flex";
-
-        // =========================
-        // FAVOURITES EMPTY
-        // =========================
 
         if(favouritesOnly){
 
@@ -1904,61 +1909,31 @@ function filterProducts(){
                 "Your favourites shelf is empty";
 
             emptyStateMessage.innerText =
-
                 "Save the desserts you love and they'll wait here for your next midnight craving ✨";
-        }
 
-            // =========================
-            // SEARCH EMPTY
-            // =========================
-
-        else if(
-
-            searchInput.value.trim()
-
-        ){
+        }else if(searchValue){
 
             emptyStateEmoji.innerText =
                 "🔎";
 
             emptyStateTitle.innerText =
-
                 "We searched every dessert shelf...";
 
             emptyStateMessage.innerText =
+                "Try another search and let's see what's fresh from the oven 🍰";
 
-                "But your craving is hiding from us today! Try another search and let's see what's fresh from the oven 🍰";
-
-        }
-
-            // =========================
-            // CATEGORY EMPTY
-            // =========================
-
-        else if(
-
-            currentCategory !== "all"
-
-        ){
+        }else if(currentCategory !== "all"){
 
             emptyStateEmoji.innerText =
                 "🧁";
 
             emptyStateTitle.innerText =
-
                 "This collection is resting for now";
 
             emptyStateMessage.innerText =
+                "The bakers are preparing something special ✨";
 
-                "The display counter looks a little empty, but the bakers are always preparing something special ✨";
-
-        }
-
-            // =========================
-            // GENERAL EMPTY
-            // =========================
-
-        else{
+        }else{
 
             emptyStateEmoji.innerText =
                 "☕";
@@ -1967,8 +1942,7 @@ function filterProducts(){
                 "The dessert counter feels quiet today";
 
             emptyStateMessage.innerText =
-
-                "Warm lights are on, coffee is brewing, and new desserts will arrive soon 🌙";
+                "Warm lights are on and new desserts will arrive soon 🌙";
 
         }
 
@@ -1979,7 +1953,6 @@ function filterProducts(){
     }
 
 }
-
 
 // =========================
 // SEARCH
@@ -2427,18 +2400,13 @@ setTimeout(() => {
         "skeletonGrid"
     ).style.display = "none";
 
-
-
     document.getElementById(
         "productsGrid"
-    ).style.display = "grid";
-
-
+    ).style.display = "block";
 
     filterProducts();
 
 }, 2100);
-
 
 
 </script>
