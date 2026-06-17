@@ -380,120 +380,213 @@ after a long tiring day.
     
     <!-- PRODUCTS -->
 
-    <div class="products-grid" id="productsGrid" style="display:none;">
+    <div id="productsGrid" style="display:none;">
 
-        {% for product in product_list %}
+        {% for category in categories %}
 
-        <div
-            class="product-card"
-            data-product-id="{{ product.product_id }}"
-            data-category="{{ product.product_category|trim|lower }}"
-            data-name="{{ product.product_name|lower }}">
+        {% if category != "all" %}
 
-            <img
-                src="{{ get_product_image(product.product_image) }}"
-                alt="{{ product.product_name }}"
-                class="product-image"
-            >
+        <section class="category-section">
 
-            <div class="product-info">
+            <div class="category-badge">
 
-                <span class="product-tag">
+                {% if category == 'Cakes' %}
+                🎂
 
-                    {{ product.product_category }}
+                {% elif category == 'Jar Cakes' %}
+                🫙
 
-                </span>
+                {% elif category == 'Brownies' %}
+                🍫
 
-                {% if product.product_is_launching %}
+                {% elif category == 'Cookies' %}
+                🍪
 
-                <div class="launch-badge">
+                {% elif category == 'Cheese Cakes' %}
+                🍰
 
-                    🚀 Launching Soon
+                {% else %}
+                ✨
+                {% endif %}
+
+                {{ category }}
+
+            </div>
+
+            <div class="products-grid">
+
+                {% for product in product_list %}
+
+                {% if product.product_category == category %}
+
+                <!-- PRODUCT CARD HERE -->
+
+                <div
+                    class="product-card"
+
+                    data-product-id="{{ product.product_id }}"
+
+                    data-category="{{ product.product_category|trim|lower }}"
+
+                    data-name="{{ product.product_name|lower }}"
+                >
+
+                    <!-- TOP BADGES -->
+
+                    <div class="product-card-top">
+
+                        {% if product.product_is_featured %}
+
+                        <div class="featured-product-badge">
+
+                            ★ Featured
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if product.product_is_launching %}
+
+                        <div class="launching-product-badge">
+
+                            🚀 Launching
+
+                        </div>
+
+                        {% elif product.product_is_seasonal %}
+
+                        <div class="seasonal-product-badge">
+
+                            🍂 Seasonal
+
+                        </div>
+
+                        {% elif product.product_is_festive %}
+
+                        <div class="festival-product-badge">
+
+                            🎉 Festival
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- IMAGE -->
+
+                    <div class="product-image-wrap">
+
+                        <img
+
+                            src="{{ get_product_image(product.product_image) }}"
+
+                            alt="{{ product.product_name }}"
+
+                            class="product-image"
+
+                        >
+
+                    </div>
+
+                    <!-- CONTENT -->
+
+                    <div class="product-info">
+
+                        <!-- PRODUCT TAG -->
+
+                        <div class="product-tag">
+
+                            {{ product.product_tags }}
+
+                        </div>
+
+                        <!-- PRODUCT NAME -->
+
+                        <h3 class="product-name">
+
+                            {{ product.product_name }}
+
+                        </h3>
+
+                        <!-- PRICE -->
+
+                        <div class="product-price-block">
+
+                            <div class="product-price">
+
+                                ₹{{ product.product_price }}
+
+                            </div>
+
+                            <div class="product-unit">
+
+                                {{ product.product_unit }}
+
+                            </div>
+
+                        </div>
+
+                        <!-- BUTTONS -->
+
+                        <div class="product-buttons">
+
+                            <a
+                                href="{{ url_for(
+                                'product.product_details',
+                                product_id=product.product_id
+                                ) }}"
+                                class="view-btn"
+                            >
+
+                                View →
+
+                            </a>
+
+                            {% if product.product_is_launching %}
+
+                            <button
+                                class="notify-btn"
+                                data-product-name="{{ product.product_name }}"
+                            >
+
+                                Notify Me 🔔
+
+                            </button>
+
+                            {% else %}
+
+                            <button
+                                class="cart-btn add-to-cart-btn"
+                                data-product-id="{{ product.product_id }}"
+                                data-product-name="{{ product.product_name }}"
+                            >
+
+                               Add to Cart 🛒
+
+                            </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
 
                 </div>
 
                 {% endif %}
-
-                <h3>
-
-                    {{ product.product_name }}
-
-                </h3>
-
-                <p>
-
-                    {{ product.product_description }}
-
-                </p>
-
-                <div class="product-price">
-
-                    ₹{{ product.product_price }}
-
-                </div>
-
-                <div class="product-unit">
-
-                    {{ product.product_unit }}
-
-                </div>
-
-                <div class="product-buttons">
-
-                    <a
-                        href="{{ url_for(
-                        'product.product_details',
-                        product_id=product.product_id
-                        ) }}"
-                        class="view-btn">
-
-                        View ✨
-
-                    </a>
-
-                    {% if product.product_is_launching %}
-
-                    <button
-
-                        class="notify-btn"
-
-                        data-product-name="{{ product.product_name }}"
-
-                    >
-
-                        Notify Me 🔔
-
-                    </button>
-
-                    {% else %}
-
-                    <button
-
-                        class="cart-btn add-to-cart-btn"
-
-                        data-product-id="{{ product.product_id }}"
-
-                        data-product-name="{{ product.product_name }}"
-
-                        >
-
-                        Add To Cart 🛒
-
-                    </button>
-
-                    {% endif %}
-
-                </div>
                 
+                {% endfor %}
+
             </div>
 
-        </div>
+        </section>
+
+        {% endif %}
 
         {% endfor %}
 
     </div>
-
-
 
     <!-- NO RESULTS -->
 
