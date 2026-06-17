@@ -907,6 +907,49 @@ small {
     transform: translateY(-2px);
 }
 
+.category-badge{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    width:fit-content;
+
+    margin:0 auto 18px auto;
+
+    padding:12px 24px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,170,120,.15),
+        rgba(255,120,180,.12)
+    );
+
+    border:
+    1px solid rgba(255,200,150,.18);
+
+    color:#ffd6a8;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+
+    box-shadow:
+    0 0 25px rgba(255,180,120,.15);
+
+    backdrop-filter:blur(14px);
+
+}
+
 
 /* =====================================
    RM DESKTOP PRODUCT CARD V4
@@ -953,31 +996,33 @@ small {
 
 .desktop-dessert-image-box{
 
-    width:340px;
-
-    min-width:340px;
+    flex-shrink:0;
 
 }
 
 .desktop-dessert-image{
 
-    width:100%;
+    display:block;
 
-    height:230px;
+    max-height:260px;
 
-    object-fit:cover;
+    width:auto;
 
     border-radius:24px;
 
-    display:block;
+    object-fit:cover;
 
 }
 
 .desktop-dessert-content{
 
-    flex:1;
+    display:flex;
 
-    min-width:0;
+    flex-direction:column;
+
+    justify-content:center;
+
+    flex:1;
 
 }
 
@@ -997,18 +1042,132 @@ small {
 
     display:inline-flex;
 
-    padding:8px 14px;
+    align-items:center;
+
+    justify-content:center;
+
+    width:fit-content;
+
+    padding:8px 18px;
 
     border-radius:999px;
 
     background:
-    rgba(255,255,255,.04);
+    linear-gradient(
+        135deg,
+        rgba(100,220,255,.15),
+        rgba(100,160,255,.10)
+    );
 
-    color:#bca89d;
+    border:
+    1px solid rgba(100,220,255,.18);
 
-    font-size:.8rem;
+    color:#8ff3ff;
+
+    font-size:.82rem;
+
+    font-weight:700;
 
     margin-bottom:14px;
+
+    box-shadow:
+    0 0 20px rgba(100,220,255,.12);
+
+}
+
+.desktop-launch-chip{
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+
+    color:white;
+
+    font-weight:800;
+
+    font-family:"Outfit",sans-serif;
+
+    box-shadow:
+    0 0 25px rgba(255,170,0,.35);
+
+}
+
+.desktop-season-chip{
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #20b26b,
+        #58db92
+    );
+
+    color:white;
+
+    font-weight:800;
+
+    font-family:"Outfit",sans-serif;
+
+    box-shadow:
+    0 0 25px rgba(88,219,146,.25);
+
+}
+
+.desktop-festival-chip{
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff3c8d,
+        #ff7ed1
+    );
+
+    color:white;
+
+    font-weight:800;
+
+    font-family:"Outfit",sans-serif;
+
+    box-shadow:
+    0 0 25px rgba(255,80,180,.28);
+
+}
+
+.desktop-featured-chip{
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #c89500,
+        #ffd36a
+    );
+
+    color:black;
+
+    font-weight:900;
+
+    font-family:"Outfit",sans-serif;
+
+    box-shadow:
+    0 0 25px rgba(255,211,106,.30);
 
 }
 
@@ -1185,18 +1344,51 @@ small {
 
     display:inline-flex;
 
-    padding:8px 14px;
+    align-items:center;
+
+    justify-content:center;
+
+    width:fit-content;
+
+    padding:8px 16px;
 
     border-radius:999px;
 
     background:
-    rgba(255,255,255,.04);
+    linear-gradient(
+        135deg,
+        rgba(100,220,255,.15),
+        rgba(100,160,255,.10)
+    );
 
-    color:#bca89d;
+    border:
+    1px solid rgba(100,220,255,.18);
 
-    font-size:.8rem;
+    color:#8ff3ff;
+
+    font-size:.78rem;
+
+    font-weight:700;
 
     margin-bottom:14px;
+
+    box-shadow:
+    0 0 16px rgba(100,220,255,.12);
+
+}
+
+.mobile-launch-chip,
+.mobile-season-chip,
+.mobile-festival-chip,
+.mobile-featured-chip{
+
+    font-family:"Outfit",sans-serif;
+
+    font-weight:800;
+
+    padding:8px 14px;
+
+    border-radius:999px;
 
 }
 
