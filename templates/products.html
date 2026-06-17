@@ -385,7 +385,10 @@ after a long tiring day.
 
         {% if category != "all" %}
 
-        <section class="category-section">
+        <section
+            class="category-section"
+            data-category="{{ category|trim|lower }}"
+        >
             <div class="category-neon-divider"></div>
             <div class="category-badge">
 
@@ -1791,11 +1794,8 @@ function filterProducts(){
     .querySelectorAll(".category-section")
     .forEach(section => {
 
-        const categoryName =
-            section
-            .querySelector(".category-badge")
-            .innerText
-            .toLowerCase();
+        const sectionCategory =
+            section.dataset.category;
 
         let sectionHasVisibleProduct = false;
 
@@ -1836,9 +1836,7 @@ function filterProducts(){
 
                 currentCategory === "all" ||
 
-                categoryName.includes(
-                    currentCategory
-                );
+                sectionCategory === currentCategory;
 
             const matchesFavourite =
 
