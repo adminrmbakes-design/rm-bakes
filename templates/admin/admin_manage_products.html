@@ -358,6 +358,96 @@
 
         }
 
+        .marketing-status-pill{
+
+            margin-top:10px;
+            margin-bottom:12px;
+
+        }
+
+        .marketing-status-pill span{
+
+            display:inline-flex;
+            align-items:center;
+
+            padding:5px 10px;
+
+            border-radius:999px;
+
+            font-size:.72rem;
+
+            font-weight:700;
+
+        }
+
+        .launching-pill{
+
+            color:#7fdfff;
+            
+            background:
+                rgba(0,180,255,.12);
+
+            border:
+                1px solid rgba(
+                    0,
+                    180,
+                    255,
+                    .25
+                );
+
+        }
+
+        .seasonal-pill{
+
+            color:#ffc66d;
+
+            background:
+                rgba(255,170,0,.12);
+
+            border:
+                1px solid rgba(
+                    255,
+                    170,
+                    0,
+                    .25
+                );
+
+        }
+
+        .festive-pill{
+
+            color:#ff9fdc;
+
+            background:
+                rgba(255,0,170,.12);
+
+            border:
+                1px solid rgba(
+                    255,
+                    0,
+                    170,
+                    .25
+                );
+
+        }
+
+        .regular-pill{
+
+            color:#e5e5e5;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    .10
+                );
+
+        }
+
         /* =====================================
            ACTION BUTTONS
         ====================================== */
@@ -627,6 +717,36 @@
         <div class="product-detail">
 
             ✨ {{ product.product_tags }}
+
+        </div>
+
+        <div class="marketing-status-pill">
+
+            {% if product.product_is_launching %}
+
+            <span class="launching-pill">
+                🚀 Launching
+            </span>
+
+            {% elif product.product_is_seasonal %}
+
+            <span class="seasonal-pill">
+                🍂 Seasonal
+            </span>
+
+            {% elif product.product_is_festive %}
+
+            <span class="festive-pill">
+                🎉 Festive
+            </span>
+
+            {% else %}
+
+            <span class="regular-pill">
+                ✨ Regular
+            </span>
+
+            {% endif %}
 
         </div>
 
