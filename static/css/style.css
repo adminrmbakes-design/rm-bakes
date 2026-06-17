@@ -981,20 +981,14 @@ small {
 
 .desktop-dessert-card{
 
-   display:flex;
+    display:flex;
 
-   align-items:center;
+    align-items:center;
 
-   justify-content:center;
+    gap:60px;
 
-   gap:30px;
-
-   padding:20px;
-
-   margin-bottom:22px;
-
-   border-radius:30px;
-
+    padding:32px;
+   
    background:
       linear-gradient(
          135deg,
@@ -1042,17 +1036,19 @@ small {
 
 .desktop-dessert-content{
 
-    display:flex;
+    flex:1;
 
-    flex-direction:column;
+    display:flex;
 
     justify-content:center;
 
-    align-items:flex-start;
+    align-items:center;
 
-    flex:0 0 420px;
+}
 
-    padding-left:35px;
+.desktop-dessert-details{
+
+    max-width:500px;
 
 }
 
