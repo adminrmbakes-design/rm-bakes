@@ -570,6 +570,14 @@ after a long tiring day.
 
                     <div class="mobile-dessert-image-wrapper">
 
+                        <div class="mobile-product-tags">
+
+                            {% if product.product_tags %}
+                            {{ product.product_tags }}
+                            {% endif %}
+
+                        </div>
+
                         {% if product.product_is_launching %}
                         <span class="mobile-launch-chip">
                             🚀 Launching
@@ -606,14 +614,6 @@ after a long tiring day.
                    <div class="mobile-content-area">
 
                        <div class="mobile-header-row">
-
-                           <div class="mobile-product-tags">
-
-                               {% if product.product_tags %}
-                               {{ product.product_tags }}
-                               {% endif %}
-
-                           </div>
 
                            {% if product.product_id in featured_product_ids %}
 
