@@ -340,16 +340,7 @@ def product_details(product_id):
 
         )
 
-    featured_product_ids = [
-
-        slot.product_id
-
-        for slot in FeaturedProduct.query.filter(
-            FeaturedProduct.product_id.isnot(None)
-        ).all()
-    ]
-
-
+  
 
     return render_template(
 
@@ -365,10 +356,7 @@ def product_details(product_id):
 
         written_reviews=written_reviews,
 
-        rating_only_reviews=rating_only_reviews,
-
-        featured_product_ids=
-        featured_product_ids
+        rating_only_reviews=rating_only_reviews
 
     )
 
