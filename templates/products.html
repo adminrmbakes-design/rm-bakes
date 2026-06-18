@@ -568,7 +568,7 @@ after a long tiring day.
                     data-category="{{ product.product_category|lower }}"
                 >
 
-                    <div class="mobile-status-row">
+                    <div class="mobile-dessert-image-wrapper">
 
                         {% if product.product_is_launching %}
                         <span class="mobile-launch-chip">
@@ -586,10 +586,6 @@ after a long tiring day.
                         </span>
                         {% endif %}
 
-                    </div>
-
-                    <div class="mobile-dessert-image-wrapper">
-
                         <img
                             src="{{ get_product_image(product.product_image) }}"
                             class="mobile-dessert-image"
@@ -605,82 +601,90 @@ after a long tiring day.
 
                         {% endif %}
 
-                        {% if product.product_id in featured_product_ids %}
-
-                        <span class="mobile-featured-overlay">
-
-                            ⭐ Featured
-
-                        </span>
-
-                        {% endif %}
-
                     </div>
 
-                    <div class="mobile-tag-pill">
+                   <div class="mobile-content-area">
 
-                        {{ product.product_tags }}
+                       <div class="mobile-header-row">
 
-                    </div>
+                           <div class="mobile-product-tags">
 
-                    <h3 class="mobile-dessert-title">
+                               {% if product.product_tags %}
+                               {{ product.product_tags }}
+                               {% endif %}
 
-                        {{ product.product_name }}
+                           </div>
 
-                    </h3>
+                           {% if product.product_id in featured_product_ids %}
 
-                    <div class="mobile-price-value">
+                           <div class="mobile-featured-badge">
 
-                        ₹{{ product.product_price }}
+                               ⭐ Featured
 
-                    </div>
+                           </div>
 
-                    <div class="mobile-unit-value">
+                           {% endif %}
 
-                        {{ product.product_unit }}
+                       </div>
 
-                    </div>
+                       <h3 class="mobile-dessert-title">
 
-                    <div class="mobile-action-column">
+                           {{ product.product_name }}
 
-                        <a
-                            href="{{ url_for(
-                            'product.product_details',
-                            product_id=product.product_id
-                            ) }}"
-                            class="mobile-view-action"
-                        >
+                       </h3>
 
-                            View →
+                       <div class="mobile-price-block">
 
-                        </a>
+                           <span class="mobile-price-value">
 
-                        {% if product.product_is_launching %}
+                               ₹{{ product.product_price }}
 
-                        <button
-                            class="mobile-notify-action notify-btn"
-                            data-product-name="{{ product.product_name }}"
-                        >
+                           </span>
 
-                            Notify Me 🔔
+                           <span class="mobile-unit-value">
 
-                        </button>
+                               /{{ product.product_unit }}
 
-                        {% else %}
+                           </span>
 
-                        <button
-                            class="mobile-cart-action add-to-cart-btn"
-                            data-product-id="{{ product.product_id }}"
-                            data-product-name="{{ product.product_name }}"
-                        >
+                       </div>
 
-                            Add To Cart 🛒
+                       <div class="mobile-action-column">
 
-                        </button>
+                           <a href="{{ url_for('product_routes.product_details', product_id=product.product_id) }}"
+                               class="mobile-view-btn">
 
-                        {% endif %}
+                               View →
 
-                    </div>
+                           </a>
+
+                           {% if product.product_is_launching %}
+
+                           <button class="mobile-notify-btn">
+
+                               Notify Me 🔔
+
+                           </button>
+
+                           {% else %}
+
+                           <form method="POST"
+                               action="{{ url_for('cart_routes.add_to_cart', product_id=product.product_id) }}">
+
+                               <button type="submit"
+                                   class="mobile-cart-btn">
+
+                                   Add To Cart 🛒
+
+                               </button>
+
+                           </form>
+
+                           {% endif %}
+
+                       </div>
+
+                   </div>
 
                 </div> <!-- MOBILE END -->
 
