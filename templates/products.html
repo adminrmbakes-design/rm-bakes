@@ -670,19 +670,15 @@ after a long tiring day.
 
                            {% else %}
 
-                           <form method="POST"
-                               action="{{ url_for('cart_routes.add_to_cart', product_id=product.product_id) }}">
+                           <button
+                               class="mobile-cart-btn add-to-cart-btn"
+                               data-product-id="{{ product.product_id }}"
+                               data-product-name="{{ product.product_name }}"
+                            >
 
-                               <button type="button"
-                                   class="mobile-cart-btn add-to-cart-btn"
-                                   data-product-id="{{ product.product_id }}"
-                                   data-product-name="{{ product.product_name }}">
+                               Add To Cart 🛒
 
-                                   Add To Cart 🛒
-
-                               </button>
-
-                           </form>
+                           </button>
 
                            {% endif %}
 
