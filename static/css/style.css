@@ -2589,7 +2589,7 @@ small {
     0 0 28px rgba(255,60,120,.30);
 }
 
-/* CART */
+/* CART AND NOTIFY */
 
 .rm-detail-desktop-cart-btn{
 
@@ -2614,6 +2614,47 @@ small {
 
     box-shadow:
     0 12px 30px rgba(0,0,0,.25);
+}
+
+.rm-detail-desktop-notify-btn{
+
+    border:none;
+
+    cursor:pointer;
+
+    min-height:62px;
+
+    padding:0 28px;
+
+    border-radius:22px;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+
+    box-shadow:
+    0 0 30px rgba(255,170,0,.25);
+
+    transition:.35s ease;
+}
+
+.rm-detail-desktop-notify-btn:hover{
+
+    transform:
+    translateY(-3px);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.25),
+    0 0 25px rgba(255,180,0,.25);
 }
 
 /* DESCRIPTION */
