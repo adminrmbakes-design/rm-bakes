@@ -651,16 +651,18 @@ after a long tiring day.
 
                        <div class="mobile-action-column">
 
-                           <a href="{{ url_for('product_routes.product_details', product_id=product.product_id) }}"
+                           <a href="{{ url_for('product.product_details',
+                               product_id=product.product_id) }}"
                                class="mobile-view-btn">
-
+                               
                                View →
 
                            </a>
 
                            {% if product.product_is_launching %}
 
-                           <button class="mobile-notify-btn">
+                           <button class="mobile-notify-btn notify-btn"
+                               data-product-name="{{ product.product_name }}">
 
                                Notify Me 🔔
 
@@ -671,8 +673,10 @@ after a long tiring day.
                            <form method="POST"
                                action="{{ url_for('cart_routes.add_to_cart', product_id=product.product_id) }}">
 
-                               <button type="submit"
-                                   class="mobile-cart-btn">
+                               <button type="button"
+                                   class="mobile-cart-btn add-to-cart-btn"
+                                   data-product-id="{{ product.product_id }}"
+                                   data-product-name="{{ product.product_name }}">
 
                                    Add To Cart 🛒
 
