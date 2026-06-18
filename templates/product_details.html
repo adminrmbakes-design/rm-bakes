@@ -16,178 +16,26 @@
 
     <div class="product-details-image-wrapper">
 
-    {% if product.product_image %}
+       {% if product.product_image %}
 
-    <img
-        src="{{ get_product_image(product.product_image) }}"
-        alt="{{ product.product_name }}"
-        class="product-details-image"
-    >
+       <img
+          src="{{ get_product_image(product.product_image) }}"
+          alt="{{ product.product_name }}"
+          class="product-details-image"
+         >
 
-{% else %}
+       {% else %}
 
-    {% endif %}
-
-</div>
-
-
-    <!-- DETAILS -->
-
-    <div class="col-lg-6">
-
-        <span class="product-tag">
-
-            {{ product.product_tags }}
-
-        </span>
-
-        <h1 class="main-title mt-3">
-
-            {{ product.product_name }}
-
-        </h1>
-
-        <p class="mt-4 product-description">
-
-            {{ product.product_description }}
-
-        </p>
-
-       <!-- Reviews -->
-
-       <div class="review-summary">
-
-           {% if review_count > 0 %}
-
-               <div class="review-rating">
-
-                   ⭐ {{ average_rating }}
-
-                  <!-- Ratings and reviews -->
-
-                   <span>
-
-                      {% if written_reviews > 0 %}
-
-                      <div>
-    
-                         💬 {{ written_reviews }} Sweet Memories
-
-                      </div>
-
-                      {% endif %}
-
-
-                      {% if rating_only_reviews > 0 %}
-
-                      <div>
-   
-                         ⭐ {{ rating_only_reviews }} Sweet Ratings
-
-                      </div>
-
-                      {% endif %}
-
-                   </span>
-
-               </div>
-          
-          <a
-
-             href="{{ url_for(
-
-             'review.product_reviews',
-             product_name=product.product_name
-             ) }}"
-
-             class="view-reviews-btn"
-
-          >
-
-            💌 View Customer Reviews →
-
-          </a>
-
-          {% else %}
-
-          <div class="review-rating">
-
-            No reviews yet 🌷
-
-          </div>
-
-          {% endif %}
-
-       </div>
-
-       <!-- Review section ends -->
-
-
-        <div class="price-favourite-row">
-
-    <div>
-
-        <h2 class="product-price">
-
-            ₹{{ product.product_price }}
-
-        </h2>
-
-        <p>
-
-            {{ product.product_unit }}
-
-        </p>
+       {% endif %}
 
     </div>
 
 
-
-    <!-- FAVOURITE BUTTON -->
-
-    <button
-
-        class="favourite-btn-detail
-
-        {% if is_favourite %}
-            active
-        {% endif %}"
-
-        id="favouriteBtn"
-
-        onclick="toggleFavourite(
-            {{ product.product_id }},
-            {{ 'true' if current_user.is_authenticated else 'false' }}
-        )"
-
-    >
-
-        ❤️
-
-    </button>
-
-</div>
+</div> <!-- CONTAINER END -->
 
 
-        <div class="mt-4 d-flex gap-3">
+  
 
-            <button
-    class="add-cart-btn"
-    onclick="addToCart(
-        {{ product.product_id }},
-        {{ 'true' if current_user.is_authenticated else 'false' }}
-    )"
->
-
-    Add to Cart 🛒
-
-</button>
-
-       
-
-        </div>
-
-    </div>
    
    
    <style>
