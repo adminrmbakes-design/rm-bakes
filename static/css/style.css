@@ -1360,126 +1360,70 @@ small {
 }
 
 /* =====================================
-   RM MOBILE PRODUCT CARD V4
+   RM BAKES MOBILE PRODUCT CARD V5
 ===================================== */
 
 @media (max-width:768px){
 
+.products-grid{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+/* CARD */
+
 .mobile-dessert-card{
 
     display:flex;
-    flex-direction:row;
 
     align-items:center;
 
-    gap:16px;
+    gap:14px;
 
-    padding:16px;
+    padding:18px;
+
+    margin-bottom:20px;
 
     border-radius:28px;
 
     background:
     linear-gradient(
         135deg,
-        rgba(10,8,18,.96),
-        rgba(5,5,10,.99)
+        rgba(8,8,18,.98),
+        rgba(4,4,10,.98)
     );
 
     border:
     1px solid rgba(255,255,255,.05);
 
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.35);
 }
+
+/* IMAGE */
 
 .mobile-dessert-image-wrapper{
 
     position:relative;
 
     flex-shrink:0;
-
 }
 
 .mobile-dessert-image{
 
-    width:auto;
+    width:120px;
 
-    max-width:120px;
+    height:120px;
 
-    height:auto;
+    object-fit:cover;
 
-    max-height:160px;
-
-    object-fit:contain;
-
-    border-radius:18px;
+    border-radius:20px;
 
     display:block;
-
 }
 
-.mobile-content-area{
-
-    flex:1;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-}
-
-.mobile-header-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:10px;
-
-}
-
-.mobile-tag-pill{
-
-    padding:6px 14px;
-
-    border-radius:999px;
-
-    background:
-    rgba(34,197,94,.15);
-
-    border:
-    1px solid rgba(34,197,94,.2);
-
-    color:#8fffb0;
-
-    font-size:.75rem;
-
-    font-weight:700;
-
-}
-
-.mobile-featured-overlay{
-
-    padding:6px 12px;
-
-    border-radius:999px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #ffd76a,
-        #ffb700
-    );
-
-    color:#1b1200;
-
-    font-size:.7rem;
-
-    font-weight:800;
-
-}
+/* MARKETING OVERLAY */
 
 .mobile-launch-chip,
 .mobile-season-chip,
@@ -1487,65 +1431,268 @@ small {
 
     position:absolute;
 
-    top:10px;
+    top:8px;
 
-    left:10px;
+    left:8px;
 
-    z-index:20;
+    z-index:5;
+
+    padding:5px 10px;
 
     border-radius:999px;
 
-    padding:6px 12px;
+    font-size:.62rem;
+
+    font-weight:800;
+
+    color:white;
+
+    backdrop-filter:blur(10px);
+}
+
+.mobile-launch-chip{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+}
+
+.mobile-season-chip{
+
+    background:
+    linear-gradient(
+        135deg,
+        #16a34a,
+        #22c55e
+    );
+}
+
+.mobile-festival-chip{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff2d8d,
+        #ff66cc
+    );
+}
+
+/* CONTENT */
+
+.mobile-content-area{
+
+    flex:1;
+
+    min-width:0;
+}
+
+/* PRODUCT TAG */
+
+.mobile-product-tags{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    background:
+    rgba(34,197,94,.12);
+
+    border:
+    1px solid rgba(34,197,94,.25);
+
+    color:#8fffaa;
+
+    font-size:.7rem;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+    box-shadow:
+    0 0 15px rgba(34,197,94,.15);
+}
+
+/* FEATURED */
+
+.mobile-featured-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffd86b,
+        #ffb700
+    );
+
+    color:#2a1700;
 
     font-size:.7rem;
 
     font-weight:800;
 
+    margin-left:6px;
+
+    box-shadow:
+    0 0 15px rgba(255,200,0,.3);
 }
+
+.mobile-header-row{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:6px;
+
+    margin-bottom:10px;
+}
+
+/* PRODUCT NAME */
 
 .mobile-dessert-title{
 
-    font-size:1.35rem;
+    font-family:
+    "Cormorant Garamond",
+    serif;
 
-    line-height:1.1;
+    font-size:2rem;
+
+    font-weight:700;
+
+    line-height:1;
+
+    color:#fff4df;
 
     margin-bottom:10px;
 
+    text-shadow:
+        0 0 10px rgba(255,200,120,.25),
+        0 0 20px rgba(255,150,80,.15);
+}
+
+/* PRICE */
+
+.mobile-price-block{
+
+    margin-bottom:12px;
 }
 
 .mobile-price-value{
 
-    font-size:1.5rem;
+    font-size:1.8rem;
 
     font-weight:900;
 
     color:#ffcf8d;
-
 }
+
+.mobile-unit-value{
+
+    color:#c9b8a9;
+
+    font-size:1rem;
+}
+
+/* BUTTONS */
 
 .mobile-action-column{
 
     display:flex;
 
+    align-items:center;
+
     gap:10px;
-
-    margin-top:12px;
-
 }
 
-.mobile-view-btn,
-.mobile-cart-btn,
-.mobile-notify-btn{
+/* VIEW */
 
-    flex:1;
+.mobile-view-btn{
 
-    padding:10px;
+    padding:10px 16px;
 
     border-radius:14px;
 
-    font-size:.85rem;
+    background:
+    rgba(70,210,255,.08);
 
+    border:
+    1px solid rgba(70,210,255,.15);
+
+    color:#7aeaff;
+
+    font-weight:700;
+
+    text-decoration:none;
 }
+
+/* CART */
+
+.mobile-cart-btn{
+
+    border:none;
+
+    padding:10px 16px;
+
+    border-radius:14px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9c40,
+        #ffc86b
+    );
+
+    color:white;
+
+    font-weight:800;
+
+    font-size:.82rem;
+
+    box-shadow:
+    0 0 20px rgba(255,180,90,.22);
+}
+
+/* NOTIFY */
+
+.mobile-notify-btn{
+
+    border:none;
+
+    padding:10px 16px;
+
+    border-radius:14px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff8c00,
+        #ffd000
+    );
+
+    color:white;
+
+    font-weight:800;
+
+    font-size:.82rem;
+
+    box-shadow:
+    0 0 20px rgba(255,190,0,.22);
+}
+
 }
 
 
