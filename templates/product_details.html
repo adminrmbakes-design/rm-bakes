@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{{ url_for('product.products') }}"
+   class="floating-close-btn">
+    ×
+</a>
+
+<div class="rm-detail-page-v2">
+
+    <!-- ===================================================== -->
+    <!-- RM DETAILS DESKTOP V2 -->
+    <!-- ===================================================== -->
+
+    <div class="rm-detail-desktop-v2">
+
+        <div class="rm-detail-desktop-image-column">
+
+            <div class="rm-detail-desktop-image-card">
+
+                {% if product.product_image %}
+                <img
+                    src="{{ get_product_image(product.product_image) }}"
+                    alt="{{ product.product_name }}"
+                    class="rm-detail-desktop-image"
+                >
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="rm-detail-desktop-content">
+
+            <div class="rm-detail-desktop-badges">
+
+                {% if product.product_is_featured %}
+                <span class="rm-detail-desktop-featured">⭐ Featured</span>
+                {% endif %}
+
+                {% if product.product_is_launching %}
+                <span class="rm-detail-desktop-launching">🚀 Launching Soon</span>
+                {% endif %}
+
+                {% if product.product_is_seasonal %}
+                <span class="rm-detail-desktop-seasonal">🌿 Seasonal</span>
+                {% endif %}
+
+                {% if product.product_is_festival %}
+                <span class="rm-detail-desktop-festival">🎉 Festival Special</span>
+                {% endif %}
+
+            </div>
+
+            <div class="rm-detail-desktop-tag">
+                {{ product.product_tags }}
+            </div>
+
+            <h1 class="rm-detail-desktop-title">
+                {{ product.product_name }}
+            </h1>
+
+            <div class="rm-detail-desktop-price-card">
+
+                <div class="rm-detail-desktop-price">
+                    ₹{{ product.product_price }}
+                </div>
+
+                <div class="rm-detail-desktop-unit">
+                    {{ product.product_unit }}
+                </div>
+
+            </div>
+
+            <div class="rm-detail-desktop-review-card">
+
+                <div class="rm-detail-desktop-review-inner">
+
+                    {% if review_count > 0 %}
+
+                    <div class="rm-detail-desktop-rating">
+                        ⭐ {{ average_rating }}
+                    </div>
+
+                    <div class="rm-detail-desktop-review-stats">
+
+                        {% if written_reviews > 0 %}
+                        <span>💬 {{ written_reviews }} Memories</span>
+                        {% endif %}
+
+                        {% if rating_only_reviews > 0 %}
+                        <span>⭐ {{ rating_only_reviews }} Ratings</span>
+                        {% endif %}
+
+                    </div>
+
+                    <a
+                        href="{{ url_for('review.product_reviews',
+                        product_name=product.product_name) }}"
+                        class="rm-detail-desktop-review-btn">
+
+                        View Reviews →
+
+                    </a>
+
+                    {% else %}
+
+                    <div class="rm-detail-desktop-no-review">
+                        No reviews yet 🌷
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="rm-detail-desktop-actions">
+
+                <button
+                    class="rm-detail-desktop-favourite-btn {% if is_favourite %}active{% endif %}"
+                    id="desktopFavouriteBtn"
+                    onclick="toggleFavourite(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    ❤️ Favourite
+
+                </button>
+
+                <button
+                    class="rm-detail-desktop-cart-btn"
+                    onclick="addToCart(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    🛒 Add To Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="rm-detail-desktop-description-section">
+
+        <div class="rm-detail-desktop-description-card">
+
+            <div class="rm-detail-desktop-description-heading">
+                About This Dessert
+            </div>
+
+            <div class="rm-detail-desktop-description-text">
+                {{ product.product_description }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- RM DETAILS MOBILE V2 -->
+    <!-- ===================================================== -->
+
+    <div class="rm-detail-mobile-v2">
+
+        <div class="rm-detail-mobile-top">
+
+            <div class="rm-detail-mobile-image-side">
+                IMAGE
+                FEATURED BADGE
+            </div>
+
+            <div class="rm-detail-mobile-content-side">
+                TITLE
+                PRICE
+                REVIEWS
+                BUTTONS
+            </div>
+
+        </div>
+
+        <div class="rm-detail-mobile-description-section">
+            DESCRIPTION
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function showToast(message){
+
+    const toast = document.createElement("div");
+    toast.className = "custom-toast";
+    toast.innerText = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
+
+    }, 2500);
+}
+
+async function toggleFavourite(productId, isLoggedIn){
+
+    if(!isLoggedIn){
+
+        showToast("Login to add Favourites..❤️");
+
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 1400);
+
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            `/toggle_favourite/${productId}`,
+            { method:"POST" }
+        );
+
+        const data = await response.json();
+
+        const favouriteBtn =
+            document.getElementById("desktopFavouriteBtn");
+
+        if(data.action === "added"){
+
+            favouriteBtn.classList.add("active");
+            showToast("Added to favourites ❤️");
+
+        }else{
+
+            favouriteBtn.classList.remove("active");
+            showToast("Removed from favourites 💔");
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+        showToast("Something went wrong 😭");
+
+    }
+}
+
+async function addToCart(productId, isLoggedIn){
+
+    if(!isLoggedIn){
+
+        showToast("Login to add items in cart 😭");
+
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 1400);
+
+        return;
+    }
+
+    const response = await fetch(
+        `/add_to_cart/${productId}`,
+        { method: "POST" }
+    );
+
+    const data = await response.json();
+
+    if(data.success){
+        showToast(data.message);
+    }else{
+        showToast("Something went wrong 😭");
+    }
+}
+
+</script>
+
+{% endblock %}
