@@ -35,7 +35,7 @@
 
             <div class="rm-detail-desktop-badges">
 
-                {% if product.product_is_featured %}
+                {% if product.product_id in favourite_ids %}
                 <span class="rm-detail-desktop-featured">⭐ Featured</span>
                 {% endif %}
 
