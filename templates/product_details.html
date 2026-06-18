@@ -130,16 +130,37 @@
 
                 </button>
 
-                <button
-                    class="rm-detail-desktop-cart-btn"
-                    onclick="addToCart(
-                        {{ product.product_id }},
-                        {{ 'true' if current_user.is_authenticated else 'false' }}
-                    )">
+                {% if product.product_is_launching %}
 
-                    🛒 Add To Cart
+               <button
+                  class="rm-detail-desktop-notify-btn"
+                  onclick="notifyLaunch(
+                     '{{ product.product_name }}'
+                  )"
+               >
 
-                </button>
+                  🔔 Notify Me
+
+               </button>
+
+               {% else %}
+
+               <button
+
+                  class="rm-detail-desktop-cart-btn"
+
+                  onclick="addToCart(
+                     {{ product.product_id }},
+                  {{ 'true' if current_user.is_authenticated else 'false' }}
+                  )"
+
+               >
+
+                  🛒 Add To Cart
+
+               </button>
+
+               {% endif %}
 
             </div>
 
@@ -288,6 +309,16 @@ async function addToCart(productId, isLoggedIn){
     }else{
         showToast("Something went wrong 😭");
     }
+}
+
+function notifyLaunch(productName){
+
+    showToast(
+
+        `${productName} is launching soon 🚀 We'll notify you when it's available!`
+
+    );
+
 }
 
 </script>
