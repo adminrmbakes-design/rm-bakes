@@ -2154,7 +2154,7 @@ function flyToCart(
             "show"
         );
 
-    }, 4400);
+    }, 850);
 
 
 
@@ -2223,12 +2223,14 @@ function flyToCart(
         "none";
 
 
-
     flyingImage.style.transition =
-
-        "all 4.4s cubic-bezier(0.22, 1, 0.36, 1)";
-
-
+        "left 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "top 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "width 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "height 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "opacity 0.25s ease 0.55s";
+  
 
     document.body.appendChild(
         flyingImage
@@ -2287,7 +2289,7 @@ function flyToCart(
             "pulse"
         );
 
-    }, 4400);
+    }, 850);
 
 }
 
