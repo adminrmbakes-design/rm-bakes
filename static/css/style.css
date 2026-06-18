@@ -1428,7 +1428,7 @@ small {
 
 }
 
-.mobile-top-row{
+.mobile-header-row{
 
     display:flex;
 
@@ -1533,9 +1533,9 @@ small {
 
 }
 
-.mobile-view-action,
-.mobile-cart-action,
-.mobile-notify-action{
+.mobile-view-btn,
+.mobile-cart-btn,
+.mobile-notify-btn{
 
     flex:1;
 
@@ -1546,12 +1546,12 @@ small {
     font-size:.85rem;
 
 }
-   
+}
+
+
 /* =====================================
    PRODUCT CARD VISIBILITY
 ===================================== */
-
-/* Desktop Default */
 
 .desktop-dessert-card{
     display:flex;
@@ -1561,8 +1561,6 @@ small {
     display:none;
 }
 
-/* Mobile */
-
 @media (max-width:768px){
 
     .desktop-dessert-card{
@@ -1570,7 +1568,7 @@ small {
     }
 
     .mobile-dessert-card{
-        display:block;
+        display:flex;
     }
 
 }
