@@ -1405,16 +1405,14 @@ small {
 
 /* IMAGE */
 
-.mobile-dessert-image-wrapper{
-
-    position:relative;
-
-    flex-shrink:0;
-
-    width:120px;
-
-   
-
+.mobile-dessert-image-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 120px;
+    display: flex;           /* ADD THIS */
+    flex-direction: column;  /* ADD THIS */
+    gap: 8px;                /* ADD THIS — space between tag and image */
+    align-items: flex-start; /* ADD THIS */
 }
 
 .mobile-dessert-image{
@@ -1499,19 +1497,19 @@ small {
 
 .mobile-product-tags{
 
-    position:absolute;
+    position:static;
 
-    top:-34px;
+    top:unset;
 
-    left:0;
+    left:unset;
 
     z-index:20;
 
-    max-width:160px;
+    max-width:120px;
 
-    min-height:32px;
+    min-height:28px;
 
-    padding:6px 12px;
+    padding:5px 10px;
 
     display:flex;
 
