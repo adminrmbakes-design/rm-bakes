@@ -156,7 +156,8 @@
         id="favouriteBtn"
 
         onclick="toggleFavourite(
-            {{ product.product_id }}
+            {{ product.product_id }},
+            {{ 'true' if current_user.is_authenticated else 'false' }}
         )"
 
     >
@@ -171,13 +172,16 @@
         <div class="mt-4 d-flex gap-3">
 
             <button
-               class="add-cart-btn"
-               onclick="toggleFavourite({{ product.product_id }}, {{ 'true' if current_user.is_authenticated else 'false' }})"
-            >
+    class="add-cart-btn"
+    onclick="addToCart(
+        {{ product.product_id }},
+        {{ 'true' if current_user.is_authenticated else 'false' }}
+    )"
+>
 
-               Add to Cart 🛒
+    Add to Cart 🛒
 
-            </button>
+</button>
 
        
 
@@ -364,16 +368,31 @@ function showToast(message){
 }
 
 
-async function toggleFavourite(productId, isLoggedIn) {
-   if (!isLoggedIn) {
-      showToast("Login to add Favourites..❤️");
-      setTimeout(() => { window.location.href = "/login"; }, 1400);
-      return;  // ← never reaches fetch, so catch never fires
-   }
-   
-   try {
-      const response =
-         await fetch(
+async function toggleFavourite(
+    productId,
+    isLoggedIn
+){
+
+    if(!isLoggedIn){
+
+        showToast(
+            "Login to add Favourites..❤️"
+        );
+
+        setTimeout(() => {
+
+            window.location.href =
+                "/login";
+
+        }, 1400);
+
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
 
                 `/toggle_favourite/${productId}`,
 
@@ -383,46 +402,51 @@ async function toggleFavourite(productId, isLoggedIn) {
 
             );
 
-      const data =
-         await response.json();
-
-      const favouriteBtn =
-         document.getElementById(
-            "favouriteBtn"
-         );
 
 
-      if(data.action === "added"){
+        const data =
+            await response.json();
 
-         favouriteBtn.classList.add(
-            "active"
-         );
 
-         showToast(
-            "Added to favourites ❤️"
-         );
 
-      }else{
+        const favouriteBtn =
+            document.getElementById(
+                "favouriteBtn"
+            );
 
-         favouriteBtn.classList.remove(
-            "active"
-         );
 
-         showToast(
-            "Removed from favourites 💔"
-         );
 
-      }
+        if(data.action === "added"){
 
-   }catch(error){
+            favouriteBtn.classList.add(
+                "active"
+            );
 
-      console.log(error);
+            showToast(
+                "Added to favourites ❤️"
+            );
 
-      showToast(
-         "Something went wrong"
-      );
+        }else{
 
-   }
+            favouriteBtn.classList.remove(
+                "active"
+            );
+
+            showToast(
+                "Removed from favourites 💔"
+            );
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showToast(
+            "Something went wrong 😭"
+        );
+
+    }
 
 }
    
