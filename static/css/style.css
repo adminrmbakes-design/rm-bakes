@@ -1377,6 +1377,8 @@ small {
 
     display:flex;
 
+    position:relative;
+
     align-items:center;
 
     gap:14px;
@@ -1431,9 +1433,11 @@ small {
 
     position:absolute;
 
-    top:8px;
+    bottom:8px;
 
     left:8px;
+
+    top:auto;
 
     z-index:5;
 
@@ -1445,11 +1449,8 @@ small {
 
     font-weight:800;
 
-    color:white;
-
-    backdrop-filter:blur(10px);
 }
-
+   
 .mobile-launch-chip{
 
     background:
@@ -1493,11 +1494,19 @@ small {
 
 .mobile-product-tags{
 
+    position:absolute;
+
+    top:16px;
+
+    left:16px;
+
+    z-index:15;
+
     display:inline-flex;
 
     align-items:center;
 
-    padding:5px 12px;
+    padding:6px 14px;
 
     border-radius:999px;
 
@@ -1509,14 +1518,13 @@ small {
 
     color:#8fffaa;
 
-    font-size:.7rem;
+    font-size:.72rem;
 
     font-weight:700;
 
-    margin-bottom:8px;
-
     box-shadow:
-    0 0 15px rgba(34,197,94,.15);
+    0 0 15px rgba(34,197,94,.18);
+
 }
 
 /* FEATURED */
@@ -1622,7 +1630,11 @@ small {
 
 .mobile-view-btn{
 
-    padding:10px 16px;
+    padding:8px 14px;
+
+    font-size:.78rem;
+
+    min-height:42px;
 
     border-radius:14px;
 
@@ -1634,7 +1646,7 @@ small {
 
     color:#7aeaff;
 
-    font-weight:700;
+    font-weight:650;
 
     text-decoration:none;
 }
@@ -1643,9 +1655,13 @@ small {
 
 .mobile-cart-btn{
 
+    font-size:.78rem;
+
+    min-height:42px;
+
     border:none;
 
-    padding:10px 16px;
+    padding:8px 14px;
 
     border-radius:14px;
 
@@ -1658,9 +1674,7 @@ small {
 
     color:white;
 
-    font-weight:800;
-
-    font-size:.82rem;
+    font-weight:700;
 
     box-shadow:
     0 0 20px rgba(255,180,90,.22);
@@ -1670,9 +1684,13 @@ small {
 
 .mobile-notify-btn{
 
+    font-size:.78rem;
+
+    min-height:42px;
+
     border:none;
 
-    padding:10px 16px;
+    padding:8px 14px;
 
     border-radius:14px;
 
@@ -1685,9 +1703,7 @@ small {
 
     color:white;
 
-    font-weight:800;
-
-    font-size:.82rem;
+    font-weight:700;
 
     box-shadow:
     0 0 20px rgba(255,190,0,.22);
