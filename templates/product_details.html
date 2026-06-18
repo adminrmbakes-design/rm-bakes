@@ -28,9 +28,193 @@
 
        {% endif %}
 
+    </div> <!-- IMAGE WRAPPER -->
+
+<!-- ===================================================== -->
+<!-- RM DETAILS DESKTOP V2 -->
+<!-- ===================================================== -->
+
+<div class="rm-detail-desktop-v2">
+
+    <!-- RIGHT SIDE CONTENT -->
+
+    <div class="rm-detail-desktop-content">
+
+        <!-- MARKETING BADGES -->
+
+        <div class="rm-detail-desktop-badges">
+
+            {% if product.product_is_featured %}
+            <span class="rm-detail-desktop-featured">
+                ⭐ Featured
+            </span>
+            {% endif %}
+
+            {% if product.product_is_launching %}
+            <span class="rm-detail-desktop-launching">
+                🚀 Launching Soon
+            </span>
+            {% endif %}
+
+            {% if product.product_is_seasonal %}
+            <span class="rm-detail-desktop-seasonal">
+                🌿 Seasonal
+            </span>
+            {% endif %}
+
+            {% if product.product_is_festival %}
+            <span class="rm-detail-desktop-festival">
+                🎉 Festival Special
+            </span>
+            {% endif %}
+
+        </div>
+
+        <!-- PRODUCT TAG -->
+
+        <div class="rm-detail-desktop-tag">
+
+            {{ product.product_tags }}
+
+        </div>
+
+        <!-- PRODUCT TITLE -->
+
+        <h1 class="rm-detail-desktop-title">
+
+            {{ product.product_name }}
+
+        </h1>
+
+        <!-- PRICE -->
+
+        <div class="rm-detail-desktop-price-card">
+
+            <div class="rm-detail-desktop-price">
+
+                ₹{{ product.product_price }}
+
+            </div>
+
+            <div class="rm-detail-desktop-unit">
+
+                {{ product.product_unit }}
+
+            </div>
+
+        </div>
+
+        <!-- REVIEWS -->
+
+        <div class="rm-detail-desktop-review-card">
+
+            <div class="rm-detail-desktop-review-inner">
+
+               {% if review_count > 0 %}
+
+               <div class="rm-detail-desktop-rating">
+
+                  ⭐ {{ average_rating }}
+
+               </div>
+
+               <div class="rm-detail-desktop-review-stats">
+
+                  {% if written_reviews > 0 %}
+                  <span>
+                     💬 {{ written_reviews }} Memories
+                  </span>
+                  {% endif %}
+
+                  {% if rating_only_reviews > 0 %}
+                  <span>
+                     ⭐ {{ rating_only_reviews }} Ratings
+                  </span>
+                  {% endif %}
+
+               </div>
+
+               <a
+                  href="{{ url_for(
+                  'review.product_reviews',
+                  product_name=product.product_name
+
+                  ) }}"
+                  class="rm-detail-desktop-review-btn"
+
+               >
+
+                  View Reviews →
+
+               </a>
+
+               {% else %}
+
+               <div class="rm-detail-desktop-no-review">
+
+                  No reviews yet 🌷
+
+               </div>
+
+               {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+
+        <div class="rm-detail-desktop-actions">
+
+            <button
+
+               class="rm-detail-desktop-favourite-btn
+
+               {% if is_favourite %}
+               active
+               {% endif %}"
+
+               id="favouriteBtn"
+
+               onclick="toggleFavourite(
+                  {{ product.product_id }},
+               {{ 'true' if current_user.is_authenticated else 'false' }}
+               )"
+
+          >
+
+               ❤️ Favourite
+
+            </button>
+
+           <button
+
+              class="rm-detail-desktop-cart-btn"
+
+              onclick="addToCart(
+                 {{ product.product_id }},
+              {{ 'true' if current_user.is_authenticated else 'false' }}
+              )"
+
+            >
+
+              🛒 Add To Cart
+
+           </button>
+
+        </div>
+
     </div>
 
+</div>
 
+<!-- ===================================================== -->
+<!-- RM DETAILS MOBILE V2 -->
+<!-- ===================================================== -->
+
+<div class="rm-detail-mobile-v2">
+
+</div>
 </div> <!-- CONTAINER END -->
 
 
