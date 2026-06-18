@@ -2197,3 +2197,467 @@ small {
     background: linear-gradient(90deg, transparent, rgba(255, 190, 120, 0.85), transparent);
     box-shadow: 0 0 18px rgba(255, 180, 120, 0.35), 0 0 35px rgba(255, 140, 80, 0.15);
 }
+
+
+/* =====================================================
+   RM PRODUCT DETAILS DESKTOP V2
+===================================================== */
+
+.rm-detail-page-v2{
+    width:min(1550px,95vw);
+    margin:40px auto 80px;
+}
+
+/* LAYOUT */
+
+.rm-detail-desktop-v2{
+    display:flex;
+    gap:50px;
+    align-items:flex-start;
+}
+
+.rm-detail-desktop-image-column{
+    flex:1.05;
+}
+
+.rm-detail-desktop-content{
+    flex:1;
+}
+
+/* IMAGE CARD */
+
+.rm-detail-desktop-image-card{
+    overflow:hidden;
+    border-radius:34px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.02)
+    );
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.30),
+    0 0 45px rgba(255,180,120,.08);
+}
+
+.rm-detail-desktop-image{
+    width:100%;
+    display:block;
+    object-fit:cover;
+    transition:.7s ease;
+}
+
+.rm-detail-desktop-image-card:hover
+.rm-detail-desktop-image{
+    transform:scale(1.04);
+}
+
+/* BADGES */
+
+.rm-detail-desktop-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+}
+
+.rm-detail-desktop-featured,
+.rm-detail-desktop-launching,
+.rm-detail-desktop-seasonal,
+.rm-detail-desktop-festival{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    font-size:.82rem;
+    font-weight:800;
+
+    letter-spacing:.4px;
+}
+
+/* FEATURED */
+
+.rm-detail-desktop-featured{
+
+    color:#2a1700;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffe18b,
+        #ffbc42
+    );
+
+    box-shadow:
+    0 0 24px rgba(255,190,80,.28);
+}
+
+/* LAUNCHING */
+
+.rm-detail-desktop-launching{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+
+    box-shadow:
+    0 0 24px rgba(255,170,0,.25);
+}
+
+/* SEASONAL */
+
+.rm-detail-desktop-seasonal{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1aa760,
+        #3ddc84
+    );
+
+    box-shadow:
+    0 0 24px rgba(61,220,132,.22);
+}
+
+/* FESTIVAL */
+
+.rm-detail-desktop-festival{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff2f92,
+        #ff73c6
+    );
+
+    box-shadow:
+    0 0 24px rgba(255,90,180,.25);
+}
+
+/* PRODUCT TAG */
+
+.rm-detail-desktop-tag{
+
+    width:fit-content;
+
+    margin-bottom:20px;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:
+    rgba(87,214,193,.10);
+
+    border:
+    1px solid rgba(87,214,193,.20);
+
+    color:#7ff8e5;
+
+    font-size:.82rem;
+
+    font-weight:700;
+
+    backdrop-filter:blur(10px);
+}
+
+/* TITLE */
+
+.rm-detail-desktop-title{
+
+    font-family:
+    "Cormorant Garamond",
+    serif;
+
+    font-size:4.4rem;
+
+    line-height:.92;
+
+    font-weight:700;
+
+    letter-spacing:-1px;
+
+    color:#fff5e9;
+
+    margin-bottom:20px;
+
+    text-shadow:
+    0 0 12px rgba(255,200,120,.15),
+    0 0 25px rgba(255,170,90,.08);
+}
+
+/* PRICE */
+
+.rm-detail-desktop-price-card{
+
+    display:inline-flex;
+
+    flex-direction:column;
+
+    padding:18px 24px;
+
+    border-radius:24px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.18);
+}
+
+.rm-detail-desktop-price{
+
+    font-size:3rem;
+
+    font-weight:900;
+
+    color:#ffd089;
+
+    line-height:1;
+}
+
+.rm-detail-desktop-unit{
+
+    margin-top:6px;
+
+    color:#bdaea2;
+
+    font-size:1rem;
+}
+
+/* REVIEW CARD */
+
+.rm-detail-desktop-review-card{
+
+    margin-top:26px;
+
+    padding:22px;
+
+    border-radius:28px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(18px);
+}
+
+.rm-detail-desktop-rating{
+
+    font-size:1.4rem;
+
+    font-weight:800;
+
+    color:#ffd76b;
+
+    margin-bottom:12px;
+}
+
+.rm-detail-desktop-review-stats{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+
+    margin-bottom:16px;
+
+    color:#e5d7cb;
+}
+
+.rm-detail-desktop-review-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:12px 20px;
+
+    border-radius:16px;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-weight:700;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7fa8,
+        #ffc986
+    );
+
+    box-shadow:
+    0 0 20px rgba(255,180,120,.20);
+
+    transition:.3s ease;
+}
+
+.rm-detail-desktop-review-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+/* ACTIONS */
+
+.rm-detail-desktop-actions{
+
+    display:flex;
+
+    gap:16px;
+
+    margin-top:28px;
+}
+
+.rm-detail-desktop-favourite-btn,
+.rm-detail-desktop-cart-btn{
+
+    border:none;
+
+    cursor:pointer;
+
+    min-height:62px;
+
+    padding:0 28px;
+
+    border-radius:22px;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    transition:.35s ease;
+}
+
+/* FAVOURITE */
+
+.rm-detail-desktop-favourite-btn{
+
+    color:white;
+
+    background:
+    rgba(255,255,255,.08);
+
+    border:
+    1px solid rgba(255,255,255,.10);
+
+    backdrop-filter:blur(12px);
+}
+
+.rm-detail-desktop-favourite-btn.active{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff296b,
+        #ff7fb5
+    );
+
+    box-shadow:
+    0 0 28px rgba(255,60,120,.30);
+}
+
+/* CART */
+
+.rm-detail-desktop-cart-btn{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9b46,
+        #ffc56f
+    );
+
+    box-shadow:
+    0 0 30px rgba(255,180,90,.20);
+}
+
+.rm-detail-desktop-favourite-btn:hover,
+.rm-detail-desktop-cart-btn:hover{
+
+    transform:
+    translateY(-3px);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.25);
+}
+
+/* DESCRIPTION */
+
+.rm-detail-desktop-description-section{
+
+    margin-top:45px;
+}
+
+.rm-detail-desktop-description-card{
+
+    padding:34px;
+
+    border-radius:34px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(18px);
+}
+
+.rm-detail-desktop-description-heading{
+
+    font-size:1.1rem;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    color:#ffd089;
+
+    margin-bottom:18px;
+}
+
+.rm-detail-desktop-description-text{
+
+    color:#d9c9bc;
+
+    line-height:1.9;
+
+    font-size:1.02rem;
+}
