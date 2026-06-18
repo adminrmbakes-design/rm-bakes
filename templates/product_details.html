@@ -9,26 +9,6 @@
 
 </a>
 
-<div class="container
-   product-detail-page">
-
-    <!-- IMAGE -->
-
-    <div class="product-details-image-wrapper">
-
-       {% if product.product_image %}
-
-       <img
-          src="{{ get_product_image(product.product_image) }}"
-          alt="{{ product.product_name }}"
-          class="product-details-image"
-         >
-
-       {% else %}
-
-       {% endif %}
-
-    </div> <!-- IMAGE WRAPPER -->
 
 <!-- ===================================================== -->
 <!-- RM DETAILS DESKTOP V2 -->
@@ -36,12 +16,30 @@
 
 <div class="rm-detail-desktop-v2">
 
-    <!-- RIGHT SIDE CONTENT -->
+    <!-- IMAGE COLUMN -->
+
+    <div class="rm-detail-desktop-image-column">
+
+        <div class="rm-detail-desktop-image-card">
+
+            {% if product.product_image %}
+
+            <img
+                src="{{ get_product_image(product.product_image) }}"
+                alt="{{ product.product_name }}"
+                class="rm-detail-desktop-image"
+            >
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- CONTENT COLUMN -->
 
     <div class="rm-detail-desktop-content">
-
-        <!-- MARKETING BADGES -->
-
+   
         <div class="rm-detail-desktop-badges">
 
             {% if product.product_is_featured %}
@@ -208,161 +206,75 @@
 
 </div>
 
+</div>
+
+</div>
+
+<div class="rm-detail-desktop-description-section">
+
+    <div class="rm-detail-desktop-description-card">
+
+        <div class="rm-detail-desktop-description-heading">
+
+            About This Dessert
+
+        </div>
+
+        <div class="rm-detail-desktop-description-text">
+
+            {{ product.product_description }}
+
+        </div>
+
+    </div>
+
+</div>
+
 <!-- ===================================================== -->
 <!-- RM DETAILS MOBILE V2 -->
 <!-- ===================================================== -->
 
 <div class="rm-detail-mobile-v2">
 
+   <div class="rm-detail-mobile-top">
+
+      <div class="rm-detail-mobile-image-side">
+
+    IMAGE
+
+    FEATURED BADGE
+
+      </div>
+      
+      <div class="rm-detail-mobile-content-side">
+
+        TITLE
+
+        PRICE
+
+        REVIEWS
+
+        BUTTONS
+
+      </div>
+
+   </div>
+
+   <div class="rm-detail-mobile-description-section">
+
+      DESCRIPTION
+
+   </div>
+
 </div>
-</div> <!-- CONTAINER END -->
+</div> <!-- V2 FINAL CLOSE -->
 
 
   
 
    
    
-   <style>
 
-.price-favourite-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:20px;
-
-}
-
-
-
-.favourite-btn-detail{
-
-    width:75px;
-
-    height:75px;
-
-    border:none;
-
-    border-radius:24px;
-
-    font-size:32px;
-
-    cursor:pointer;
-
-    background:
-
-        rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(18px);
-
-    transition:0.45s ease;
-
-    box-shadow:
-
-        0 0 22px rgba(255,0,100,0.12);
-
-}
-
-
-
-.favourite-btn-detail:hover{
-
-    transform:
-        scale(1.08)
-        rotate(-6deg);
-
-}
-
-
-
-.favourite-btn-detail.active{
-
-    background:
-
-        linear-gradient(
-            135deg,
-            #ff004c,
-            #ff66a3
-        );
-
-    box-shadow:
-
-        0 0 35px rgba(255,0,120,0.65);
-
-}
-
-
-
-.favourite-btn-detail:active{
-
-    transform:scale(0.92);
-
-}
-
-.review-summary{
-
-    margin-top:25px;
-
-    margin-bottom:25px;
-
-}
-
-.review-rating{
-
-    font-size:1.2rem;
-
-    font-weight:700;
-
-    color:#ffd700;
-
-    margin-bottom:12px;
-
-}
-
-.view-reviews-btn{
-
-    display:inline-block;
-
-    padding:12px 22px;
-
-    border-radius:18px;
-
-    text-decoration:none;
-
-    color:white;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            #ff77aa,
-            #ffcc88
-        );
-
-    box-shadow:
-
-        0 0 25px rgba(
-            255,
-            180,
-            120,
-            0.4
-        );
-
-    transition:0.35s ease;
-
-}
-
-.view-reviews-btn:hover{
-
-    transform:translateY(-3px);
-
-}
-
-</style>
-   
    
 
 <script>
