@@ -1484,6 +1484,21 @@ small {
     );
 }
 
+/* FAVOURITE HEART */
+
+.mobile-favourite-heart{
+    position:absolute;
+    top:8px;
+    right:8px;
+    bottom:auto;
+    left:auto;
+    font-size:1.1rem;
+    z-index:10;
+    text-shadow:
+        0 0 8px #ff4da6,
+        0 0 18px #ff4da6;
+}
+
 /* CONTENT */
 
 .mobile-content-area{
