@@ -3447,11 +3447,37 @@ small {
    RM CART DESKTOP V2
 ===================================================== */
 
-.rm-cart-page-v2{
+.rm-cart-header-v2{
 
-    width:min(1600px,95vw);
+    text-align:center;
 
-    margin:40px auto 80px;
+    margin-bottom:55px;
+
+}
+
+.rm-cart-header-v2 .main-title{
+
+    font-family:
+    "Cormorant Garamond",
+    serif;
+
+    font-size:4.5rem;
+
+    font-weight:700;
+
+    color:#fff4df;
+
+    margin-bottom:12px;
+
+}
+
+.rm-cart-header-v2 .cart-subtitle{
+
+    font-size:1.1rem;
+
+    color:#c8b8ab;
+
+    letter-spacing:.5px;
 
 }
 
@@ -3472,7 +3498,11 @@ small {
     grid-template-columns:
     repeat(3,minmax(0,1fr));
 
-    gap:28px;
+    gap:32px;
+
+    max-width:1450px;
+
+    margin:auto;
 
     align-items:start;
 
@@ -3483,6 +3513,10 @@ small {
 ===================================== */
 
 .rm-cart-desktop-card{
+
+    display:flex;
+
+    flex-direction:column;
 
     border-radius:34px;
 
@@ -3513,11 +3547,14 @@ small {
 
 }
 
+
 /* =====================================
    IMAGE
 ===================================== */
 
 .rm-cart-desktop-image-card{
+
+    height:280px;
 
     overflow:hidden;
 
@@ -3526,6 +3563,10 @@ small {
 .rm-cart-desktop-image{
 
     width:100%;
+
+    height:100%;
+
+    object-fit:cover;
 
     display:block;
 
@@ -3536,7 +3577,7 @@ small {
 .rm-cart-desktop-card:hover
 .rm-cart-desktop-image{
 
-    transform:scale(1.04);
+    transform:scale(1.05);
 
 }
 
@@ -3547,6 +3588,12 @@ small {
 .rm-cart-desktop-content{
 
     padding:24px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
 
 }
 
@@ -3584,15 +3631,15 @@ small {
     "Cormorant Garamond",
     serif;
 
-    font-size:2.2rem;
+    font-size:2rem;
 
-    line-height:1;
+    line-height:1.05;
 
     font-weight:700;
 
     color:#fff4df;
 
-    margin-bottom:18px;
+    margin:0;
 
 }
 
@@ -3604,17 +3651,15 @@ small {
 
     display:flex;
 
-    align-items:end;
+    align-items:flex-end;
 
-    gap:10px;
-
-    margin-bottom:20px;
+    gap:8px;
 
 }
 
 .rm-cart-desktop-price{
 
-    font-size:2rem;
+    font-size:2.2rem;
 
     font-weight:900;
 
@@ -3641,8 +3686,6 @@ small {
     align-items:center;
 
     gap:14px;
-
-    margin-bottom:20px;
 
 }
 
@@ -3694,9 +3737,7 @@ small {
 
 .rm-cart-desktop-item-total{
 
-    margin-bottom:20px;
-
-    font-size:1.05rem;
+    font-size:1.15rem;
 
     font-weight:800;
 
@@ -3716,7 +3757,7 @@ small {
 
     resize:none;
 
-    padding:14px;
+    padding:16px;
 
     border-radius:18px;
 
@@ -3727,8 +3768,6 @@ small {
     rgba(255,255,255,.03);
 
     color:white;
-
-    margin-bottom:14px;
 
 }
 
@@ -3770,6 +3809,18 @@ small {
 
 .rm-cart-desktop-save-note{
 
+    border:none;
+
+    cursor:pointer;
+
+    padding:14px 22px;
+
+    border-radius:16px;
+
+    font-weight:800;
+
+    color:#14211d;
+
     background:
     linear-gradient(
         135deg,
@@ -3777,11 +3828,21 @@ small {
         #7ff8e5
     );
 
-    color:#14211d;
-
 }
 
 .rm-cart-desktop-delete-note{
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:14px 22px;
+
+    border-radius:16px;
+
+    font-weight:800;
+
+    color:white;
 
     background:
     linear-gradient(
@@ -3804,11 +3865,11 @@ small {
 
     cursor:pointer;
 
-    min-height:56px;
+    min-height:58px;
 
     border-radius:18px;
 
-    font-size:.95rem;
+    font-size:1rem;
 
     font-weight:800;
 
@@ -3832,17 +3893,28 @@ small {
 
 }
 
+.rm-cart-desktop-remove:hover{
+
+    transform:
+    translateY(-2px);
+
+}
+
 /* =====================================
    SUMMARY
 ===================================== */
 
 .rm-cart-desktop-summary-card{
 
-    margin-top:40px;
+    margin:50px auto 0;
 
-    padding:30px;
+    max-width:700px;
+
+    padding:36px;
 
     border-radius:34px;
+
+    text-align:center;
 
     background:
     rgba(255,255,255,.04);
@@ -3852,8 +3924,6 @@ small {
 
     backdrop-filter:blur(18px);
 
-    text-align:center;
-
 }
 
 .rm-cart-desktop-summary-title{
@@ -3862,17 +3932,17 @@ small {
     "Cormorant Garamond",
     serif;
 
-    font-size:2rem;
+    font-size:2.2rem;
 
     color:#fff4df;
 
-    margin-bottom:12px;
+    margin-bottom:14px;
 
 }
 
 .rm-cart-desktop-grand-total{
 
-    font-size:2rem;
+    font-size:2.2rem;
 
     font-weight:900;
 
@@ -3890,9 +3960,9 @@ small {
 
     justify-content:center;
 
-    min-height:60px;
+    min-height:62px;
 
-    padding:0 32px;
+    padding:0 34px;
 
     border-radius:18px;
 
@@ -3908,9 +3978,6 @@ small {
         #ff9b46,
         #ffc56f
     );
-
-    box-shadow:
-    0 0 25px rgba(255,190,90,.18);
 
 }
 
