@@ -1963,6 +1963,19 @@ small {
     background: #d4a762;
 }
 
+/* ========================================
+   DEVICE VISIBILITY
+======================================== */
+
+.mobile-quick-actions {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+
 /* MOBILE */
 
 @media (max-width:992px) {
@@ -2035,17 +2048,6 @@ small {
     margin-top: 10px;
 }
 
-/* ========================================
-   DEVICE VISIBILITY
-======================================== */
-
-.mobile-quick-actions {
-    display: none;
-}
-
-.desktop-only {
-    display: block;
-}
 
 /* =====================================
    HOMEPAGE FEATURED PRODUCTS V2
