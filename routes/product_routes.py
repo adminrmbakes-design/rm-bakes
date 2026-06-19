@@ -340,15 +340,15 @@ def product_details(product_id):
 
         )
 
-    featured_product_ids = [
+    is_featured = (
 
-        slot.product_id
+        FeaturedProduct.query.filter_by(
+            product_id=product_id
+        ).first()
 
-        for slot in FeaturedProduct.query.filter(
-            FeaturedProduct.product_id.isnot(None)
-        ).all()
+        is not None
 
-    ]
+    )
 
   
 
@@ -368,8 +368,7 @@ def product_details(product_id):
 
         rating_only_reviews=rating_only_reviews,
 
-        featured_product_ids=featured_product_ids
-
+        is_featured=is_featured
     )
 
 
