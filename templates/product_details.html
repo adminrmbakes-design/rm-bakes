@@ -507,7 +507,7 @@ function flyToCart(){
     const mobileImage = document.querySelector(".rm-detail-mobile-image");
 
     const image =
-        (desktopImage && getComputedStyle(desktopImage).display !== "none")
+        (desktopImage && desktopImage.offsetParent !== null)
             ? desktopImage
             : mobileImage;
 
