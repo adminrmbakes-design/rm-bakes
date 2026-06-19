@@ -190,24 +190,190 @@
 
     <div class="rm-detail-mobile-v2">
 
-        <div class="rm-detail-mobile-top">
+    <div class="rm-detail-mobile-top">
 
-            <div class="rm-detail-mobile-image-side">
-                IMAGE
-                FEATURED BADGE
-            </div>
+        <!-- IMAGE -->
 
-            <div class="rm-detail-mobile-content-side">
-                TITLE
-                PRICE
-                REVIEWS
-                BUTTONS
+        <div class="rm-detail-mobile-image-side">
+
+            <div class="rm-detail-mobile-image-card">
+
+                {% if product.product_image %}
+                <img
+                    src="{{ get_product_image(product.product_image) }}"
+                    alt="{{ product.product_name }}"
+                    class="rm-detail-mobile-image"
+                >
+                {% endif %}
+
+                {% if is_featured %}
+                <span class="rm-detail-mobile-featured-overlay">
+                    ⭐ Featured
+                </span>
+                {% endif %}
+
             </div>
 
         </div>
 
-        <div class="rm-detail-mobile-description-section">
-            DESCRIPTION
+        <!-- CONTENT -->
+
+        <div class="rm-detail-mobile-content-side">
+
+            <!-- MARKETING CHIPS -->
+
+            <div class="rm-detail-mobile-marketing-row">
+
+                {% if product.product_is_launching %}
+                <span class="rm-detail-mobile-launching">
+                    🚀 Launching
+                </span>
+                {% endif %}
+
+                {% if product.product_is_seasonal %}
+                <span class="rm-detail-mobile-seasonal">
+                    🌿 Seasonal
+                </span>
+                {% endif %}
+
+                {% if product.product_is_festive %}
+                <span class="rm-detail-mobile-festival">
+                    🎉 Festival
+                </span>
+                {% endif %}
+
+            </div>
+
+            <!-- TAG -->
+
+            <div class="rm-detail-mobile-tag">
+
+                {{ product.product_tags }}
+
+            </div>
+
+            <!-- TITLE -->
+
+            <h1 class="rm-detail-mobile-title">
+
+                {{ product.product_name }}
+
+            </h1>
+
+            <!-- PRICE -->
+
+            <div class="rm-detail-mobile-price-card">
+
+                <div class="rm-detail-mobile-price">
+
+                    ₹{{ product.product_price }}
+
+                </div>
+
+                <div class="rm-detail-mobile-unit">
+
+                    {{ product.product_unit }}
+
+                </div>
+
+            </div>
+
+            <!-- REVIEWS -->
+
+            <div class="rm-detail-mobile-review-card">
+
+                {% if review_count > 0 %}
+
+                <div class="rm-detail-mobile-rating">
+
+                    ⭐ {{ average_rating }}
+
+                </div>
+
+                {% else %}
+
+                <div class="rm-detail-mobile-rating">
+
+                    No reviews yet 🌷
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="rm-detail-mobile-actions">
+
+                <button
+
+                    class="rm-detail-mobile-favourite-btn {% if is_favourite %}active{% endif %}"
+
+                    onclick="toggleFavourite(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    ❤️
+
+                </button>
+
+                {% if product.product_is_launching %}
+
+                <button
+
+                    class="rm-detail-mobile-notify-btn"
+
+                    onclick="notifyLaunch(
+                        '{{ product.product_name }}'
+                    )">
+
+                    🔔 Notify
+
+                </button>
+
+                {% else %}
+
+                <button
+
+                    class="rm-detail-mobile-cart-btn"
+
+                    onclick="addToCart(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    🛒 Cart
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+
+    <div class="rm-detail-mobile-description-section">
+
+        <div class="rm-detail-mobile-description-card">
+
+            <div class="rm-detail-mobile-description-heading">
+
+                About This Dessert
+
+            </div>
+
+            <div class="rm-detail-mobile-description-text">
+
+                {{ product.product_description }}
+
+            </div>
+
         </div>
 
     </div>
