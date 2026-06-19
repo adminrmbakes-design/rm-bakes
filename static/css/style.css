@@ -2726,3 +2726,517 @@ small {
 
     font-size:1.02rem;
 }
+
+/* =====================================================
+   RM PRODUCT DETAILS MOBILE V2
+===================================================== */
+
+.rm-detail-mobile-v2{
+    display:none;
+}
+
+/* MOBILE ONLY */
+
+@media (max-width:768px){
+
+/* PAGE */
+
+.rm-detail-page-v2{
+
+    width:min(100%,96vw);
+
+    margin:20px auto 120px;
+
+}
+
+/* HIDE DESKTOP */
+
+.rm-detail-desktop-v2,
+.rm-detail-desktop-description-section{
+
+    display:none;
+
+}
+
+/* MOBILE WRAPPER */
+
+.rm-detail-mobile-v2{
+
+    display:block;
+
+}
+
+/* TOP SECTION */
+
+.rm-detail-mobile-top{
+
+    display:flex;
+
+    gap:14px;
+
+    align-items:flex-start;
+
+}
+
+/* =====================================
+   IMAGE
+===================================== */
+
+.rm-detail-mobile-image-side{
+
+    width:145px;
+
+    flex-shrink:0;
+
+}
+
+.rm-detail-mobile-image-card{
+
+    position:relative;
+
+    width:100%;
+
+    overflow:hidden;
+
+    border-radius:24px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.02)
+    );
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.30);
+
+}
+
+.rm-detail-mobile-image{
+
+    width:100%;
+
+    display:block;
+
+    object-fit:cover;
+
+    transition:.5s ease;
+
+}
+
+.rm-detail-mobile-image-card:hover
+.rm-detail-mobile-image{
+
+    transform:scale(1.04);
+
+}
+
+/* FEATURED OVERLAY */
+
+.rm-detail-mobile-featured-overlay{
+
+    position:absolute;
+
+    top:8px;
+
+    left:8px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.65rem;
+
+    font-weight:800;
+
+    color:#2a1700;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffd76a,
+        #ffb700
+    );
+
+    box-shadow:
+    0 0 15px rgba(255,200,0,.35);
+
+}
+
+/* =====================================
+   CONTENT
+===================================== */
+
+.rm-detail-mobile-content-side{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+/* MARKETING ROW */
+
+.rm-detail-mobile-marketing-row{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:6px;
+
+    margin-bottom:8px;
+
+}
+
+.rm-detail-mobile-launching,
+.rm-detail-mobile-seasonal,
+.rm-detail-mobile-festival{
+
+    padding:5px 10px;
+
+    border-radius:999px;
+
+    font-size:.65rem;
+
+    font-weight:800;
+
+}
+
+/* LAUNCH */
+
+.rm-detail-mobile-launching{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+
+    color:white;
+
+}
+
+/* SEASON */
+
+.rm-detail-mobile-seasonal{
+
+    background:
+    linear-gradient(
+        135deg,
+        #1aa760,
+        #3ddc84
+    );
+
+    color:white;
+
+}
+
+/* FESTIVAL */
+
+.rm-detail-mobile-festival{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff2f92,
+        #ff73c6
+    );
+
+    color:white;
+
+}
+
+/* TAG */
+
+.rm-detail-mobile-tag{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:fit-content;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:
+    rgba(87,214,193,.10);
+
+    border:
+    1px solid rgba(87,214,193,.20);
+
+    color:#7ff8e5;
+
+    font-size:.68rem;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+/* TITLE */
+
+.rm-detail-mobile-title{
+
+    font-family:
+    "Cormorant Garamond",
+    serif;
+
+    font-size:2rem;
+
+    line-height:.95;
+
+    font-weight:700;
+
+    color:#fff4df;
+
+    margin-bottom:10px;
+
+    text-shadow:
+    0 0 10px rgba(255,200,120,.20);
+
+}
+
+/* =====================================
+   PRICE
+===================================== */
+
+.rm-detail-mobile-price-card{
+
+    display:inline-flex;
+
+    flex-direction:column;
+
+    margin-bottom:12px;
+
+}
+
+.rm-detail-mobile-price{
+
+    font-size:1.8rem;
+
+    font-weight:900;
+
+    color:#ffcf8d;
+
+    line-height:1;
+
+}
+
+.rm-detail-mobile-unit{
+
+    font-size:.85rem;
+
+    color:#c7b7ab;
+
+    margin-top:4px;
+
+}
+
+/* =====================================
+   REVIEW CARD
+===================================== */
+
+.rm-detail-mobile-review-card{
+
+    padding:10px 14px;
+
+    border-radius:16px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(12px);
+
+    margin-bottom:12px;
+
+}
+
+.rm-detail-mobile-rating{
+
+    color:#ffd76b;
+
+    font-weight:700;
+
+    font-size:.85rem;
+
+}
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.rm-detail-mobile-actions{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+.rm-detail-mobile-favourite-btn{
+
+    width:46px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:1rem;
+
+}
+
+.rm-detail-mobile-favourite-btn.active{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff296b,
+        #ff7fb5
+    );
+
+}
+
+.rm-detail-mobile-cart-btn,
+.rm-detail-mobile-notify-btn{
+
+    flex:1;
+
+    min-height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    font-size:.85rem;
+
+    font-weight:800;
+
+    color:white;
+
+}
+
+/* CART */
+
+.rm-detail-mobile-cart-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9b46,
+        #ffc56f
+    );
+
+}
+
+/* NOTIFY */
+
+.rm-detail-mobile-notify-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff7b00,
+        #ffb300
+    );
+
+}
+
+/* =====================================
+   DESCRIPTION
+===================================== */
+
+.rm-detail-mobile-description-section{
+
+    margin-top:18px;
+
+}
+
+.rm-detail-mobile-description-card{
+
+    padding:22px;
+
+    border-radius:24px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(16px);
+
+}
+
+.rm-detail-mobile-description-heading{
+
+    color:#ffd089;
+
+    font-size:.9rem;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    margin-bottom:12px;
+
+}
+
+.rm-detail-mobile-description-text{
+
+    color:#d9c9bc;
+
+    line-height:1.8;
+
+    font-size:.92rem;
+
+}
+
+}
+
+/* =====================================================
+   PRODUCT DETAILS VISIBILITY
+===================================================== */
+
+.rm-detail-desktop-v2,
+.rm-detail-desktop-description-section{
+    display:block;
+}
+
+.rm-detail-mobile-v2{
+    display:none;
+}
+
+@media(max-width:768px){
+
+    .rm-detail-desktop-v2,
+    .rm-detail-desktop-description-section{
+        display:none;
+    }
+
+    .rm-detail-mobile-v2{
+        display:block;
+    }
+
+}
