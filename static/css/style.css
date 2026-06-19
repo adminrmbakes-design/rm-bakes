@@ -2729,6 +2729,34 @@ small {
     font-size:1.02rem;
 }
 
+
+/* =====================================================
+   PRODUCT DETAILS VISIBILITY
+===================================================== */
+
+.rm-detail-desktop-v2,
+.rm-detail-desktop-description-section{
+    display:block;
+}
+
+.rm-detail-mobile-v2{
+    display:none;
+}
+
+@media (max-width:768px){
+
+    .rm-detail-desktop-v2,
+    .rm-detail-desktop-description-section{
+        display:none !important;
+    }
+
+    .rm-detail-mobile-v2{
+        display:block !important;
+    }
+
+}
+
+
 /* =====================================================
    RM PRODUCT DETAILS MOBILE V2
 ===================================================== */
@@ -3214,31 +3242,5 @@ small {
     font-size:.92rem;
 
 }
-
-}
-
-/* =====================================================
-   PRODUCT DETAILS VISIBILITY
-===================================================== */
-
-.rm-detail-desktop-v2,
-.rm-detail-desktop-description-section{
-    display:block;
-}
-
-.rm-detail-mobile-v2{
-    display:none;
-}
-
-@media(max-width:768px){
-
-    .rm-detail-desktop-v2,
-    .rm-detail-desktop-description-section{
-        display:none;
-    }
-
-    .rm-detail-mobile-v2{
-        display:block;
-    }
 
 }
