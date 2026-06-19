@@ -1,0 +1,598 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{{ url_for('product.products') }}"
+   class="floating-close-btn">
+    ×
+</a>
+
+<div
+    class="floating-cart-receiver"
+    id="floatingCartReceiver"
+>
+
+    🛒
+
+</div>
+
+<div class="rm-detail-page-v2">
+
+    <!-- ===================================================== -->
+    <!-- RM DETAILS DESKTOP V2 -->
+    <!-- ===================================================== -->
+
+    <div class="rm-detail-desktop-v2">
+
+        <div class="rm-detail-desktop-image-column">
+
+            <div class="rm-detail-desktop-image-card">
+
+                {% if product.product_image %}
+                <img
+                    src="{{ get_product_image(product.product_image) }}"
+                    alt="{{ product.product_name }}"
+                    class="rm-detail-desktop-image"
+                >
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="rm-detail-desktop-content">
+
+            <div class="rm-detail-desktop-badges">
+
+                {% if is_featured %}
+                <span class="rm-detail-desktop-featured">⭐ Featured</span>
+                {% endif %}
+
+                {% if product.product_is_launching %}
+                <span class="rm-detail-desktop-launching">🚀 Launching Soon</span>
+                {% endif %}
+
+                {% if product.product_is_seasonal %}
+                <span class="rm-detail-desktop-seasonal">🌿 Seasonal</span>
+                {% endif %}
+
+                {% if product.product_is_festive %}
+                <span class="rm-detail-desktop-festival">🎉 Festival Special</span>
+                {% endif %}
+
+            </div>
+
+            <div class="rm-detail-desktop-tag">
+                {{ product.product_tags }}
+            </div>
+
+            <h1 class="rm-detail-desktop-title">
+                {{ product.product_name }}
+            </h1>
+
+            <div class="rm-detail-desktop-price-card">
+
+                <div class="rm-detail-desktop-price">
+                    ₹{{ product.product_price }}
+                </div>
+
+                <div class="rm-detail-desktop-unit">
+                    {{ product.product_unit }}
+                </div>
+
+            </div>
+
+            <div class="rm-detail-desktop-review-card">
+
+                <div class="rm-detail-desktop-review-inner">
+
+                    {% if review_count > 0 %}
+
+                    <div class="rm-detail-desktop-rating">
+                        ⭐ {{ average_rating }}
+                    </div>
+
+                    <div class="rm-detail-desktop-review-stats">
+
+                        {% if written_reviews > 0 %}
+                        <span>💬 {{ written_reviews }} Memories</span>
+                        {% endif %}
+
+                        {% if rating_only_reviews > 0 %}
+                        <span>⭐ {{ rating_only_reviews }} Ratings</span>
+                        {% endif %}
+
+                    </div>
+
+                    <a
+                        href="{{ url_for('review.product_reviews',
+                        product_name=product.product_name) }}"
+                        class="rm-detail-desktop-review-btn">
+
+                        View Reviews →
+
+                    </a>
+
+                    {% else %}
+
+                    <div class="rm-detail-desktop-no-review">
+                        No reviews yet 🌷
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="rm-detail-desktop-actions">
+
+                <button
+                    class="rm-detail-desktop-favourite-btn {% if is_favourite %}active{% endif %}"
+                    id="desktopFavouriteBtn"
+                    onclick="toggleFavourite(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    ❤️ Favourite
+
+                </button>
+
+                {% if product.product_is_launching %}
+
+               <button
+                  class="rm-detail-desktop-notify-btn"
+                  onclick="notifyLaunch(
+                     '{{ product.product_name }}'
+                  )"
+               >
+
+                  🔔 Notify Me
+
+               </button>
+
+               {% else %}
+
+               <button
+
+                  class="rm-detail-desktop-cart-btn"
+
+                  onclick="addToCart(
+                     {{ product.product_id }},
+                  {{ 'true' if current_user.is_authenticated else 'false' }}
+                  )"
+
+               >
+
+                  🛒 Add To Cart
+
+               </button>
+
+               {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="rm-detail-desktop-description-section">
+
+        <div class="rm-detail-desktop-description-card">
+
+            <div class="rm-detail-desktop-description-heading">
+                About This Dessert
+            </div>
+
+            <div class="rm-detail-desktop-description-text">
+                {{ product.product_description }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- RM DETAILS MOBILE V2 -->
+    <!-- ===================================================== -->
+
+    <div class="rm-detail-mobile-v2">
+
+    <div class="rm-detail-mobile-top">
+
+        <!-- IMAGE -->
+
+        <div class="rm-detail-mobile-image-side">
+
+            <div class="rm-detail-mobile-image-card">
+
+                {% if product.product_image %}
+                <img
+                    src="{{ get_product_image(product.product_image) }}"
+                    alt="{{ product.product_name }}"
+                    class="rm-detail-mobile-image"
+                >
+                {% endif %}
+
+                {% if is_featured %}
+                <span class="rm-detail-mobile-featured-overlay">
+                    ⭐ Featured
+                </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+
+        <div class="rm-detail-mobile-content-side">
+
+            <!-- MARKETING CHIPS -->
+
+            <div class="rm-detail-mobile-marketing-row">
+
+                {% if product.product_is_launching %}
+                <span class="rm-detail-mobile-launching">
+                    🚀 Launching
+                </span>
+                {% endif %}
+
+                {% if product.product_is_seasonal %}
+                <span class="rm-detail-mobile-seasonal">
+                    🌿 Seasonal
+                </span>
+                {% endif %}
+
+                {% if product.product_is_festive %}
+                <span class="rm-detail-mobile-festival">
+                    🎉 Festival
+                </span>
+                {% endif %}
+
+            </div>
+
+            <!-- TAG -->
+
+            <div class="rm-detail-mobile-tag">
+
+                {{ product.product_tags }}
+
+            </div>
+
+            <!-- TITLE -->
+
+            <h1 class="rm-detail-mobile-title">
+
+                {{ product.product_name }}
+
+            </h1>
+
+            <!-- PRICE -->
+
+            <div class="rm-detail-mobile-price-card">
+
+                <div class="rm-detail-mobile-price">
+
+                    ₹{{ product.product_price }}
+
+                </div>
+
+                <div class="rm-detail-mobile-unit">
+
+                    {{ product.product_unit }}
+
+                </div>
+
+            </div>
+
+            <!-- REVIEWS -->
+
+            <div class="rm-detail-mobile-review-card">
+
+                {% if review_count > 0 %}
+
+                <div class="rm-detail-mobile-rating">
+
+                    ⭐ {{ average_rating }}
+
+                </div>
+
+                <div class="rm-detail-mobile-review-stats">
+
+                    {% if written_reviews > 0 %}
+                    <span>💬 {{ written_reviews }} Memories</span>
+                    {% endif %}
+
+                    {% if rating_only_reviews > 0 %}
+                    <span>⭐ {{ rating_only_reviews }} Ratings</span>
+                    {% endif %}
+
+                    <a
+                        href="{{ url_for('review.product_reviews',
+                        product_name=product.product_name) }}"
+                        class="rm-detail-mobile-review-link">
+
+                        View Reviews →
+
+                    </a>
+
+                </div>
+
+                {% else %}
+
+                <div class="rm-detail-mobile-rating">
+
+                    No reviews yet 🌷
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="rm-detail-mobile-actions">
+
+                <button
+
+                    class="rm-detail-mobile-favourite-btn {% if is_favourite %}active{% endif %}"
+
+                    id="mobileFavouriteBtn"
+
+                    onclick="toggleFavourite(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    ❤️
+
+                </button>
+
+                {% if product.product_is_launching %}
+
+                <button
+
+                    class="rm-detail-mobile-notify-btn"
+
+                    onclick="notifyLaunch(
+                        '{{ product.product_name }}'
+                    )">
+
+                    🔔 Notify
+
+                </button>
+
+                {% else %}
+
+                <button
+
+                    class="rm-detail-mobile-cart-btn"
+
+                    onclick="addToCart(
+                        {{ product.product_id }},
+                        {{ 'true' if current_user.is_authenticated else 'false' }}
+                    )">
+
+                    🛒 Cart
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+
+    <div class="rm-detail-mobile-description-section">
+
+        <div class="rm-detail-mobile-description-card">
+
+            <div class="rm-detail-mobile-description-heading">
+
+                About This Dessert
+
+            </div>
+
+            <div class="rm-detail-mobile-description-text">
+
+                {{ product.product_description }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function showToast(message){
+
+    const toast = document.createElement("div");
+    toast.className = "custom-toast";
+    toast.innerText = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
+
+    }, 2500);
+}
+
+async function toggleFavourite(productId, isLoggedIn){
+
+    if(!isLoggedIn){
+
+        showToast("Login to add Favourites..❤️");
+
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 1400);
+
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            `/toggle_favourite/${productId}`,
+            { method:"POST" }
+        );
+
+        const data = await response.json();
+
+        const favouriteBtns = [
+            document.getElementById("desktopFavouriteBtn"),
+            document.getElementById("mobileFavouriteBtn")
+        ].filter(Boolean);
+
+        if(data.action === "added"){
+
+            favouriteBtns.forEach(btn => btn.classList.add("active"));
+            showToast("Added to favourites ❤️");
+
+        }else{
+
+            favouriteBtns.forEach(btn => btn.classList.remove("active"));
+            showToast("Removed from favourites 💔");
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+        showToast("Something went wrong 😭");
+
+    }
+}
+
+/* =====================================
+   FLOATING FLY TO CART
+===================================== */
+
+function flyToCart(){
+
+    const floatingCart =
+        document.getElementById("floatingCartReceiver");
+
+    if(!floatingCart) return;
+
+    floatingCart.classList.add("show");
+
+    setTimeout(() => {
+        floatingCart.classList.remove("show");
+    }, 850);
+
+    const desktopImage = document.querySelector(".rm-detail-desktop-image");
+    const mobileImage = document.querySelector(".rm-detail-mobile-image");
+
+    const image =
+        (desktopImage && getComputedStyle(desktopImage).display !== "none")
+            ? desktopImage
+            : mobileImage;
+
+    if(!image) return;
+
+    const flyingImage = image.cloneNode(true);
+    const imageRect = image.getBoundingClientRect();
+    const cartRect = floatingCart.getBoundingClientRect();
+
+    flyingImage.style.position = "fixed";
+    flyingImage.style.left = imageRect.left + "px";
+    flyingImage.style.top = imageRect.top + "px";
+    flyingImage.style.width = imageRect.width + "px";
+    flyingImage.style.height = imageRect.height + "px";
+    flyingImage.style.borderRadius = "20px";
+    flyingImage.style.zIndex = "999999";
+    flyingImage.style.pointerEvents = "none";
+
+    flyingImage.style.transition =
+        "left 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "top 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "width 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "height 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), " +
+        "opacity 0.25s ease 0.55s";
+
+    document.body.appendChild(flyingImage);
+
+    setTimeout(() => {
+
+        flyingImage.style.left = cartRect.left + 18 + "px";
+        flyingImage.style.top = cartRect.top + 18 + "px";
+        flyingImage.style.width = "24px";
+        flyingImage.style.height = "24px";
+        flyingImage.style.opacity = "0";
+        flyingImage.style.transform = "scale(0.2) rotate(720deg)";
+
+        floatingCart.classList.add("pulse");
+
+    }, 40);
+
+    setTimeout(() => {
+
+        flyingImage.remove();
+        floatingCart.classList.remove("pulse");
+
+    }, 850);
+}
+
+async function addToCart(productId, isLoggedIn){
+
+    if(!isLoggedIn){
+
+        showToast("Login to add items in cart 😭");
+
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 1400);
+
+        return;
+    }
+
+    const response = await fetch(
+        `/add_to_cart/${productId}`,
+        { method: "POST" }
+    );
+
+    const data = await response.json();
+
+    if(data.success){
+        showToast(data.message);
+        flyToCart();
+    }else{
+        showToast("Something went wrong 😭");
+    }
+}
+
+function notifyLaunch(productName){
+
+    showToast(
+
+        `${productName} is launching soon 🚀 We'll notify you when it's available!`
+
+    );
+
+}
+
+</script>
+
+{% endblock %}
