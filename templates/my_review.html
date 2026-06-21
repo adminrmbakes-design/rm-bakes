@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="{{ url_for('order.my_orders') }}" class="detail-back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Orders</a>
+
+<div class="rm-page-hero">
+  <h1>My Review</h1>
+  <p>Your shared experience for Order #{{ order.order_number }}</p>
+</div>
+
+<div class="review-wrap">
+  <div class="review-card-display">
+
+    <!-- Stars -->
+    <div class="rv-rating-display">
+      {% for i in range(review.rating) %}⭐{% endfor %}
+    </div>
+    <div style="font-size:1rem;font-weight:700;color:var(--maroon);margin-bottom:16px;">{{ review.rating }}/5</div>
+
+    <!-- Review text -->
+    {% if review.review_text %}
+    <div class="rv-text">{{ review.review_text }}</div>
+    {% else %}
+    <div class="rv-text rv-rating-only">Rating only — no written review shared</div>
+    {% endif %}
+
+    <!-- Date -->
+    <div class="rv-date">Submitted {{ review.created_at.strftime('%d %b %Y · %I:%M %p') }}</div>
+
+    <!-- Admin Reply -->
+    {% if review.admin_reply %}
+    <div class="rv-admin-reply">
+      <div class="rv-reply-title"><i class="fa-solid fa-store"></i> Reply from RM Bakes</div>
+      <div class="rv-reply-text">{{ review.admin_reply }}</div>
+      {% if review.admin_reply_at %}
+      <div class="rv-reply-meta">Replied {{ review.admin_reply_at.strftime('%d %b %Y') }}</div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div style="margin-top:20px;padding:16px;background:var(--cream-2);border-radius:var(--radius-md);font-size:0.85rem;color:var(--text-muted);">
+      RM Bakes hasn't replied yet — usually within 24 hours.
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="rv-actions">
+      <a href="{{ url_for('review.edit_review', order_id=order.order_id) }}" class="btn btn-outline">Edit Review</a>
+      <button class="btn btn-danger" onclick="deleteReview({{ order.order_id }})">Delete Review</button>
+    </div>
+  </div>
+</div>
+
+<script>
+async function deleteReview(orderId) {
+  if (!confirm('Delete your review permanently?')) return;
+  const res = await fetch(`/delete-review/${orderId}`, {method:'POST'});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => window.location.href="{{ url_for('order.my_orders') }}", 1500);
+}
+</script>
+{% endblock %}

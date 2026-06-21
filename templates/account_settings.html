@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="rm-page-hero">
+  <h1>Account Settings</h1>
+  <p>Manage your RM Bakes account, security and recovery</p>
+</div>
+
+<div class="settings-grid">
+
+  <!-- CHANGE PASSWORD -->
+  <div class="rm-card section-card">
+    <div class="section-title">Change Password</div>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Update your account password. Strong passwords protect your account.</p>
+
+    <label class="rm-label">Current Password</label>
+    <div class="rm-input-group">
+      <input type="password" id="currentPassword" class="rm-input" placeholder="Current password">
+      <button type="button" class="rm-input-eye toggle-pw-btn" data-target="currentPassword"><i class="fa-regular fa-eye"></i></button>
+    </div>
+    <label class="rm-label">New Password</label>
+    <div class="rm-input-group">
+      <input type="password" id="newPassword" class="rm-input" placeholder="New password">
+      <button type="button" class="rm-input-eye toggle-pw-btn" data-target="newPassword"><i class="fa-regular fa-eye"></i></button>
+    </div>
+    <label class="rm-label">Confirm New Password</label>
+    <div class="rm-input-group">
+      <input type="password" id="confirmPassword" class="rm-input" placeholder="Confirm new password">
+      <button type="button" class="rm-input-eye toggle-pw-btn" data-target="confirmPassword"><i class="fa-regular fa-eye"></i></button>
+    </div>
+    <div class="pw-rules">Min 8 chars · uppercase · lowercase · number · special character</div>
+    <button class="btn btn-primary" id="changePasswordBtn">Update Password</button>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div class="rm-card section-card">
+    <div class="section-title">Forgot Password</div>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Can't remember your password? Recover your account securely using email OTP.</p>
+    <a href="{{ url_for('password_reset.forgot_password') }}" class="btn btn-amber">Recover via Email OTP</a>
+  </div>
+
+  <!-- DELETE ACCOUNT -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delete Account</div>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Your account will be soft deleted. You can recover it later using email OTP verification.</p>
+    <label class="rm-label">Enter Password to Confirm</label>
+    <div class="rm-input-group">
+      <input type="password" id="deletePassword" class="rm-input" placeholder="Your current password">
+      <button type="button" class="rm-input-eye toggle-pw-btn" data-target="deletePassword"><i class="fa-regular fa-eye"></i></button>
+    </div>
+    <button class="btn btn-danger" id="deleteAccountBtn">Delete My Account</button>
+  </div>
+</div>
+
+<script>
+// Toggle password visibility
+document.querySelectorAll('.toggle-pw-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const inp = document.getElementById(btn.dataset.target);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.innerHTML = inp.type === 'password' ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
+  });
+});
+
+// Change password
+document.getElementById('changePasswordBtn').addEventListener('click', async () => {
+  try {
+    const res = await fetch('/profile/change-password', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        current_password: document.getElementById('currentPassword').value,
+        new_password: document.getElementById('newPassword').value,
+        confirm_password: document.getElementById('confirmPassword').value
+      })
+    });
+    const data = await res.json();
+    showToast(data.message);
+    if (data.success) { document.getElementById('currentPassword').value=''; document.getElementById('newPassword').value=''; document.getElementById('confirmPassword').value=''; }
+  } catch { showToast('Something went wrong'); }
+});
+
+// Delete account
+document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+  if (!confirm('Delete your account? You can recover it later using email OTP.')) return;
+  try {
+    const res = await fetch('/profile/delete-account', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password: document.getElementById('deletePassword').value })
+    });
+    const data = await res.json();
+    showToast(data.message);
+    if (data.success) setTimeout(() => window.location.href='/', 1500);
+  } catch { showToast('Something went wrong'); }
+});
+</script>
+{% endblock %}
