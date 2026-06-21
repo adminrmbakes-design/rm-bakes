@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes • Edit Product
+
+    </title>
+
+    <!-- =====================================
+         GOOGLE FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =====================================
+           GLOBAL
+        ====================================== */
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+        body{
+
+            min-height:100vh;
+
+            color:white;
+
+            font-family:'Inter',sans-serif;
+
+            background:
+
+                radial-gradient(
+                    circle at top,
+                    rgba(0,255,200,0.08),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #050505,
+                    #0d0d0d,
+                    #151515
+                );
+
+        }
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.18;
+
+            pointer-events:none;
+
+        }
+
+        /* =====================================
+           TOPBAR
+        ====================================== */
+
+        .topbar{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:100;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            padding:20px 28px;
+
+            background:
+
+                rgba(0,0,0,0.65);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .page-title{
+
+            font-family:'Orbitron',sans-serif;
+
+            font-size:1.3rem;
+
+            letter-spacing:2px;
+
+        }
+
+        .back-btn{
+
+            text-decoration:none;
+
+            color:white;
+
+            padding:12px 18px;
+
+            border-radius:16px;
+
+            background:
+
+                rgba(255,255,255,0.08);
+
+            border:
+
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+        /* =====================================
+           CONTAINER
+        ====================================== */
+
+        .container{
+
+            width:92%;
+
+            max-width:950px;
+
+            margin:40px auto;
+
+        }
+
+        .form-card{
+
+            padding:30px;
+
+            border-radius:30px;
+
+            background:
+
+                rgba(255,255,255,0.04);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+            backdrop-filter:blur(18px);
+
+        }
+
+        .form-title{
+
+            font-size:1.3rem;
+
+            font-weight:700;
+
+            margin-bottom:10px;
+
+        }
+
+        .form-description{
+
+            color:
+
+                rgba(255,255,255,0.55);
+
+            margin-bottom:30px;
+
+        }
+
+        /* =====================================
+           CURRENT IMAGE
+        ====================================== */
+
+        .current-image{
+
+            width:100%;
+
+            max-height:320px;
+
+            object-fit:cover;
+
+            border-radius:24px;
+
+            margin-bottom:25px;
+
+            border:
+
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+        /* =====================================
+           FORM
+        ====================================== */
+
+        .form-group{
+
+            margin-bottom:22px;
+
+        }
+
+        .form-group label{
+
+            display:block;
+
+            margin-bottom:10px;
+
+            font-weight:600;
+
+        }
+
+        .form-control{
+
+            width:100%;
+
+            padding:16px;
+
+            border:none;
+
+            outline:none;
+
+            border-radius:18px;
+
+            color:white;
+
+            background:
+
+                rgba(255,255,255,0.06);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        /* =====================================
+        PRODUCT MARKETING
+        ===================================== */
+
+        .marketing-options{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+        .marketing-item{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:12px;
+
+            padding:16px;
+
+            border-radius:18px;
+
+            cursor:pointer;
+
+            background:
+
+                rgba(255,255,255,0.05);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .marketing-item input{
+
+            width:18px;
+
+            height:18px;
+
+            cursor:pointer;
+
+        }
+
+        textarea.form-control{
+
+            min-height:140px;
+
+            resize:vertical;
+
+        }
+
+        /* =====================================
+           SAVE BUTTON
+        ====================================== */
+
+        .save-btn{
+
+            width:100%;
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:18px;
+
+            border-radius:20px;
+
+            font-size:1rem;
+
+            font-weight:700;
+
+            color:black;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #00ffd0,
+                    #00f0ff
+                );
+
+            box-shadow:
+
+                0 0 25px rgba(
+                    0,
+                    255,
+                    208,
+                    0.25
+                );
+
+            transition:0.3s;
+
+        }
+
+        .save-btn:hover{
+
+            transform:
+                translateY(-2px);
+
+        }
+
+        /* =====================================
+           MOBILE
+        ====================================== */
+
+        @media(max-width:700px){
+
+            .topbar{
+
+                flex-direction:column;
+
+                align-items:flex-start;
+
+                gap:15px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =====================================
+     TOPBAR
+====================================== -->
+
+<div class="topbar">
+
+    <div class="page-title">
+
+        EDIT PRODUCT
+
+    </div>
+
+    <a
+
+        href="{{ url_for('admin_product.manage_products') }}"
+
+        class="back-btn"
+
+    >
+
+        ← Manage Products
+
+    </a>
+
+</div>
+
+<!-- =====================================
+     FORM CONTAINER
+====================================== -->
+
+<div class="container">
+
+<div class="form-card">
+
+    <div class="form-title">
+
+        ✏️ Update Product
+
+    </div>
+
+    <div class="form-description">
+
+        Modify product information,
+        replace image or update category.
+
+    </div>
+
+    <!-- =====================================
+         CURRENT IMAGE
+    ====================================== -->
+
+    {% if product.product_image %}
+
+    <img
+
+        src="{{ get_product_image(product.product_image) }}"
+
+        class="current-image"
+
+        alt="{{ product.product_name }}"
+
+    >
+
+    {% endif %}
+
+    <!-- =====================================
+         EDIT FORM
+    ====================================== -->
+
+    <form
+
+        method="POST"
+
+        enctype="multipart/form-data"
+
+    >
+
+        <!-- Product Name -->
+
+        <div class="form-group">
+
+            <label>
+
+                Product Name
+
+            </label>
+
+            <input
+
+                type="text"
+
+                name="product_name"
+
+                value="{{ product.product_name }}"
+
+                class="form-control"
+
+                required
+
+            >
+
+        </div>
+
+        <!-- Description -->
+
+        <div class="form-group">
+
+            <label>
+
+                Description
+
+            </label>
+
+            <textarea
+
+                name="product_description"
+
+                class="form-control"
+
+                required
+
+            >{{ product.product_description }}</textarea>
+
+        </div>
+
+        <!-- Price -->
+
+        <div class="form-group">
+
+            <label>
+
+                Price (₹)
+
+            </label>
+
+            <input
+
+                type="number"
+
+                step="0.01"
+
+                name="product_price"
+
+                value="{{ product.product_price }}"
+
+                class="form-control"
+
+                required
+
+            >
+
+        </div>
+
+        <!-- Unit -->
+
+        <div class="form-group">
+
+            <label>
+
+                Unit
+
+            </label>
+
+            <input
+
+                type="text"
+
+                name="product_unit"
+
+                value="{{ product.product_unit }}"
+
+                class="form-control"
+
+                required
+
+            >
+
+        </div>
+
+        <!-- Category -->
+
+        <div class="form-group">
+
+            <label>
+
+                Category
+
+            </label>
+
+            <input
+
+                type="text"
+
+                name="product_category"
+
+                value="{{ product.product_category }}"
+
+                class="form-control"
+
+                required
+
+            >
+
+        </div>
+
+        <!-- Tags -->
+
+        <div class="form-group">
+
+            <label>
+
+                Tags
+
+            </label>
+
+            <input
+
+                type="text"
+
+                name="product_tags"
+
+                value="{{ product.product_tags }}"
+
+                class="form-control"
+
+            >
+
+        </div>
+
+        <!-- =====================================
+        PRODUCT MARKETING
+        ===================================== -->
+
+        <div class="form-group">
+
+            <label>
+
+                Product Marketing
+
+            </label>
+
+            <div class="marketing-options">
+
+                <label class="marketing-item">
+
+                    <input
+                        type="radio"
+                        name="marketing_type"
+                        value="none"
+
+                        {% if not product.product_is_launching
+                        and not product.product_is_seasonal
+                        and not product.product_is_festive %}
+                        checked
+                        {% endif %}
+                    >
+
+                    ✨ Regular Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="radio"
+                        name="marketing_type"
+                        value="launching"
+
+                        {% if product.product_is_launching %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🚀 Launching Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="radio"
+                        name="marketing_type"
+                        value="seasonal"
+
+                        {% if product.product_is_seasonal %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🍂 Seasonal Product
+
+                </label>
+
+                <label class="marketing-item">
+
+                    <input
+                        type="radio"
+                        name="marketing_type"
+                        value="festive"
+
+                        {% if product.product_is_festive %}
+                        checked
+                        {% endif %}
+                    >
+
+                    🎉 Festive Product
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- New Image -->
+
+        <div class="form-group">
+
+            <label>
+
+                Replace Image
+                (Optional)
+
+            </label>
+
+            <input
+
+                type="file"
+
+                name="product_image"
+
+                accept="image/*"
+
+                class="form-control"
+
+            >
+
+        </div>
+
+        <!-- Save Button -->
+
+        <button
+
+            type="submit"
+
+            class="save-btn"
+
+        >
+
+            Save Changes 🚀
+
+        </button>
+
+    </form>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
