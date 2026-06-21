@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="page-transition" id="pageTransition"></div>
+
+<!-- NAVBAR -->
+<nav class="rm-navbar">
+  <a href="{{ url_for('main.home') }}" class="rm-logo" style="text-decoration:none;">
+    <img src="{{ url_for('static', filename='uploads/banner.png') }}" alt="RM Bakes" style="height:38px;width:auto;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;">RM BAKES</span>
+  </a>
+
+  <ul class="rm-nav-links">
+    <li><a href="{{ url_for('main.home') }}">Home</a></li>
+    <li><a href="{{ url_for('product.products') }}">Menu</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a href="{{ url_for('cart.cart') }}">Cart</a></li>
+    <li><a href="{{ url_for('order.my_orders') }}">Orders</a></li>
+    <li><a href="{{ url_for('profile.profile') }}">{{ current_user.username }}</a></li>
+    {% else %}
+    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+    {% endif %}
+  </ul>
+
+  <div class="rm-nav-actions">
+    <a href="{{ url_for('notification.notifications_page') }}" class="rm-nav-icon-btn" title="Notifications">
+      <i class="fa-regular fa-bell"></i>
+      {% if notification_badge_count > 0 %}<span class="rm-badge">{{ notification_badge_count }}</span>{% endif %}
+    </a>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('cart.cart') }}" class="rm-nav-icon-btn" title="Cart"><i class="fa-solid fa-bag-shopping"></i></a>
+    <button class="btn btn-primary btn-sm" onclick="confirmLogout()" style="margin-left:4px;">Sign Out</button>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm">Login</a>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
+    {% endif %}
+    <button class="rm-hamburger" id="hamburgerBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="cafe-strip">Warm Lights &nbsp;·&nbsp; Soft Music &nbsp;·&nbsp; Fresh Desserts &nbsp;·&nbsp; Midnight Comfort</div>
+
+<!-- MOBILE MENU -->
+<div class="rm-mobile-menu" id="mobileMenu">
+  <a href="{{ url_for('main.home') }}">Home</a>
+  <a href="{{ url_for('product.products') }}">Menu</a>
+  <div class="rm-mobile-divider"></div>
+  {% if current_user.is_authenticated %}
+  <a href="{{ url_for('cart.cart') }}">Cart</a>
+  <a href="{{ url_for('order.my_orders') }}">My Orders</a>
+  <a href="{{ url_for('profile.profile') }}">Profile — {{ current_user.username }}</a>
+  <a href="{{ url_for('notification.notifications_page') }}">Notifications</a>
+  <div class="rm-mobile-divider"></div>
+  <a href="{{ url_for('profile.account_settings') }}">Account Settings</a>
+  <button class="mobile-link" onclick="confirmLogout()">Sign Out</button>
+  {% else %}
+  <a href="{{ url_for('auth.login') }}">Login</a>
+  <a href="{{ url_for('auth.register') }}">Create Account</a>
+  {% endif %}
+  <div class="rm-mobile-divider"></div>
+  <a href="{{ url_for('main.about') }}">About Us</a>
+</div>
+
+<!-- FLASH MESSAGES -->
+<div class="rm-flash-area" id="flashArea">
+  {% with messages = get_flashed_messages() %}{% if messages %}{% for message in messages %}
+  <div class="rm-flash"><span>{{ message }}</span><button class="flash-close" onclick="this.parentElement.remove()">✕</button></div>
+  {% endfor %}{% endif %}{% endwith %}
+</div>
+
+<!-- MAIN -->
+<main class="rm-main">{% block content %}{% endblock %}</main>
+
+<!-- Floating notification -->
+<a href="{{ url_for('notification.notifications_page') }}" class="floating-notif-btn" title="Notifications" style="position:fixed;bottom:28px;right:28px;">
+  <i class="fa-regular fa-bell"></i>
+  {% if notification_badge_count > 0 %}<span class="rm-badge">{{ notification_badge_count }}</span>{% endif %}
+</a>
+
+<!-- FOOTER -->
+<footer class="rm-footer">
+  <div class="rm-footer-brand">
+    <h2>RM BAKES</h2>
+    <p>Warm Lights &nbsp;·&nbsp; Soft Music &nbsp;·&nbsp; Handcrafted Desserts</p>
+  </div>
+  <div class="rm-footer-divider"></div>
+  <div class="rm-footer-socials">
+    <a href="https://facebook.com/" target="_blank" class="rm-footer-social"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.instagram.com/rmcloudcakecreations" target="_blank" class="rm-footer-social"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/918147777938" target="_blank" class="rm-footer-social"><i class="fab fa-whatsapp"></i></a>
+  </div>
+  <div class="rm-footer-links">
+    <a href="{{ url_for('main.about') }}">About Us</a>
+    <a href="{{ url_for('product.products') }}">Menu</a>
+    <a href="{{ url_for('custom_order.dessert_studio') }}">Dessert Studio</a>
+  </div>
+  <p class="rm-footer-copy">© 2026 RM Bakes &nbsp;·&nbsp; Made with love and flour</p>
+</footer>
+
+<script>
+// Hamburger
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburgerBtn.addEventListener('click', () => {
+  hamburgerBtn.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+    hamburgerBtn.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+});
+
+// Logout
+function confirmLogout() {
+  if (confirm('Sign out of RM Bakes?')) window.location.href = "{{ url_for('auth.logout') }}";
+}
+
+// Page transitions
+const transitionOverlay = document.getElementById('pageTransition');
+document.querySelectorAll('a').forEach(link => {
+  const href = link.getAttribute('href');
+  if (!href || href.startsWith('#') || href.startsWith('http') || link.getAttribute('target') === '_blank' || link.hasAttribute('download')) return;
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    transitionOverlay.classList.add('active');
+    setTimeout(() => window.location.assign(href), 380);
+  });
+});
+
+// Auto-dismiss flash
+document.querySelectorAll('.rm-flash').forEach((el, i) => {
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(20px)'; setTimeout(()=>el.remove(),400); }, 4000+i*500);
+});
+
+// Global toast helper
+function showToast(message) {
+  const t = document.createElement('div');
+  t.className = 'custom-toast';
+  t.textContent = message;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(),400); }, 2500);
+}
+</script>
+
+</body>
+</html>
