@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ═══════════════════════════
+     HERO SECTION
+     Desktop: carousel (left) + quick panel (right)
+     Mobile:  carousel full-width, quick panel hidden
+              studio card shown AFTER featured (fix #5)
+═══════════════════════════ -->
+
+{% if active_carousels %}
+<div class="home-hero-grid">
+
+  <!-- ── CAROUSEL (fix #4: natural image ratio, not fixed) ── -->
+  <div class="rm-carousel-shell">
+    <div id="rmCarousel" style="position:relative;overflow:hidden;border-radius:inherit;">
+      {% for carousel in active_carousels %}
+      <div class="rm-carousel-item"
+           style="display:{% if loop.first %}block{% else %}none{% endif %};"
+           data-index="{{ loop.index0 }}">
+        <img
+          src="{{ carousel.carousel_banner_image }}"
+          alt="{{ carousel.carousel_title }}"
+          class="rm-carousel-img">
+        <div class="rm-carousel-overlay">
+          <div class="rm-carousel-category">
+            {{ carousel.carousel_category | replace('_',' ') | title }}
+          </div>
+          <h2 class="rm-carousel-title">{{ carousel.carousel_title }}</h2>
+          {% if carousel.carousel_description %}
+          <p class="rm-carousel-desc">{{ carousel.carousel_description }}</p>
+          {% endif %}
+          {% if carousel.carousel_action_link %}
+          <a href="{{ carousel.carousel_action_link }}"
+             class="btn btn-amber rm-carousel-cta">
+            {{ carousel.carousel_action_text }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Dots -->
+    <div class="rm-carousel-dots" id="carouselDots">
+      {% for carousel in active_carousels %}
+      <button class="rm-carousel-dot {% if loop.first %}active{% endif %}"
+              data-slide="{{ loop.index0 }}"
+              onclick="goToSlide({{ loop.index0 }})"></button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ── DESKTOP QUICK PANEL (hidden on mobile via CSS) ── -->
+  <div class="home-quick-panel">
+
+    <div class="quick-panel-card">
+      <h3>Quick Access</h3>
+      <a href="{{ url_for('product.products') }}"
+         class="btn btn-primary btn-full" style="margin-bottom:10px;">
+        Browse the Menu
+      </a>
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('order.my_orders') }}"
+         class="btn btn-outline btn-full">My Orders</a>
+      {% else %}
+      <a href="{{ url_for('auth.login') }}"
+         class="btn btn-outline btn-full">Login to Order</a>
+      {% endif %}
+    </div>
+
+    <div class="quick-panel-card studio-card">
+      <h3>Dessert Studio</h3>
+      <p>Design something deeply personal — handcrafted desserts made exclusively for your moments.</p>
+      <div class="studio-actions">
+        <a href="{{ url_for('custom_order.dessert_studio') }}"
+           class="studio-btn-main">Open Dessert Studio</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('custom_order.my_custom_orders') }}"
+           class="studio-btn-sec">My Studio Orders</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══════════════════════════
+     FEATURED DELIGHTS
+     (shown first on BOTH desktop and mobile)
+═══════════════════════════ -->
+<div class="rm-section-header">
+  <h2>Featured Delights</h2>
+  <p>Handpicked favourites from our café collection</p>
+  <div class="rm-divider"></div>
+</div>
+
+<div class="featured-grid">
+  {% for product in featured_products %}
+  <a href="{{ url_for('product.product_details', product_id=product.product_id) }}"
+     class="featured-card">
+    <img
+      src="{{ get_product_image(product.product_image) }}"
+      alt="{{ product.product_name }}"
+      class="featured-card-img"
+      loading="lazy">
+    <div class="featured-card-body">
+      <div class="featured-badge-pill">✦ Featured</div>
+      <div class="featured-card-tag">{{ product.product_tags }}</div>
+      <div class="featured-card-name">{{ product.product_name }}</div>
+      <div class="featured-card-desc">
+        {{ product.product_description[:60] }}…
+      </div>
+      <div class="featured-card-footer">
+        <div>
+          <div class="featured-card-price">₹{{ product.product_price }}</div>
+          <div style="font-size:.73rem;color:var(--grey);">{{ product.product_unit }}</div>
+        </div>
+        <span class="featured-card-link">View →</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+<!-- ═══════════════════════════
+     MOBILE DESSERT STUDIO BANNER
+     FIX #5: Appears AFTER featured products on mobile.
+             Hidden on desktop (CSS handles this).
+═══════════════════════════ -->
+<div class="home-mobile-studio">
+  <h3>✨ Dessert Studio</h3>
+  <p>Dream up a custom dessert — for birthdays, anniversaries, or just because.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a href="{{ url_for('custom_order.dessert_studio') }}"
+       class="btn btn-amber">Open Studio</a>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('custom_order.my_custom_orders') }}"
+       class="btn btn-ghost"
+       style="color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.22);">
+      My Orders
+    </a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}"
+       class="btn btn-ghost"
+       style="color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.22);">
+      Login to Order
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── Carousel JS ── -->
+<script>
+(function () {
+  let current = 0;
+  const slides = document.querySelectorAll('.rm-carousel-item');
+  const dots   = document.querySelectorAll('.rm-carousel-dot');
+  const total  = slides.length;
+
+  window.goToSlide = function(n) {
+    slides[current].style.display = 'none';
+    dots[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].style.display = 'block';
+    dots[current].classList.add('active');
+  };
+
+  if (total > 1) {
+    setInterval(() => goToSlide(current + 1), 5500);
+  }
+})();
+</script>
+
+{% endblock %}

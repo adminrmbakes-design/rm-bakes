@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="rm-page-hero">
+  <h1>Checkout</h1>
+  <p>One last step before sweetness reaches your doorstep</p>
+</div>
+
+<div style="max-width:720px;margin:0 auto;">
+
+  <!-- ORDER SUMMARY -->
+  <div class="rm-card section-card">
+    <div class="section-title">Order Summary</div>
+    {% for item in checkout_items %}
+    <div class="checkout-item">
+      {% if item.product_image %}
+      <img src="{{ get_product_image(item.product_image) }}" class="checkout-item-img" alt="{{ item.product_name }}">
+      {% else %}
+      <div class="checkout-item-img-placeholder">🍰</div>
+      {% endif %}
+      <div style="flex:1;">
+        <div class="checkout-item-name">{{ item.product_name }}</div>
+        <div class="checkout-item-meta">₹{{ item.product_price }} × {{ item.product_quantity }} {{ item.product_unit }}</div>
+        {% if item.note %}<div class="checkout-item-note">Note: {{ item.note }}</div>{% endif %}
+      </div>
+      <div class="checkout-item-total">₹{{ item.total_price }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="checkout-totals">
+      <div class="total-line"><span>Subtotal</span><strong>₹{{ subtotal }}</strong></div>
+      <div class="total-line"><span>Delivery Fee</span><strong>₹{{ delivery_fee }}</strong></div>
+      {% if discount_amount > 0 %}
+      <div class="total-line total-savings"><span>Sweet Deal Savings</span><strong>−₹{{ discount_amount }}</strong></div>
+      {% endif %}
+      <div class="total-line grand"><span>Grand Total</span><strong>₹{{ grand_total }}</strong></div>
+    </div>
+  </div>
+
+  <!-- COUPON -->
+  <div class="rm-card section-card">
+    <div class="section-title">Sweet Deal Code</div>
+    {% if applied_coupon %}
+    <div class="coupon-applied-badge"><i class="fa-solid fa-tag"></i> {{ applied_coupon }} applied</div>
+    <button class="btn btn-ghost btn-sm" onclick="removeCoupon()">Remove</button>
+    {% else %}
+    <div class="coupon-input-row">
+      <input type="text" id="couponCode" class="rm-input" placeholder="Enter discount code" style="margin-bottom:0;">
+      <button class="btn btn-amber" onclick="applyCoupon()">Apply</button>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- DELIVERY DETAILS -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delivery Details</div>
+    {% if not current_user.full_name or not current_user.phone_number or not current_user.delivery_address %}
+    <div class="incomplete-alert">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      Your profile is incomplete. Please add delivery details before placing the order.
+    </div>
+    {% endif %}
+
+    <div class="checkout-totals" style="border-top:none;padding-top:0;margin-top:0;">
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Full Name</span><span class="delivery-detail-value">{{ current_user.full_name or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Phone</span><span class="delivery-detail-value">{{ current_user.phone_number or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Address</span><span class="delivery-detail-value">{{ current_user.delivery_address or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Landmark</span><span class="delivery-detail-value">{{ current_user.landmark or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">City</span><span class="delivery-detail-value">{{ current_user.city or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Pincode</span><span class="delivery-detail-value">{{ current_user.pincode or '—' }}</span></div>
+      <div class="delivery-detail-line" style="border:none;"><span class="delivery-detail-label">Payment</span><span class="delivery-detail-value">{{ current_user.preferred_payment_method or 'Cash on Delivery' }}</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+      <a href="{{ url_for('profile.profile') }}" class="btn btn-outline btn-sm">Edit Profile</a>
+      {% if current_user.google_maps_link %}
+      <a href="{{ current_user.google_maps_link }}" target="_blank" class="btn btn-ghost btn-sm">Open Maps</a>
+      {% endif %}
+      <button class="btn btn-ghost btn-sm" onclick="location.reload()">Refresh</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-full btn-lg" id="placeOrderBtn">Place Order</button>
+</div>
+
+<!-- Order animation overlay -->
+<div class="order-overlay" id="orderOverlay">
+  <video class="order-video" id="orderVideo" muted playsinline preload="auto">
+    <source src="{{ url_for('static', filename='videos/order_place.mp4') }}" type="video/mp4">
+  </video>
+</div>
+
+<script>
+async function applyCoupon() {
+  const code = document.getElementById('couponCode').value.trim();
+  if (!code) { showToast('Enter a coupon code first'); return; }
+  const res = await fetch('/apply-coupon', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({coupon_code:code})});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => location.reload(), 1500);
+}
+
+async function removeCoupon() {
+  const res = await fetch('/remove-coupon', {method:'POST'});
+  const data = await res.json();
+  if (data.success) { showToast(data.message); setTimeout(() => location.reload(), 1500); }
+}
+
+document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('placeOrderBtn');
+  const overlay = document.getElementById('orderOverlay');
+  const video = document.getElementById('orderVideo');
+  try {
+    btn.disabled = true; btn.textContent = 'Preparing your order...';
+    overlay.classList.add('active');
+    const res = await fetch('/place-order', {method:'POST'});
+    const data = await res.json();
+    if (data.success) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+      let redirected = false;
+      const go = () => { if (!redirected) { redirected = true; window.location.href = data.redirect; } };
+      video.onended = go;
+      setTimeout(go, 7000);
+    } else {
+      overlay.classList.remove('active');
+      btn.disabled = false; btn.textContent = 'Place Order';
+      showToast("Couldn't place order — please try again");
+      setTimeout(() => window.location.href = '/cart', 1800);
+    }
+  } catch {
+    overlay.classList.remove('active');
+    btn.disabled = false; btn.textContent = 'Place Order';
+    showToast("Couldn't place order — please try again");
+  }
+});
+</script>
+{% endblock %}

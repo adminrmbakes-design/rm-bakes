@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="rm-page-hero">
+  <h1>My Orders</h1>
+  <p>Every dessert carries a memory</p>
+</div>
+
+{% if orders %}
+<div class="orders-filter-tabs">
+  <button class="order-filter-btn active" id="btn-active" onclick="filterOrders('active')">Active</button>
+  <button class="order-filter-btn" id="btn-delivered" onclick="filterOrders('delivered')">Delivered</button>
+  <button class="order-filter-btn" id="btn-cancelled" onclick="filterOrders('cancelled')">Cancelled</button>
+  <button class="order-filter-btn" id="btn-custom" onclick="filterOrders('custom')">Dessert Studio</button>
+</div>
+{% endif %}
+
+<!-- Empty states -->
+<div class="empty-order-state" id="noActive" style="display:none;"><div class="empty-icon">📦</div><h2>No Active Orders</h2><p>Nothing being prepared right now</p></div>
+<div class="empty-order-state" id="noDelivered" style="display:none;"><div class="empty-icon">✅</div><h2>No Delivered Orders</h2><p>No completed deliveries yet</p></div>
+<div class="empty-order-state" id="noCancelled" style="display:none;"><div class="empty-icon">✕</div><h2>No Cancelled Orders</h2><p>No cancelled orders</p></div>
+<div class="empty-order-state" id="noCustom" style="display:none;"><div class="empty-icon">✨</div><h2>No Studio Orders</h2><p>No custom dessert creations yet</p></div>
+
+{% if not orders %}
+<div class="empty-order-state">
+  <div class="empty-icon">🍰</div>
+  <h2>No orders yet</h2>
+  <p>Your dessert journey hasn't started — browse the menu!</p>
+  <a href="{{ url_for('product.products') }}" class="btn btn-primary" style="margin-top:16px;">Browse Menu</a>
+</div>
+{% endif %}
+
+{% for order in orders %}
+<div class="order-card-wrap order-card" data-status="{{ order.order_status }}" data-type="{% if order.is_custom_order %}custom{% else %}menu{% endif %}">
+  <div class="order-card-top">
+    <div>
+      <div class="order-num">#{{ order.order_number }}</div>
+      {% if order.is_custom_order %}<div class="studio-tag">✨ Dessert Studio Creation</div>{% endif %}
+      <div class="order-date">{{ order.ordered_at.strftime("%d %b %Y · %I:%M %p") }}</div>
+    </div>
+    <span class="status-badge status-{{ order.order_status }}">{{ order.order_status.replace("_"," ").title() }}</span>
+  </div>
+
+  {% if order.is_custom_order %}
+  <div class="custom-order-preview">
+    {% if order.custom_inspiration_image %}
+    <img src="{{ order.custom_inspiration_image }}" class="custom-preview-img" alt="Inspiration">
+    {% endif %}
+    <div style="font-size:0.88rem;color:var(--text-body);line-height:1.8;">
+      <strong>Dessert:</strong> {{ order.custom_dessert_category }}<br>
+      <strong>Flavor:</strong> {{ order.custom_flavor }}
+    </div>
+  </div>
+  {% else %}
+  {% for item in order.products[:2] %}
+  <div class="order-product-preview">
+    {% if item.product_image %}
+    <img src="{{ get_product_image(item.product_image) }}" class="order-thumb" alt="{{ item.product_name }}">
+    {% else %}
+    <div class="order-thumb-placeholder">🍰</div>
+    {% endif %}
+    <div>
+      <div class="order-product-name">{{ item.product_name }}</div>
+      <div class="order-product-meta">₹{{ item.product_price }} × {{ item.product_quantity }}</div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="order-card-bottom">
+    <div class="order-grand">₹{{ order.grand_total }}</div>
+    <div class="order-actions">
+      <a href="{{ url_for('order.order_details', order_id=order.order_id) }}" class="btn btn-outline btn-sm">View Details</a>
+      {% if order.order_status == "delivered" %}
+        {% if order.has_review %}
+        <a href="{{ url_for('review.my_review', order_id=order.order_id) }}" class="btn btn-ghost btn-sm">My Review</a>
+        {% else %}
+        <a href="{{ url_for('review.leave_review', order_id=order.order_id) }}" class="btn btn-amber btn-sm">Leave Review</a>
+        {% endif %}
+      {% endif %}
+      {% if not order.is_custom_order %}
+      <button class="btn btn-ghost btn-sm" onclick="orderAgain({{ order.order_id }})">Order Again</button>
+      {% endif %}
+      {% if order.order_status in ["queued","approved"] %}
+      <button class="btn btn-danger btn-sm" onclick="cancelOrder({{ order.order_id }})">Cancel</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script>
+function filterOrders(type) {
+  ['active','delivered','cancelled','custom'].forEach(t => {
+    document.getElementById('btn-'+t)?.classList.toggle('active', t === type);
+  });
+  let visible = 0;
+  document.querySelectorAll('.order-card').forEach(card => {
+    const status = card.dataset.status;
+    const cardType = card.dataset.type;
+    let show = false;
+    if (type === 'active') show = status !== 'cancelled' && status !== 'delivered';
+    else if (type === 'delivered') show = status === 'delivered';
+    else if (type === 'cancelled') show = status === 'cancelled';
+    else if (type === 'custom') show = cardType === 'custom';
+    card.style.display = show ? 'block' : 'none';
+    if (show) visible++;
+  });
+  ['noActive','noDelivered','noCancelled','noCustom'].forEach(id => document.getElementById(id).style.display='none');
+  if (visible === 0) {
+    const map = {active:'noActive',delivered:'noDelivered',cancelled:'noCancelled',custom:'noCustom'};
+    document.getElementById(map[type]).style.display = 'block';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => filterOrders('active'));
+
+async function cancelOrder(orderId) {
+  if (!confirm('Cancel this order?')) return;
+  const res = await fetch(`/cancel-order/${orderId}`, {method:'POST'});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => location.reload(), 1200);
+}
+
+async function orderAgain(orderId) {
+  const res = await fetch(`/order-again/${orderId}`, {method:'POST'});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => window.location.href = data.redirect, 1200);
+}
+</script>
+{% endblock %}
