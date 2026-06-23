@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes Global Announcements
+
+    </title>
+
+
+
+    <!-- =====================================
+         GOOGLE FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+
+            box-sizing:border-box;
+
+        }
+
+
+
+        body{
+
+            min-height:100vh;
+
+            font-family:'Inter', sans-serif;
+
+            background:
+
+                radial-gradient(
+
+                    circle at top,
+
+                    rgba(255,180,0,0.08),
+
+                    transparent 30%
+
+                ),
+
+                linear-gradient(
+
+                    135deg,
+
+                    #040404,
+                    #0a0a0a,
+                    #111111
+
+                );
+
+            color:white;
+
+            overflow-x:hidden;
+
+            position:relative;
+
+        }
+
+
+
+        /* ====================================
+           GRID BACKGROUND
+        ==================================== */
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            width:100%;
+            height:100%;
+
+            background-image:
+
+                linear-gradient(
+
+                    rgba(255,255,255,0.03) 1px,
+
+                    transparent 1px
+
+                ),
+
+                linear-gradient(
+
+                    90deg,
+
+                    rgba(255,255,255,0.03) 1px,
+
+                    transparent 1px
+
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.2;
+
+            pointer-events:none;
+
+        }
+
+
+
+        /* ====================================
+           TOPBAR
+        ==================================== */
+
+        .topbar{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:100;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:20px;
+
+            padding:20px 30px;
+
+            background:rgba(0,0,0,0.55);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+
+
+        .topbar-left h1{
+
+            font-size:1.5rem;
+
+            font-weight:800;
+
+            letter-spacing:2px;
+
+            font-family:'Orbitron', sans-serif;
+
+        }
+
+
+
+        .topbar-left p{
+
+            margin-top:8px;
+
+            color:rgba(255,255,255,0.55);
+
+            font-size:0.82rem;
+
+        }
+
+
+
+        .topbar-right{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:18px;
+
+            flex-wrap:wrap;
+
+            justify-content:flex-end;
+
+        }
+
+
+
+        .admin-chip{
+
+            padding:12px 18px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            font-size:0.82rem;
+
+            color:#7affdf;
+
+        }
+
+
+
+        .dashboard-btn{
+
+            text-decoration:none;
+
+            padding:12px 20px;
+
+            border-radius:18px;
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #00f5ff,
+                    #00d4ff
+
+                );
+
+            color:black;
+
+            font-size:0.84rem;
+
+            font-weight:700;
+
+        }
+
+
+
+        /* ====================================
+           PAGE WRAPPER
+        ==================================== */
+
+        .page-wrapper{
+
+            width:92%;
+
+            max-width:1450px;
+
+            margin:auto;
+
+            padding:
+                40px 0 120px;
+
+        }
+
+
+
+        /* ====================================
+           PAGE HEADER
+        ==================================== */
+
+        .page-header{
+
+            margin-bottom:40px;
+
+        }
+
+
+
+        .page-title{
+
+            font-size:2.8rem;
+
+            font-weight:800;
+
+            font-family:'Orbitron', sans-serif;
+
+            margin-bottom:14px;
+
+        }
+
+
+
+        .page-subtitle{
+
+            color:rgba(255,255,255,0.65);
+
+            line-height:1.8;
+
+        }
+
+
+
+        /* ====================================
+           FORM CARD
+        ==================================== */
+
+        .form-card{
+
+            padding:36px;
+
+            border-radius:34px;
+
+            background:
+
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(20px);
+
+            margin-bottom:60px;
+
+        }
+
+
+
+        .form-card h2{
+
+            margin-bottom:30px;
+
+            font-size:1.5rem;
+
+        }
+
+
+
+        .announcement-form{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:24px;
+
+        }
+
+
+
+        .form-group{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:12px;
+
+        }
+
+
+
+        .form-group label{
+
+            font-weight:600;
+
+        }
+
+
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select{
+
+            border:none;
+
+            outline:none;
+
+            border-radius:20px;
+
+            padding:18px;
+
+            background:
+
+                rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-size:1rem;
+
+        }
+
+
+
+        .form-group textarea{
+
+            resize:none;
+
+        }
+
+
+
+        .publish-btn{
+
+            border:none;
+
+            outline:none;
+
+            padding:18px;
+
+            border-radius:20px;
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #ffb347,
+                    #ffcc33
+
+                );
+
+            color:black;
+
+            font-size:1rem;
+
+            font-weight:700;
+
+            transition:0.35s ease;
+
+        }
+
+
+
+        .publish-btn:hover{
+
+            transform:
+                translateY(-4px);
+
+        }
+
+
+
+        /* ====================================
+           SECTION TITLE
+        ==================================== */
+
+        .section-title{
+
+            font-size:1.8rem;
+
+            margin-bottom:30px;
+
+        }
+
+
+
+        /* ====================================
+           GRID
+        ==================================== */
+
+        .notifications-grid{
+
+            display:grid;
+
+            grid-template-columns:
+
+                repeat(
+
+                    auto-fit,
+
+                    minmax(360px,1fr)
+
+                );
+
+            gap:32px;
+
+        }
+
+
+
+        /* ====================================
+           CARD
+        ==================================== */
+
+        .notification-card{
+
+            overflow:hidden;
+
+            border-radius:34px;
+
+            background:
+
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(20px);
+
+            transition:0.35s ease;
+
+        }
+
+
+
+        .notification-card:hover{
+
+            transform:
+                translateY(-8px);
+
+            box-shadow:
+
+                0 0 35px rgba(255,180,0,0.08);
+
+        }
+
+
+
+        /* ====================================
+           BANNER
+        ==================================== */
+
+        .banner-container{
+
+            width:100%;
+
+            aspect-ratio:16/9;
+
+            overflow:hidden;
+
+        }
+
+
+
+        .notification-banner{
+
+            width:100%;
+            height:100%;
+
+            object-fit:cover;
+
+        }
+
+
+
+        /* ====================================
+           CONTENT
+        ==================================== */
+
+        .notification-content{
+
+            padding:24px;
+
+        }
+
+
+
+        .notification-content h3{
+
+            font-size:1.4rem;
+
+            margin-bottom:14px;
+
+        }
+
+
+
+        .notification-content p{
+
+            color:rgba(255,255,255,0.72);
+
+            line-height:1.8;
+
+        }
+
+
+
+        .notification-content small{
+
+            display:block;
+
+            margin-top:16px;
+
+            color:rgba(255,255,255,0.45);
+
+        }
+
+
+
+        /* ====================================
+           STATUS
+        ==================================== */
+
+        .status-badge{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:
+                8px 14px;
+
+            border-radius:999px;
+
+            font-size:0.75rem;
+
+            font-weight:700;
+
+            margin-bottom:18px;
+
+        }
+
+
+
+        .active{
+
+            background:
+                rgba(0,255,170,0.15);
+
+            color:#00ffaa;
+
+        }
+
+
+
+        .inactive{
+
+            background:
+                rgba(255,77,109,0.15);
+
+            color:#ff4d6d;
+
+        }
+
+
+
+        /* ====================================
+           ACTIONS
+        ==================================== */
+
+        .notification-actions{
+
+            display:flex;
+
+            gap:16px;
+
+            padding:
+                0 24px 24px;
+
+        }
+
+
+
+        .toggle-btn,
+        .delete-btn{
+
+            flex:1;
+
+            border:none;
+
+            outline:none;
+
+            padding:14px;
+
+            border-radius:16px;
+
+            font-weight:700;
+
+            transition:0.3s ease;
+
+        }
+
+
+
+        .toggle-btn.activate{
+
+            background:
+                rgba(0,255,170,0.15);
+
+            color:#00ffaa;
+
+        }
+
+
+
+        .toggle-btn.deactivate{
+
+            background:
+                rgba(255,193,7,0.15);
+
+            color:#ffc107;
+
+        }
+
+
+
+        .delete-btn{
+
+            background:
+                rgba(255,77,109,0.15);
+
+            color:#ff4d6d;
+
+        }
+
+
+
+        .toggle-btn:hover,
+        .delete-btn:hover{
+
+            transform:
+                translateY(-3px);
+
+        }
+
+
+
+        /* ====================================
+           EMPTY
+        ==================================== */
+
+        .empty-state{
+
+            text-align:center;
+
+            padding:120px 20px;
+
+            border-radius:34px;
+
+            background:
+
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+
+
+        .empty-icon{
+
+            font-size:4rem;
+
+            margin-bottom:20px;
+
+        }
+
+
+
+        .empty-state h2{
+
+            margin-bottom:12px;
+
+        }
+
+
+
+        .empty-state p{
+
+            color:rgba(255,255,255,0.65);
+
+        }
+
+
+        /* ====================================
+           LIVE PREVIEW
+        =================================== */
+
+        .section-block{
+
+            padding:24px;
+
+            border-radius:24px;
+
+            background:
+                rgba(255,255,255,0.03);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .form-section-title{
+
+            margin-bottom:20px;
+
+            font-size:1.2rem;
+
+        }
+
+        .live-preview{
+
+            margin-top:20px;
+
+        }
+
+        .preview-card{
+
+            margin-top:15px;
+
+            padding:24px;
+
+            border-radius:24px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+        }
+
+
+
+        /* ====================================
+           MOBILE
+        ==================================== */
+
+        @media(max-width:768px){
+
+            .topbar{
+
+                padding:18px;
+
+                flex-direction:column;
+
+                align-items:flex-start;
+
+            }
+
+
+
+            .topbar-right{
+
+                width:100%;
+
+                justify-content:flex-start;
+
+            }
+
+
+
+            .page-title{
+
+                font-size:2.1rem;
+
+            }
+
+
+
+            .form-card{
+
+                padding:24px;
+
+            }
+
+
+
+            .notification-actions{
+
+                flex-direction:column;
+
+            }
+
+        }
+
+
+        .flash-wrapper{
+             width:92%;
+             max-width:1450px;
+             margin:20px auto;
+        }
+
+        .flash{
+             padding:16px;
+             border-radius:16px;
+             margin-bottom:12px;
+             background:rgba(0,255,170,0.12);
+             border:1px solid rgba(0,255,170,0.2);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-wrapper">
+            {% for category, message in messages %}
+                <div class="flash">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+
+    <!-- =====================================
+         TOPBAR
+    ====================================== -->
+
+    <div class="topbar">
+
+        <div class="topbar-left">
+
+            <h1>
+
+                RM BAKES CONTROL CENTER
+
+            </h1>
+
+            <p>
+
+                Marketing Broadcast & Global Campaign System
+
+            </p>
+
+        </div>
+
+
+
+        <div class="topbar-right">
+
+            <div class="admin-chip">
+
+                👤 {{ admin_username }}
+
+            </div>
+
+
+
+            <div class="admin-chip">
+
+                🛡 {{ admin_role or "Administrator" }}
+
+            </div>
+
+
+
+            <a
+                href="{{ url_for('admin.admin_dashboard') }}"
+                class="dashboard-btn"
+            >
+
+                ← Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         PAGE
+    ====================================== -->
+
+    <div class="page-wrapper">
+
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <h1 class="page-title">
+
+                📢 Global Announcements
+
+            </h1>
+
+            <p class="page-subtitle">
+
+                Publish global offers, campaigns,
+                launches and RM Bakes marketing
+                announcements 😭🔥
+
+            </p>
+
+        </div>
+
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <h2>
+
+                🚀 Publish Announcement
+
+            </h2>
+
+
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                class="announcement-form"
+            >
+
+                <div class="section-block">
+
+                    <h3 class="form-section-title">
+
+                        📢 Basic Information
+
+                    </h3>
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Announcement Title
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Weekend Offer 🎂"
+                        required
+                    >
+
+                </div>
+
+                <!-- NOTIFICATION TYPE -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Notification Type
+
+                    </label>
+
+                    <select
+                        name="notification_type"
+                        id="notificationType"
+                    >
+
+                        <option value="announcement">
+                            📢 Announcement
+                        </option>
+
+                        <option value="coupon">
+                            🎟 Coupon
+                        </option>
+
+                        <option value="new_product">
+                            🍰 New Product
+                        </option>
+
+                        <option value="launching_soon">
+                            🚀 Launching Soon
+                        </option>
+
+                        <option value="seasonal">
+                            🎄 Seasonal Special
+                        </option>
+
+                        <option value="out_of_stock">
+                            😭 Out Of Stock
+                        </option>
+
+                    </select>
+
+                    <small id="typeHelp" style="color:rgba(255,255,255,0.65)">General RM Bakes announcement</small>
+
+                </div>
+
+
+
+                <!-- MESSAGE -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Description
+
+                    </label>
+
+                    <textarea
+                        name="message"
+                        rows="4"
+                        placeholder="Flat 20% OFF on all Kunafa products 😭🔥"
+                        required
+                    ></textarea>
+
+                </div>
+
+                </div>
+
+                <div class="section-block">
+
+                    <h3 class="form-section-title">
+
+                        🎯 Notification Target
+
+                    </h3>
+
+                <!-- DYNAMIC FIELDS -->
+
+                <!-- 1. Coupons field -->
+                <div
+                    id="couponFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Coupon Code
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="coupon_code"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- 2. Product field -->
+                <div
+                    id="productFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Select Product
+
+                        </label>
+
+                        <select name="product_id">
+
+                            <option value="">
+
+                                Select Product
+
+                            </option>
+
+                            {% for product in products %}
+
+                            <option
+                                value="{{ product.product_id }}"
+                            >
+
+                                {{ product.product_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- 3. Seasonal field -->
+                <div
+                    id="seasonalFields"
+                    style="display:none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Starts At
+
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="starts_at"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Expires At
+
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="expires_at"
+                        >
+
+                    </div>
+
+                </div>
+                    
+                </div>
+
+                <!-- Common field -->
+                <div  id="actionFields">
+                    
+                <div class="form-group">
+
+                    <label>
+
+                        Action Button Text
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="action_text"
+                        placeholder="View Dessert"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Action Link
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="action_link"
+                        placeholder="/products"
+                    >
+
+                </div>
+
+                </div>
+
+                <div class="section-block">
+                    
+                    <h3 class="form-section-title">
+
+                        ⏰ Scheduling
+
+                    </h3>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Priority
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="priority"
+                        value="0"
+                    >
+
+                </div>
+                
+                <div class="form-group">
+
+                    <label>
+                        
+                        <input
+                            type="checkbox"
+                            name="is_featured"
+                        >
+
+                        Featured Notification
+
+                    </label>
+
+                </div>
+                
+                </div>
+
+
+                <div class="section-block">
+
+                    <h3 class="form-section-title">
+
+                        🖼 Banner
+
+                    </h3>
+                    
+                <!-- IMAGE -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Upload Banner (16:9)
+
+                    </label>
+
+                    <input
+                        type="file"
+                        name="banner"
+                        accept="image/*"
+                        required
+                    >
+
+                </div>
+
+                </div>
+
+
+
+                <!-- LIVE PREVIEW -->
+
+                <div class="live-preview">
+
+                    <h3>
+
+                        👀 Live Preview
+
+                    </h3>
+
+                    <div
+                        id="previewCard"
+                        class="preview-card"
+                    >
+
+                        <h4 id="previewTitle">
+
+                            Announcement Title
+
+                        </h4>
+
+                        <p id="previewMessage">
+
+                            Description preview...
+
+                        </p>
+
+                    </div>
+
+                </div>
+                
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="publish-btn"
+                >
+
+                    🚀 Publish Globally
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- EXISTING -->
+
+        <h2 class="section-title">
+
+            🌍 Live Announcements
+
+        </h2>
+
+
+
+        {% if notifications %}
+
+            <div class="notifications-grid">
+
+                {% for notification in notifications %}
+
+                    <div class="notification-card">
+
+                        <!-- IMAGE -->
+
+                        <div class="banner-container">
+
+                            <img
+                                src="{{ notification.banner_image }}"
+                                class="notification-banner"
+                            >
+
+                        </div>
+
+
+
+                        <!-- CONTENT -->
+
+                        <div class="notification-content">
+
+                            {% if notification.is_active %}
+
+                                <span class="status-badge active">
+
+                                    ACTIVE
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge inactive">
+
+                                    INACTIVE
+
+                                </span>
+
+                            {% endif %}
+
+
+
+                            <h3>
+
+                                {{ notification.title }}
+
+                            </h3>
+
+
+
+                            <p>
+
+                                {{ notification.message }}
+
+                            </p>
+
+
+
+                            <small>
+
+                                {{ notification.created_at }}
+
+                            </small>
+
+                        </div>
+
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="notification-actions">
+
+                            <!-- TOGGLE -->
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('admin.toggle_global_notification', notification_id=notification.notification_id) }}"
+                            >
+
+                                {% if notification.is_active %}
+
+                                    <button
+                                        type="submit"
+                                        class="toggle-btn deactivate"
+                                    >
+
+                                        Disable
+
+                                    </button>
+
+                                {% else %}
+
+                                    <button
+                                        type="submit"
+                                        class="toggle-btn activate"
+                                    >
+
+                                        Enable
+
+                                    </button>
+
+                                {% endif %}
+
+                            </form>
+
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('admin.delete_global_notification', notification_id=notification.notification_id) }}"
+                                onsubmit="return confirm('Delete this announcement?')"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn"
+                                >
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+
+                    📭
+
+                </div>
+
+                <h2>
+
+                    No Announcements Yet
+
+                </h2>
+
+                <p>
+
+                    Publish your first RM Bakes
+                    marketing campaign 😭🔥
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+<!-- JS -->
+<script>
+
+const typeSelect =
+    document.getElementById(
+        "notificationType"
+    );
+
+const couponFields =
+    document.getElementById(
+        "couponFields"
+    );
+
+const productFields =
+    document.getElementById(
+        "productFields"
+    );
+
+const seasonalFields =
+    document.getElementById(
+        "seasonalFields"
+    );
+
+const titleInput =
+    document.querySelector(
+        'input[name="title"]'
+    );
+
+const messageInput =
+    document.querySelector(
+        'textarea[name="message"]'
+    );
+
+titleInput.addEventListener(
+    "input",
+    () => {
+
+        document.getElementById(
+            "previewTitle"
+        ).innerText = titleInput.value;
+
+    }
+);
+
+messageInput.addEventListener(
+    "input",
+    () => {
+
+        document.getElementById(
+            "previewMessage"
+        ).innerText = messageInput.value;
+
+    }
+);
+
+function updateFields(){
+
+    couponFields.style.display = "none";
+    productFields.style.display = "none";
+    seasonalFields.style.display = "none";
+
+    if(typeSelect.value === "coupon"){
+
+        couponFields.style.display = "block";
+
+    }
+
+    else if(
+        typeSelect.value === "new_product"
+        ||
+        typeSelect.value === "launching_soon"
+    ){
+
+        productFields.style.display = "block";
+
+    }
+
+    else if(
+        typeSelect.value === "seasonal"
+    ){
+
+        productFields.style.display = "block";
+
+        seasonalFields.style.display = "block";
+
+    }
+
+actionFields.style.display = "block";
+
+if(typeSelect.value === "coupon"){
+
+    actionFields.style.display =
+        "none";
+
+}
+
+}
+
+typeSelect.addEventListener(
+    "change",
+    updateFields
+);
+
+updateFields();
+
+</script>
+
+</body>
+
+</html>
