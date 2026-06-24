@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="{{ url_for('order.my_orders') }}" class="detail-back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Orders</a>
+
+<div class="rm-page-hero">
+  <h1>Order Details</h1>
+  <p>Sweetness is being prepared with care</p>
+</div>
+
+<div style="max-width:780px;margin:0 auto;">
+
+  <!-- ORDER HEADER -->
+  <div class="rm-card section-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div class="order-num">#{{ order.order_number }}</div>
+        {% if order.is_custom_order %}<div class="studio-tag" style="margin-top:8px;">✨ Dessert Studio Production</div>{% endif %}
+        <div class="order-date" style="margin-top:8px;">Ordered {{ order.ordered_at.strftime("%d %b %Y · %I:%M %p") }}</div>
+      </div>
+      <span class="status-badge status-{{ order.order_status }}">{{ order.order_status.replace("_"," ").title() }}</span>
+    </div>
+  </div>
+
+  <!-- CUSTOM ORDER INFO -->
+  {% if order.is_custom_order %}
+  <div class="rm-card-amber rm-card section-card">
+    <div class="section-title">Dessert Studio Creation</div>
+    {% if order.custom_inspiration_image %}
+    <img src="{{ order.custom_inspiration_image }}" style="width:100%;border-radius:var(--radius-lg);margin-bottom:16px;max-height:300px;object-fit:cover;" alt="Inspiration">
+    {% endif %}
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:0.9rem;color:var(--text-body);line-height:1.8;">
+      <div><strong>Request Code:</strong> {{ order.custom_request_code }}</div>
+      <div><strong>Category:</strong> {{ order.custom_dessert_category }}</div>
+      <div><strong>Flavor:</strong> {{ order.custom_flavor }}</div>
+      <div><strong>Quantity:</strong> {{ order.custom_quantity }}</div>
+      {% if order.custom_description %}<div style="margin-top:8px;"><strong>Vision:</strong><br>{{ order.custom_description }}</div>{% endif %}
+      {% if order.custom_message %}<div style="margin-top:8px;"><strong>Message:</strong> {{ order.custom_message }}</div>{% endif %}
+      {% if order.custom_special_notes %}<div style="margin-top:8px;"><strong>Notes:</strong> {{ order.custom_special_notes }}</div>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- PRODUCTION TIMELINE -->
+  <div class="rm-card section-card">
+    <div class="section-title">Production Journey</div>
+    {% set status_order = ["queued","approved","preparing","baking","packaging","out_for_delivery","delivered"] %}
+    {% set current_index = status_order.index(order.order_status) if order.order_status in status_order else 0 %}
+    <div class="production-timeline">
+      {% set steps = [
+        ("🧾","Order Confirmed","Your dessert entered the production queue."),
+        ("✅","Production Approved","Ingredients and preparation finalised."),
+        ("👨‍🍳","Dessert Preparation","Your handcrafted dessert is being prepared."),
+        ("🔥","Baking in Progress","Fresh baking magic is happening."),
+        ("📦","Packaging","Final touches and secure packaging."),
+        ("🛵","Out for Delivery","Your dessert is on its way."),
+        ("🎉","Delivered","Dessert journey completed.")
+      ] %}
+      {% for icon, title, desc in steps %}
+      {% set i = loop.index0 %}
+      <div class="timeline-step {% if i < current_index %}completed{% elif i == current_index %}active{% endif %}">
+        <div class="timeline-icon">{{ icon }}</div>
+        <div class="timeline-body">
+          <div class="timeline-title">{{ title }}</div>
+          <div class="timeline-desc">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- DELIVERY DETAILS -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delivery Details</div>
+    <div class="checkout-totals" style="border-top:none;padding-top:0;margin-top:0;">
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Name</span><span class="delivery-detail-value">{{ order.full_name }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Phone</span><span class="delivery-detail-value">{{ order.phone_number }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Address</span><span class="delivery-detail-value">{{ order.delivery_address }}</span></div>
+      {% if order.landmark %}<div class="delivery-detail-line"><span class="delivery-detail-label">Landmark</span><span class="delivery-detail-value">{{ order.landmark }}</span></div>{% endif %}
+      {% if order.city %}<div class="delivery-detail-line"><span class="delivery-detail-label">City</span><span class="delivery-detail-value">{{ order.city }}</span></div>{% endif %}
+      {% if order.pincode %}<div class="delivery-detail-line"><span class="delivery-detail-label">Pincode</span><span class="delivery-detail-value">{{ order.pincode }}</span></div>{% endif %}
+      <div class="delivery-detail-line" style="border:none;"><span class="delivery-detail-label">Payment</span><span class="delivery-detail-value">{{ order.payment_method }}</span></div>
+    </div>
+    {% if order.google_maps_link %}<a href="{{ order.google_maps_link }}" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:12px;">Open Maps</a>{% endif %}
+  </div>
+
+  <!-- ITEMS + TOTALS (menu orders only) -->
+  {% if not order.is_custom_order %}
+  <div class="rm-card section-card">
+    <div class="section-title">Ordered Items</div>
+    {% for item in order.products %}
+    <div class="checkout-item">
+      {% if item.product_image %}
+      <img src="{{ get_product_image(item.product_image) }}" class="checkout-item-img" alt="{{ item.product_name }}">
+      {% else %}
+      <div class="checkout-item-img-placeholder">🍰</div>
+      {% endif %}
+      <div style="flex:1;">
+        <div class="checkout-item-name">{{ item.product_name }}</div>
+        <div class="checkout-item-meta">₹{{ item.product_price }} × {{ item.product_quantity }} {{ item.product_unit }}</div>
+        {% if item.note %}<div class="checkout-item-note">Note: {{ item.note }}</div>{% endif %}
+      </div>
+      <div class="checkout-item-total">₹{{ item.total_price }}</div>
+    </div>
+    {% endfor %}
+    <div class="checkout-totals">
+      <div class="total-line"><span>Subtotal</span><strong>₹{{ order.subtotal }}</strong></div>
+      <div class="total-line"><span>Delivery Fee</span><strong>₹{{ order.delivery_fee }}</strong></div>
+      {% if order.discount_amount and order.discount_amount > 0 %}
+      <div class="total-line total-savings"><span>Sweet Deal ({{ order.coupon_code }})</span><strong>−₹{{ order.discount_amount }}</strong></div>
+      {% endif %}
+      <div class="total-line grand"><span>Grand Total</span><strong>₹{{ order.grand_total }}</strong></div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ACTIONS -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+    {% if not order.is_custom_order %}
+    <button class="btn btn-outline" onclick="orderAgain({{ order.order_id }})">Order Again</button>
+    {% endif %}
+    {% if order.order_status in ["queued","approved"] %}
+    <button class="btn btn-danger" onclick="cancelOrder({{ order.order_id }})">Cancel Order</button>
+    {% endif %}
+    {% if order.order_status == "delivered" %}
+      {% if order.has_review %}
+      <a href="{{ url_for('review.my_review', order_id=order.order_id) }}" class="btn btn-ghost">My Review</a>
+      {% else %}
+      <a href="{{ url_for('review.leave_review', order_id=order.order_id) }}" class="btn btn-amber">Leave Review</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+async function cancelOrder(orderId) {
+  if (!confirm('Cancel this order?')) return;
+  const res = await fetch(`/cancel-order/${orderId}`, {method:'POST'});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => location.reload(), 1200);
+}
+async function orderAgain(orderId) {
+  const res = await fetch(`/order-again/${orderId}`, {method:'POST'});
+  const data = await res.json();
+  showToast(data.message);
+  if (data.success) setTimeout(() => window.location.href = data.redirect, 1200);
+}
+</script>
+{% endblock %}
