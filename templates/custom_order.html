@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dessert Studio — RM Bakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="studio-page">
+  <!-- TOP BAR -->
+  <div class="studio-topbar">
+    <a href="{{ url_for('main.home') }}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Home</a>
+    <div class="rm-logo" style="font-size:1.1rem;letter-spacing:2px;">RM BAKES</div>
+    <a href="{{ url_for('custom_order.my_custom_orders') }}" class="btn btn-outline btn-sm">My Studio Orders</a>
+  </div>
+
+  <div class="studio-page-wrap">
+    <div class="studio-hero">
+      <h1>Dessert <em>Studio</em></h1>
+      <p style="color:var(--text-muted);max-width:560px;margin:0 auto;line-height:1.8;">
+        Not interested in ordinary desserts? Design something deeply personal — handcrafted and emotionally memorable.
+        From dream cakes to artistic kunafa creations, RM Bakes transforms your imagination into sweetness.
+      </p>
+      <div class="studio-quote">"Every custom dessert tells a story."</div>
+    </div>
+
+    <div class="studio-form-card">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--maroon);margin-bottom:28px;">Design Your Dream Dessert</h2>
+
+      {% with messages = get_flashed_messages() %}{% if messages %}{% for m in messages %}
+      <div style="padding:12px 16px;background:var(--amber-pale);border:1px solid rgba(200,146,58,0.25);border-radius:var(--radius-md);margin-bottom:16px;color:var(--text-body);font-size:0.9rem;">{{ m }}</div>
+      {% endfor %}{% endif %}{% endwith %}
+
+      <form action="{{ url_for('custom_order.submit_custom_order') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Submit this dessert request?')">
+
+        <div class="studio-grid">
+          <div>
+            <label class="rm-label">Dessert Category</label>
+            <select name="dessert_category" class="rm-input" required>
+              <option value="">Select a category</option>
+              <option>Cake</option><option>Kunafa</option><option>Brownie</option>
+              <option>Cupcake</option><option>Cheesecake</option><option>Cookies</option><option>Chocolate Box</option>
+            </select>
+          </div>
+          <div>
+            <label class="rm-label">Flavor</label>
+            <input type="text" name="flavor" class="rm-input" placeholder="e.g. Chocolate Truffle" required>
+          </div>
+          <div>
+            <label class="rm-label">Quantity</label>
+            <input type="text" name="quantity" class="rm-input" placeholder="e.g. 1kg / 12 pcs" required>
+          </div>
+          <div>
+            <label class="rm-label">Occasion</label>
+            <input type="text" name="occasion" class="rm-input" placeholder="Birthday / Wedding / Anniversary">
+          </div>
+          <div>
+            <label class="rm-label">Delivery Date</label>
+            <input type="date" name="delivery_date" class="rm-input">
+          </div>
+          <div>
+            <label class="rm-label">Estimated Budget (₹)</label>
+            <input type="number" name="budget" class="rm-input" placeholder="e.g. 1500">
+          </div>
+        </div>
+
+        <label class="rm-label">Inspiration Image</label>
+        <div class="upload-box" onclick="document.getElementById('imgInput').click()">
+          <i class="fa-solid fa-image" style="font-size:1.5rem;color:var(--amber);margin-bottom:8px;display:block;"></i>
+          <p>Upload inspiration images, sketches or references</p>
+          <input type="file" name="inspiration_image" id="imgInput" accept="image/*" style="display:none;" onchange="previewImg(this)">
+        </div>
+        <div class="upload-preview" id="uploadPreview"><img id="previewImg" src="" alt="Preview"></div>
+
+        <label class="rm-label" style="margin-top:20px;">Describe Your Dream Dessert</label>
+        <textarea name="description" class="rm-input" placeholder="Describe colors, design, layers, themes, toppings, mood..." required style="min-height:140px;"></textarea>
+
+        <label class="rm-label">Custom Message on Dessert</label>
+        <input type="text" name="custom_message" class="rm-input" placeholder="e.g. Happy Birthday Nila ❤️">
+
+        <label class="rm-label">Special Notes</label>
+        <textarea name="special_notes" class="rm-input" placeholder="Allergies, eggless request, delivery preferences..."></textarea>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px;">Submit Dessert Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function previewImg(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('previewImg').src = e.target.result;
+      document.getElementById('uploadPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+</body>
+</html>

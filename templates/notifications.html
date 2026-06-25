@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="notif-header">
+  <h1>Notifications</h1>
+  {% if current_user.is_authenticated %}
+  <button class="btn btn-ghost btn-sm" onclick="clearNotifs()"><i class="fa-solid fa-trash-can"></i> Clear All</button>
+  {% endif %}
+</div>
+
+<div class="notif-tabs">
+  {% if current_user.is_authenticated %}
+  <button class="notif-tab active" id="tab-orders" onclick="showTab('orders')">Orders</button>
+  {% endif %}
+  <button class="notif-tab {% if not current_user.is_authenticated %}active{% endif %}" id="tab-rmbakes" onclick="showTab('rmbakes')">RM Bakes</button>
+</div>
+
+<!-- ORDERS TAB -->
+{% if current_user.is_authenticated %}
+<div class="notif-tab-content active" id="orders-content">
+  {% if user_notifications %}
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    {% for n in user_notifications %}
+    <div class="notif-card">
+      <div class="notif-icon">{% if n.notification_category == 'custom_order' %}✨{% else %}<i class="fa-solid fa-cake-candles"></i>{% endif %}</div>
+      <div class="notif-body">
+        <div class="notif-title">{{ n.title }}</div>
+        {% if n.custom_order_id or "DS" in n.message %}
+        <span class="notif-order-type custom">✨ Custom Order</span>
+        {% else %}
+        <span class="notif-order-type">🍰 Menu Order</span>
+        {% endif %}
+        <div class="notif-text">{{ n.message }}</div>
+        <div class="notif-meta">{{ n.created_at.strftime('%d %b %Y · %I:%M %p') }}</div>
+        <div class="notif-actions">
+          {% if n.order_id %}
+          <a href="{{ url_for('order.order_details', order_id=n.order_id) }}" class="btn btn-outline btn-sm">View Order</a>
+          {% endif %}
+          {% if n.notification_category == 'review' and n.order_id %}
+          <a href="{{ url_for('review.my_review', order_id=n.order_id) }}" class="btn btn-ghost btn-sm">View Reply</a>
+          {% endif %}
+          {% if n.notification_category in ['delivered_review','review_reminder'] %}
+            {% if n.has_review %}
+            <a href="{{ url_for('review.my_review', order_id=n.order_id) }}" class="btn btn-ghost btn-sm">My Review</a>
+            {% else %}
+            <a href="{{ url_for('review.leave_review', order_id=n.order_id) }}" class="btn btn-amber btn-sm">Leave Review</a>
+            {% endif %}
+          {% endif %}
+          {% if n.custom_order_id %}
+          <a href="{{ url_for('custom_order.custom_order_details', custom_order_id=n.custom_order_id) }}" class="btn btn-amber btn-sm">View Dessert</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="notif-empty"><div class="empty-icon"><i class="fa-regular fa-bell-slash"></i></div><h2>No Order Notifications</h2><p>Your order updates will appear here</p></div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- RM BAKES TAB -->
+<div class="notif-tab-content {% if not current_user.is_authenticated %}active{% endif %}" id="rmbakes-content">
+  {% if global_notifications %}
+  <div class="global-notif-grid">
+    {% for n in global_notifications %}
+    <div class="global-notif-card">
+      <img src="{{ n.banner_image }}" class="global-notif-banner" alt="{{ n.title }}">
+      <div class="global-notif-body">
+        <span class="notif-type-badge">
+          {% if n.notification_type == 'coupon' %}🎟 Coupon
+          {% elif n.notification_type == 'new_product' %}🍰 New Product
+          {% elif n.notification_type == 'launching_soon' %}🚀 Launching Soon
+          {% elif n.notification_type == 'seasonal' %}🌿 Seasonal
+          {% elif n.notification_type == 'out_of_stock' %}Out of Stock
+          {% else %}📢 Announcement{% endif %}
+        </span>
+        {% if n.is_featured %}<span class="notif-featured-badge">★ Featured</span>{% endif %}
+        <h3 style="margin:8px 0 6px;font-size:1.05rem;color:var(--maroon);">{{ n.title }}</h3>
+        <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;margin-bottom:8px;">{{ n.message }}</p>
+        <div style="font-size:0.75rem;color:var(--grey);">{{ n.created_at.strftime('%d %b %Y · %I:%M %p') }}</div>
+        {% if n.notification_type == 'coupon' and n.coupon_code %}<div class="notif-coupon-box">{{ n.coupon_code }}</div>{% endif %}
+        {% if n.product_name %}<div class="notif-info-box">Product: <strong>{{ n.product_name }}</strong></div>{% endif %}
+        {% if n.notification_type != 'coupon' and n.action_text and n.action_link %}
+        <a href="{{ n.action_link }}" class="btn btn-primary btn-sm" style="margin-top:14px;">{{ n.action_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="notif-empty"><div class="empty-icon"><i class="fa-regular fa-cake-candles"></i></div><h2>No Announcements</h2><p>New offers and launches will appear here</p></div>
+  {% endif %}
+</div>
+
+<script>
+function showTab(name) {
+  ['orders','rmbakes'].forEach(t => {
+    const tab = document.getElementById('tab-'+t);
+    const content = document.getElementById(t+'-content');
+    if (tab) tab.classList.toggle('active', t===name);
+    if (content) content.classList.toggle('active', t===name);
+  });
+}
+
+async function clearNotifs() {
+  if (!confirm('Clear all personal notifications?')) return;
+  const res = await fetch('/clear-user-notifications', {method:'POST'});
+  const data = await res.json();
+  if (data.success) location.reload();
+}
+</script>
+{% endblock %}
