@@ -1,1 +1,0 @@
-RM Bakes template files
