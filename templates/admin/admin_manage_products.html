@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+
+        RM Bakes • Manage Products
+
+    </title>
+
+    <!-- =====================================
+         GOOGLE FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =====================================
+           GLOBAL
+        ====================================== */
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+        body{
+
+            min-height:100vh;
+
+            color:white;
+
+            font-family:'Inter',sans-serif;
+
+            background:
+
+                radial-gradient(
+                    circle at top,
+                    rgba(0,255,200,0.08),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #050505,
+                    #0d0d0d,
+                    #151515
+                );
+
+        }
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size:40px 40px;
+
+            opacity:0.18;
+
+            pointer-events:none;
+
+        }
+
+        /* =====================================
+           TOPBAR
+        ====================================== */
+
+        .topbar{
+
+            position:sticky;
+
+            top:0;
+
+            z-index:100;
+
+            padding:20px 28px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            background:
+
+                rgba(0,0,0,0.65);
+
+            backdrop-filter:blur(18px);
+
+            border-bottom:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .page-title{
+
+            font-family:'Orbitron',sans-serif;
+
+            letter-spacing:2px;
+
+            font-size:1.3rem;
+
+        }
+
+        .dashboard-btn{
+
+            text-decoration:none;
+
+            color:white;
+
+            padding:12px 18px;
+
+            border-radius:16px;
+
+            background:
+
+                rgba(255,255,255,0.08);
+
+            border:
+
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+        /* =====================================
+           FLASH MESSAGES
+        ====================================== */
+
+        .flash-wrapper{
+
+            width:92%;
+
+            max-width:1400px;
+
+            margin:20px auto;
+
+        }
+
+        .flash{
+
+            padding:16px;
+
+            margin-bottom:12px;
+
+            border-radius:18px;
+
+            background:
+
+                rgba(0,255,180,0.1);
+
+            border:
+
+                1px solid rgba(0,255,180,0.15);
+
+            color:#8ffff0;
+
+        }
+
+        /* =====================================
+           SEARCH BAR
+        ====================================== */
+
+        .search-section{
+
+            width:92%;
+
+            max-width:1400px;
+
+            margin:30px auto;
+
+        }
+
+        .search-form{
+
+            display:flex;
+
+            gap:12px;
+
+        }
+
+        .search-input{
+
+            flex:1;
+
+            padding:16px;
+
+            border:none;
+
+            outline:none;
+
+            color:white;
+
+            border-radius:18px;
+
+            background:
+
+                rgba(255,255,255,0.06);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        .search-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:16px 22px;
+
+            border-radius:18px;
+
+            font-weight:700;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #00ffd0,
+                    #00f0ff
+                );
+
+            color:black;
+
+        }
+
+        /* =====================================
+           PRODUCT GRID
+        ====================================== */
+
+        .products-grid{
+
+            width:92%;
+
+            max-width:1400px;
+
+            margin:auto auto 50px;
+
+            display:grid;
+
+            grid-template-columns:
+
+                repeat(
+                    auto-fit,
+                    minmax(320px,1fr)
+                );
+
+            gap:24px;
+
+        }
+
+        /* =====================================
+           PRODUCT CARD
+        ====================================== */
+
+        .product-card{
+
+            background:
+
+                rgba(255,255,255,0.04);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+            border-radius:28px;
+
+            overflow:hidden;
+
+            backdrop-filter:blur(16px);
+
+        }
+
+        /* Product image */
+
+        .product-image{
+
+            width:100%;
+
+            height:240px;
+
+            object-fit:cover;
+
+        }
+
+        /* Product content */
+
+        .product-content{
+
+            padding:22px;
+
+        }
+
+        .product-name{
+
+            font-size:1.1rem;
+
+            font-weight:700;
+
+            margin-bottom:12px;
+
+        }
+
+        .product-detail{
+
+            margin-bottom:8px;
+
+            color:
+
+                rgba(255,255,255,0.65);
+
+        }
+
+        .marketing-status-pill{
+
+            margin-top:10px;
+            margin-bottom:12px;
+
+        }
+
+        .marketing-status-pill span{
+
+            display:inline-flex;
+            align-items:center;
+
+            padding:5px 10px;
+
+            border-radius:999px;
+
+            font-size:.72rem;
+
+            font-weight:700;
+
+        }
+
+        .launching-pill{
+
+            color:#7fdfff;
+            
+            background:
+                rgba(0,180,255,.12);
+
+            border:
+                1px solid rgba(
+                    0,
+                    180,
+                    255,
+                    .25
+                );
+
+        }
+
+        .seasonal-pill{
+
+            color:#ffc66d;
+
+            background:
+                rgba(255,170,0,.12);
+
+            border:
+                1px solid rgba(
+                    255,
+                    170,
+                    0,
+                    .25
+                );
+
+        }
+
+        .festive-pill{
+
+            color:#ff9fdc;
+
+            background:
+                rgba(255,0,170,.12);
+
+            border:
+                1px solid rgba(
+                    255,
+                    0,
+                    170,
+                    .25
+                );
+
+        }
+
+        .regular-pill{
+
+            color:#e5e5e5;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    .10
+                );
+
+        }
+
+        /* =====================================
+           ACTION BUTTONS
+        ====================================== */
+
+        .action-row{
+
+            margin-top:20px;
+
+            display:flex;
+
+            gap:10px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .edit-btn{
+
+            text-decoration:none;
+
+            color:black;
+
+            font-weight:700;
+
+            padding:12px 16px;
+
+            border-radius:16px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #00ffd0,
+                    #00f0ff
+                );
+
+        }
+
+        .delete-btn{
+
+            border:none;
+
+            cursor:pointer;
+
+            padding:12px 16px;
+
+            border-radius:16px;
+
+            color:white;
+
+            background:
+
+                rgba(255,0,80,0.15);
+
+            border:
+
+                1px solid rgba(255,0,80,0.18);
+
+        }
+
+        /* =====================================
+           EMPTY STATE
+        ====================================== */
+
+        .empty-state{
+
+            width:92%;
+
+            max-width:700px;
+
+            margin:80px auto;
+
+            text-align:center;
+
+            padding:40px;
+
+            border-radius:28px;
+
+            background:
+
+                rgba(255,255,255,0.04);
+
+            border:
+
+                1px solid rgba(255,255,255,0.06);
+
+        }
+
+        /* =====================================
+           MOBILE
+        ====================================== */
+
+        @media(max-width:700px){
+
+            .topbar{
+
+                flex-direction:column;
+
+                align-items:flex-start;
+
+                gap:14px;
+
+            }
+
+            .search-form{
+
+                flex-direction:column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =====================================
+     FLASH MESSAGES
+====================================== -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+<div class="flash-wrapper">
+
+{% for category, message in messages %}
+
+<div class="flash">
+
+    {{ message }}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+{% endwith %}
+
+<!-- =====================================
+     TOPBAR
+====================================== -->
+
+<div class="topbar">
+
+    <div class="page-title">
+
+        PRODUCT CONTROL CENTER
+
+    </div>
+
+    <a
+
+        href="{{ url_for('admin.admin_dashboard') }}"
+
+        class="dashboard-btn"
+
+    >
+
+        ← Dashboard
+
+    </a>
+
+</div>
+
+<!-- =====================================
+     SEARCH
+====================================== -->
+
+<div class="search-section">
+
+    <form
+
+        method="GET"
+
+        class="search-form"
+
+    >
+
+        <input
+
+            type="text"
+
+            name="search"
+
+            value="{{ search_query }}"
+
+            placeholder="Search products..."
+
+            class="search-input"
+
+        >
+
+        <button
+
+            type="submit"
+
+            class="search-btn"
+
+        >
+
+            Search 🔎
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- =====================================
+     PRODUCTS GRID
+====================================== -->
+
+{% if products %}
+
+<div class="products-grid">
+
+{% for product in products %}
+
+<div class="product-card">
+
+    <!-- Product Image -->
+
+    <img
+
+        src="{{ get_product_image(product.product_image) }}"
+
+        class="product-image"
+
+        alt="{{ product.product_name }}"
+
+    >
+
+    <!-- Product Content -->
+
+    <div class="product-content">
+
+        <div class="product-name">
+
+            {{ product.product_name }}
+
+        </div>
+
+        <div class="product-detail">
+
+            💰 ₹{{ product.product_price }}
+
+        </div>
+
+        <div class="product-detail">
+
+            📦 {{ product.product_unit }}
+
+        </div>
+
+        <div class="product-detail">
+
+            🏷 {{ product.product_category }}
+
+        </div>
+
+        <div class="product-detail">
+
+            ✨ {{ product.product_tags }}
+
+        </div>
+
+        <div class="marketing-status-pill">
+
+            {% if product.product_is_launching %}
+
+            <span class="launching-pill">
+                🚀 Launching
+            </span>
+
+            {% elif product.product_is_seasonal %}
+
+            <span class="seasonal-pill">
+                🍂 Seasonal
+            </span>
+
+            {% elif product.product_is_festive %}
+
+            <span class="festive-pill">
+                🎉 Festive
+            </span>
+
+            {% else %}
+
+            <span class="regular-pill">
+                ✨ Regular
+            </span>
+
+            {% endif %}
+
+        </div>
+
+        <!-- Action Buttons -->
+
+        <div class="action-row">
+
+            <a
+
+                href="{{ url_for(
+                    'admin_product.edit_product',
+                    product_id=product.product_id
+                ) }}"
+
+                class="edit-btn"
+
+            >
+
+                Edit ✏️
+
+            </a>
+
+            <form
+
+                method="POST"
+
+                action="{{ url_for(
+                    'admin_product.delete_product',
+                    product_id=product.product_id
+                ) }}"
+
+                onsubmit="return confirm(
+                    'Delete this product?'
+                );"
+
+            >
+
+                <button
+
+                    type="submit"
+
+                    class="delete-btn"
+
+                >
+
+                    Delete 🗑️
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<!-- =====================================
+     EMPTY STATE
+====================================== -->
+
+<div class="empty-state">
+
+    <h2>
+
+        😭 No Products Found
+
+    </h2>
+
+    <br>
+
+    <p>
+
+        No products matched your search.
+
+    </p>
+
+</div>
+
+{% endif %}
+
+</body>
+
+</html>
