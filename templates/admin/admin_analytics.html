@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+
+RM Bakes Intelligence Hub
+
+</title>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/admin_analytics.css'
+    ) }}"
+>
+
+</head>
+
+<body>
+
+
+
+<!-- =====================================
+     TOPBAR
+===================================== -->
+
+<div class="topbar">
+
+    <div class="topbar-left">
+
+        <h1>
+
+            RM BAKES INTELLIGENCE HUB
+
+        </h1>
+
+        <p>
+
+            Revenue Intelligence &
+            Business Analytics Center
+
+        </p>
+
+    </div>
+
+
+
+    <div class="topbar-right">
+
+        <div class="admin-chip">
+
+            👤 {{ admin_username }}
+
+        </div>
+
+
+
+        <div class="admin-chip">
+
+            🛡 {{ admin_role or "Administrator" }}
+
+        </div>
+
+
+
+        <a
+            href="{{ url_for(
+                'admin.admin_dashboard'
+            ) }}"
+            class="back-btn"
+        >
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     HERO
+===================================== -->
+
+<section class="hero">
+
+    <div class="hero-glow"></div>
+
+    <span class="hero-badge">
+
+        RM BAKES • COMMAND CENTER
+
+    </span>
+
+
+
+    <h1>
+
+        Business Intelligence Hub
+
+    </h1>
+
+
+
+    <p>
+
+        Real-time revenue tracking,
+        customer analytics,
+        Dessert Studio insights and
+        operational intelligence.
+
+    </p>
+
+</section>
+
+
+
+<!-- =====================================
+     EXECUTIVE RADAR
+===================================== -->
+
+<section class="executive-radar">
+
+    <div class="section-title">
+
+        Executive Radar
+
+    </div>
+
+
+
+    <div class="radar-grid">
+
+        <div class="radar-card">
+
+            <div class="card-icon">
+                💰
+            </div>
+
+            <div class="card-label">
+                Revenue
+            </div>
+
+            <div class="card-value">
+                ₹{{ "{:,.0f}".format(
+                    total_revenue
+                ) }}
+            </div>
+
+        </div>
+
+
+
+        <div class="radar-card">
+
+            <div class="card-icon">
+                📦
+            </div>
+
+            <div class="card-label">
+                Orders
+            </div>
+
+            <div class="card-value">
+                {{ total_orders }}
+            </div>
+
+        </div>
+
+
+
+        <div class="radar-card">
+
+            <div class="card-icon">
+                👥
+            </div>
+
+            <div class="card-label">
+                Customers
+            </div>
+
+            <div class="card-value">
+                {{ total_customers }}
+            </div>
+
+        </div>
+
+
+
+        <div class="radar-card">
+
+            <div class="card-icon">
+                🎨
+            </div>
+
+            <div class="card-label">
+                Dessert Studio
+            </div>
+
+            <div class="card-value">
+                {{ total_custom_orders }}
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     BUSINESS HEALTH CENTER
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Business Health Center
+
+    </div>
+
+    <div class="health-grid">
+
+        <div class="health-score-card">
+
+            <div class="health-score">
+
+                {{ health_score }}
+
+            </div>
+
+            <div class="health-status">
+
+                {{ health_status }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Delivery Rate
+
+            </h3>
+
+            <p>
+
+                {{ delivery_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Cancellation Rate
+
+            </h3>
+
+            <p>
+
+                {{ cancellation_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Studio Conversion
+
+            </h3>
+
+            <p>
+
+                {{ conversion_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="health-metric-card">
+
+            <h3>
+
+                Revenue Forecast
+
+            </h3>
+
+            <p>
+
+                ₹{{ "{:,.0f}".format(forecast_revenue) }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     REVENUE NEBULA
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Revenue Nebula
+
+    </div>
+
+
+
+    <div class="revenue-grid">
+
+        <div class="mini-card">
+
+            <span>
+                Today
+            </span>
+
+            <h3>
+
+                ₹{{ "{:,.0f}".format(
+                    today_revenue
+                ) }}
+
+            </h3>
+
+        </div>
+
+
+
+        <div class="mini-card">
+
+            <span>
+                Last 7 Days
+            </span>
+
+            <h3>
+
+                ₹{{ "{:,.0f}".format(
+                    weekly_revenue
+                ) }}
+
+            </h3>
+
+        </div>
+
+
+
+        <div class="mini-card">
+
+            <span>
+                Last 30 Days
+            </span>
+
+            <h3>
+
+                ₹{{ "{:,.0f}".format(
+                    monthly_revenue
+                ) }}
+
+            </h3>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+
+<!-- =====================================
+     DESSERT STUDIO INTELLIGENCE
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Dessert Studio Intelligence
+
+    </div>
+
+    <div class="studio-grid">
+
+        <div class="studio-card">
+
+            <h3>
+
+                Average Budget
+
+            </h3>
+
+            <p>
+
+                ₹{{ "{:,.0f}".format(average_budget) }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Quote Acceptance
+
+            </h3>
+
+            <p>
+
+                {{ quote_acceptance_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Success Rate
+
+            </h3>
+
+            <p>
+
+                {{ studio_success_rate }}%
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Accepted Quotes
+
+            </h3>
+
+            <p>
+
+                {{ accepted_quotes }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Rejected Quotes
+
+            </h3>
+
+            <p>
+
+                {{ rejected_quotes }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="studio-card">
+
+            <h3>
+
+                Pending Responses
+
+            </h3>
+
+            <p>
+
+                {{ pending_quote_responses }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+    
+
+<!-- =====================================
+     PRODUCT MARKET BOARD
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Product Market Board
+
+    </div>
+
+    <div class="market-board">
+
+        {% for product_name, quantity in top_products %}
+
+        <div class="market-card">
+
+            <div class="market-rank">
+
+                #{{ loop.index }}
+
+            </div>
+
+            <div class="market-product">
+
+                {{ product_name }}
+
+            </div>
+
+            <div class="market-metric">
+
+                {{ quantity }} sold
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+    
+<!-- =====================================
+     FAVOURITE INTELLIGENCE
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Favourite Intelligence
+
+    </div>
+
+    <div class="favourite-grid">
+
+        {% for product_name, count in top_favourites %}
+
+        <div class="favourite-card">
+
+            <div class="favourite-icon">
+
+                ❤️
+
+            </div>
+
+            <div class="favourite-name">
+
+                {{ product_name }}
+
+            </div>
+
+            <div class="favourite-count">
+
+                {{ count }} favourites
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     CUSTOMER RADAR
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Customer Radar
+
+    </div>
+
+    <div class="customer-radar-grid">
+
+        <div class="customer-stat-card">
+
+            <div class="stat-icon">
+
+                👥
+
+            </div>
+
+            <div class="stat-value">
+
+                {{ total_customers }}
+
+            </div>
+
+            <div class="stat-label">
+
+                Total Customers
+
+            </div>
+
+        </div>
+
+
+
+        <div class="customer-stat-card">
+
+            <div class="stat-icon">
+
+                💰
+
+            </div>
+
+            <div class="stat-value">
+
+                ₹{{ average_order_value }}
+
+            </div>
+
+            <div class="stat-label">
+
+                Average Order Value
+
+            </div>
+
+        </div>
+
+
+
+        <div class="customer-stat-card">
+
+            <div class="stat-icon">
+
+                ❤️
+
+            </div>
+
+            <div class="stat-value">
+
+                {{ total_favourites }}
+
+            </div>
+
+            <div class="stat-label">
+
+                Total Favourites
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     VIP CUSTOMERS
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        VIP Customer Leaderboard
+
+    </div>
+
+    <div class="vip-board">
+
+        {% for customer, amount in vip_customers %}
+
+        <div class="vip-card">
+
+            <div class="vip-rank">
+
+                👑 #{{ loop.index }}
+
+            </div>
+
+            <div class="vip-name">
+
+                {{ customer }}
+
+            </div>
+
+            <div class="vip-spend">
+
+                ₹{{ "{:,.0f}".format(amount) }}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     HEAT GALAXY
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Order Heat Galaxy
+
+    </div>
+
+    <div class="heatmap-grid">
+
+        <div class="heat-cell">
+
+            <div class="heat-value">
+
+                {{ heatmap[0] }}
+
+            </div>
+
+            <div class="heat-label">
+
+                Morning
+
+            </div>
+
+        </div>
+
+
+
+        <div class="heat-cell">
+
+            <div class="heat-value">
+
+                {{ heatmap[1] }}
+
+            </div>
+
+            <div class="heat-label">
+
+                Afternoon
+
+            </div>
+
+        </div>
+
+
+
+        <div class="heat-cell">
+
+            <div class="heat-value">
+
+                {{ heatmap[2] }}
+
+            </div>
+
+            <div class="heat-label">
+
+                Evening
+
+            </div>
+
+        </div>
+
+
+
+        <div class="heat-cell">
+
+            <div class="heat-value">
+
+                {{ heatmap[3] }}
+
+            </div>
+
+            <div class="heat-label">
+
+                Night
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     OPERATIONS CORE
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Operations Core
+
+    </div>
+
+    <div class="operations-grid">
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ queued_orders }}
+
+            </h2>
+
+            <p>
+
+                Queued
+
+            </p>
+
+        </div>
+
+
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ approved_orders }}
+
+            </h2>
+
+            <p>
+
+                Approved
+
+            </p>
+
+        </div>
+
+
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ preparing_orders }}
+
+            </h2>
+
+            <p>
+
+                Preparing
+
+            </p>
+
+        </div>
+
+
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ baking_orders }}
+
+            </h2>
+
+            <p>
+
+                Baking
+
+            </p>
+
+        </div>
+
+
+        
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ packed_orders }}
+
+            </h2>
+
+            <p>
+
+                Packed
+
+            </p>
+
+        </div>
+        
+
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ delivery_orders }}
+
+            </h2>
+
+            <p>
+
+                Out for Delivery 
+
+            </p>
+
+        </div>
+
+
+
+
+        <div class="ops-card">
+
+            <h2>
+
+                {{ delivered_orders }}
+
+            </h2>
+
+            <p>
+
+                Delivered
+
+            </p>
+
+        </div>
+
+
+        
+        
+        <div class="ops-card">
+
+            <h2>
+
+                {{ cancelled_orders }}
+
+            </h2>
+
+            <p>
+
+                Cancelled
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     RM INTELLIGENCE ENGINE
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        RM Intelligence Engine
+
+    </div>
+
+    <div class="insights-container">
+
+        {% for insight in insights %}
+
+        <div class="insight-card">
+
+            {{ insight }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     FLAVOURS & OCCASIONS
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Flavours & Occasions
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Flavours
+
+            </h3>
+
+            {% for flavour, count in top_flavours %}
+
+            <p>
+
+                🍓 {{ flavour }} — {{ count }}
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Occasions
+
+            </h3>
+
+            {% for occasion, count in top_occasions %}
+
+            <p>
+
+                🎂 {{ occasion }} — {{ count }}
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+    
+
+<!-- =====================================
+     ANALYTICS VISUALIZATION CENTER
+===================================== -->
+
+<section class="analytics-section">
+
+    <div class="section-title">
+
+        Analytics Visualization Center
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>
+
+                Revenue Trend
+
+            </h3>
+
+            <canvas id="revenueChart"></canvas>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Top Products
+
+            </h3>
+
+            <canvas id="productsChart"></canvas>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+
+                Order Status
+
+            </h3>
+
+            <canvas id="statusChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const revenueCtx = document
+.getElementById("revenueChart");
+
+new Chart(
+
+    revenueCtx,
+
+    {
+
+        type:"line",
+
+        data:{
+
+            labels:
+            {{ revenue_chart_labels|tojson }},
+
+            datasets:[{
+
+                label:"Revenue",
+
+                data:
+                {{ revenue_chart_values|tojson }},
+
+                borderColor:"#00ffd0",
+
+                tension:0.4
+
+            }]
+
+        }
+
+    }
+
+);
+
+
+
+const productsCtx = document.getElementById("productsChart");
+
+new Chart(productsCtx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: {{ product_chart_labels|tojson }},
+
+        datasets: [{
+
+
+            data: {{ product_chart_values|tojson }},
+
+            backgroundColor: [
+                "#00ffd0",
+                "#00bfff",
+                "#ffcc00",
+                "#ff6b6b",
+                "#9b5cff"
+            ],
+
+            borderRadius: 12,
+
+            borderWidth: 0
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    color: "#ffffff"
+                }
+
+            },
+
+            x: {
+
+                ticks: {
+                    color: "#ffffff"
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+
+
+const statusCtx = document
+.getElementById("statusChart");
+
+new Chart(
+
+    statusCtx,
+
+    {
+
+        type:"doughnut",
+
+        data:{
+
+            labels: [
+                "Queued",
+                "Approved",
+                "Preparing",
+                "Baking",
+                "Packed",
+                "Delivery",
+                "Delivered",
+                "Cancelled"
+            ],
+
+            datasets:[{
+
+                data:
+                {{ status_chart_values|tojson }}
+
+            }]
+
+        }
+
+    }
+
+);
+
+        </script>
+
+</body>
+
+</html>
