@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+
+{# Route passes:
+   product_name   — string
+   reviews        — list of ProductReview objects (is_visible=True, has text)
+   written_reviews    — int count of reviews with text
+   rating_only_reviews — int count of reviews without text
+   average_rating — float
+   Fields on each review: rating, review_text, customer_name,
+                          created_at, admin_reply, admin_reply_at #}
+
+<a href="{{ url_for('product.products') }}" class="detail-back-btn">
+  <i class="fa-solid fa-arrow-left"></i> Back to Menu
+</a>
+
+<!-- Header -->
+<div class="reviews-header">
+  <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);color:var(--maroon);">
+    {{ product_name }}
+  </h1>
+  <p style="color:var(--text-muted);font-size:.9rem;margin-top:4px;">Customer Reviews</p>
+
+  {% set total_reviews = written_reviews + rating_only_reviews %}
+  {% if total_reviews > 0 %}
+  <div class="rating-summary">
+    <div class="avg-rating-big">{{ average_rating }} ⭐</div>
+    <div class="rv-count-row">
+      {% if written_reviews    > 0 %}
+      <span>{{ written_reviews }} written review{{ 's' if written_reviews != 1 }}</span>
+      {% endif %}
+      {% if rating_only_reviews > 0 %}
+      <span>{{ rating_only_reviews }} rating{{ 's' if rating_only_reviews != 1 }} only</span>
+      {% endif %}
+      <span>{{ total_reviews }} total</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="rm-divider" style="margin:20px auto 0;"></div>
+</div>
+
+{% if reviews %}
+<div class="rv-grid">
+  {% for review in reviews %}
+  <div class="rv-item-card">
+
+    <!-- Stars -->
+    <div class="rv-item-stars">
+      {% for i in range(review.rating) %}⭐{% endfor %}
+      <span style="font-size:.85rem;color:var(--text-muted);">({{ review.rating }}/5)</span>
+    </div>
+
+    <!-- Review text -->
+    {% if review.review_text and review.review_text.strip() %}
+    <p class="rv-item-text">{{ review.review_text }}</p>
+    {% else %}
+    <p class="rv-rating-only">No written review — star rating only</p>
+    {% endif %}
+
+    <!-- Footer: use customer_name (FIX: was review.username which doesn't exist) -->
+    <div class="rv-item-footer">
+      <div>
+        <span style="font-weight:600;color:var(--text-dark);">
+          {{ review.customer_name }}
+        </span>
+        <span class="rv-verified">✓ Verified Purchase</span>
+      </div>
+      <span>{{ review.created_at.strftime('%d %b %Y') }}</span>
+    </div>
+
+    {# Admin replies are private — not shown on public product reviews page #}
+
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div style="text-align:center;padding:80px 20px;background:var(--card);border:1.5px solid var(--honey-dark);border-radius:var(--r-xl);">
+  <div style="font-size:2.5rem;margin-bottom:16px;">✍️</div>
+  <h2 style="color:var(--maroon);margin-bottom:8px;">No Written Reviews Yet</h2>
+  <p style="color:var(--text-muted);">
+    {% if rating_only_reviews > 0 %}
+    There {{ 'are' if rating_only_reviews != 1 else 'is' }}
+    {{ rating_only_reviews }} star rating{{ 's' if rating_only_reviews != 1 }} but no written reviews yet.
+    {% else %}
+    Be the first to review this dessert!
+    {% endif %}
+  </p>
+</div>
+{% endif %}
+
+{% endblock %}

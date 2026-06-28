@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="rm-page-hero">
+  <h1>Checkout</h1>
+  <p>One last step before sweetness reaches your doorstep</p>
+</div>
+
+<div style="max-width:720px;margin:0 auto;">
+
+  <!-- Order Summary -->
+  <div class="rm-card section-card">
+    <div class="section-title">Order Summary</div>
+    {% for item in checkout_items %}
+    <div class="checkout-item">
+      {% if item.product_image %}
+      <img src="{{ get_product_image(item.product_image) }}" class="checkout-item-img" alt="{{ item.product_name }}">
+      {% else %}
+      <div class="checkout-item-img-placeholder">🍰</div>
+      {% endif %}
+      <div style="flex:1;min-width:0;">
+        <div class="checkout-item-name">{{ item.product_name }}</div>
+        <div class="checkout-item-meta">₹{{ item.product_price }} × {{ item.product_quantity }} {{ item.product_unit }}</div>
+        {% if item.note %}<div class="checkout-item-note">Note: {{ item.note }}</div>{% endif %}
+      </div>
+      <div class="checkout-item-total">₹{{ item.total_price }}</div>
+    </div>
+    {% endfor %}
+    <div class="checkout-totals">
+      <div class="total-line"><span>Subtotal</span><strong>₹{{ subtotal }}</strong></div>
+      <div class="total-line"><span>Delivery Fee</span><strong>₹{{ delivery_fee }}</strong></div>
+      {% if discount_amount > 0 %}
+      <div class="total-line total-savings"><span>Sweet Deal Savings</span><strong>−₹{{ discount_amount }}</strong></div>
+      {% endif %}
+      <div class="total-line grand"><span>Grand Total</span><strong id="grandTotal">₹{{ grand_total }}</strong></div>
+    </div>
+  </div>
+
+  <!-- Sweet Deal Code -->
+  <div class="rm-card section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:0;border:none;padding:0;">🎟 Sweet Deal Code</div>
+      <button class="btn btn-ghost btn-sm" id="viewCouponsBtn" style="font-size:.8rem;">
+        <i class="fa-solid fa-tags"></i> View Available Coupons
+      </button>
+    </div>
+    {% if applied_coupon %}
+    <div class="coupon-applied-badge">
+      <i class="fa-solid fa-tag"></i> {{ applied_coupon }} applied — saving ₹{{ discount_amount }}
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="removeCoupon()">Remove Coupon</button>
+    {% else %}
+    <div class="coupon-input-row">
+      <input type="text" id="couponCode" class="rm-input"
+             placeholder="Enter Sweet Deal code" style="margin-bottom:0;text-transform:uppercase;"
+             oninput="this.value=this.value.toUpperCase()">
+      <button class="btn btn-amber" onclick="applyCoupon()">Apply</button>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Delivery Details -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delivery Details</div>
+    {% if not current_user.full_name or not current_user.phone_number or not current_user.delivery_address %}
+    <div class="incomplete-alert">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      Delivery details are incomplete. Please update your profile before placing the order.
+    </div>
+    {% endif %}
+    <div class="checkout-totals" style="border-top:none;padding-top:0;margin-top:0;">
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Name</span><span class="delivery-detail-value">{{ current_user.full_name or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Phone</span><span class="delivery-detail-value">{{ current_user.phone_number or '—' }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Address</span><span class="delivery-detail-value">{{ current_user.delivery_address or '—' }}</span></div>
+      {% if current_user.landmark %}<div class="delivery-detail-line"><span class="delivery-detail-label">Landmark</span><span class="delivery-detail-value">{{ current_user.landmark }}</span></div>{% endif %}
+      {% if current_user.city    %}<div class="delivery-detail-line"><span class="delivery-detail-label">City</span><span class="delivery-detail-value">{{ current_user.city }}</span></div>{% endif %}
+      {% if current_user.pincode %}<div class="delivery-detail-line"><span class="delivery-detail-label">Pincode</span><span class="delivery-detail-value">{{ current_user.pincode }}</span></div>{% endif %}
+      <div class="delivery-detail-line" style="border:none;"><span class="delivery-detail-label">Payment</span><span class="delivery-detail-value">{{ current_user.preferred_payment_method or 'Cash on Delivery' }}</span></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+      <a href="{{ url_for('profile.profile') }}" class="btn btn-outline btn-sm">Edit Profile</a>
+      {% if current_user.google_maps_link %}<a href="{{ current_user.google_maps_link }}" target="_blank" class="btn btn-ghost btn-sm">Maps</a>{% endif %}
+      <button class="btn btn-ghost btn-sm" onclick="location.reload()">Refresh</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-full btn-lg" id="placeOrderBtn" style="margin-top:8px;">
+    🎂 Place Order
+  </button>
+</div>
+
+<!-- Order animation overlay -->
+<div class="order-overlay" id="orderOverlay">
+  <video class="order-video" id="orderVideo" muted playsinline preload="auto">
+    <source src="{{ url_for('static', filename='videos/order_place.mp4') }}" type="video/mp4">
+  </video>
+</div>
+
+<!-- ════════════════════════════════════════
+     FIX #1: COUPON VIEWER
+     The overlay is CREATED BY JS and appended directly to document.body
+     so position:fixed is ALWAYS relative to the viewport — no parent
+     stacking-context can trap it.
+════════════════════════════════════════ -->
+<script>
+/* ── Coupon operations ── */
+async function applyCoupon() {
+  const code = (document.getElementById('couponCode') || {}).value;
+  if (!code || !code.trim()) { showToast('⚠️ Enter a coupon code first'); return; }
+  try {
+    const res  = await fetch('/apply-coupon', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ coupon_code: code.trim() })
+    });
+    const data = await res.json();
+    showToast(data.success ? `🎟 ${data.message}` : `❌ ${data.message}`);
+    if (data.success) setTimeout(() => location.reload(), 1400);
+  } catch { showToast('⚠️ Could not apply coupon — try again'); }
+}
+
+async function removeCoupon() {
+  try {
+    const res  = await fetch('/remove-coupon', { method:'POST' });
+    const data = await res.json();
+    showToast(data.message || 'Coupon removed');
+    if (data.success) setTimeout(() => location.reload(), 1200);
+  } catch { showToast('⚠️ Could not remove coupon'); }
+}
+
+/* ── Place order ── */
+document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+  const btn     = document.getElementById('placeOrderBtn');
+  const overlay = document.getElementById('orderOverlay');
+  const video   = document.getElementById('orderVideo');
+  btn.disabled    = true;
+  btn.textContent = '⏳ Preparing your order…';
+  showToast('Sending your order to RM Bakes…');
+  try {
+    const res  = await fetch('/place-order', { method:'POST' });
+    const data = await res.json();
+    if (data.success) {
+      overlay.classList.add('active');
+      video.currentTime = 0; video.play().catch(() => {});
+      showToast('🎉 Order placed successfully!');
+      let gone = false;
+      const go = () => { if (!gone) { gone=true; window.location.href=data.redirect; } };
+      video.onended = go; setTimeout(go, 7000);
+    } else {
+      overlay.classList.remove('active');
+      btn.disabled    = false;
+      btn.textContent = '🎂 Place Order';
+      showToast('❌ ' + (data.message || "Couldn't place order — try again"));
+      setTimeout(() => window.location.href='/cart', 2000);
+    }
+  } catch {
+    overlay.classList.remove('active');
+    btn.disabled    = false; btn.textContent = '🎂 Place Order';
+    showToast('❌ Network error — please try again');
+  }
+});
+
+/* ════════════════════════════════════════
+   FIX #1: COUPON VIEWER
+   Overlay built in JS and appended to document.body so position:fixed
+   is ALWAYS viewport-relative (no parent stacking context traps it).
+════════════════════════════════════════ */
+let couponOverlay = null;   // built lazily on first open
+
+function buildCouponOverlay() {
+  if (couponOverlay && document.body.contains(couponOverlay)) return;
+
+  couponOverlay = document.createElement('div');
+  couponOverlay.id = 'couponViewerOverlay';
+
+  // Inline critical styles so they CANNOT be overridden by parent context
+  Object.assign(couponOverlay.style, {
+    position:        'fixed',
+    top:             '0',
+    left:            '0',
+    right:           '0',
+    bottom:          '0',
+    zIndex:          '9999999',
+    background:      'rgba(0,0,0,0.65)',
+    display:         'none',          // hidden initially
+    alignItems:      'center',
+    justifyContent:  'center',
+    padding:         '16px',
+    backdropFilter:  'blur(3px)',
+    WebkitBackdropFilter: 'blur(3px)'
+  });
+
+  couponOverlay.innerHTML = `
+    <div id="couponViewerBox" style="
+      background:var(--card,#fff);
+      border-radius:24px;
+      padding:24px;
+      max-width:480px;
+      width:100%;
+      max-height:82vh;
+      overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+      position:relative;
+    ">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <span style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--maroon,#5c1520);font-weight:700;">
+          🎟 Available Coupons
+        </span>
+        <button id="closeCouponBtn" style="
+          background:none;border:none;font-size:1.4rem;cursor:pointer;
+          color:var(--grey,#9b8e86);line-height:1;padding:4px 8px;
+          border-radius:50%;
+        ">✕</button>
+      </div>
+      <div id="couponListInner">
+        <div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:10px;display:block;"></i>
+          Loading coupons…
+        </div>
+      </div>
+    </div>`;
+
+  // Close on overlay background click
+  couponOverlay.addEventListener('click', (e) => {
+    if (e.target === couponOverlay) closeCouponViewer();
+  });
+
+  // Close button
+  couponOverlay.querySelector('#closeCouponBtn').addEventListener('click', closeCouponViewer);
+
+  // Append to body — bypasses all parent stacking contexts
+  document.body.appendChild(couponOverlay);
+}
+
+async function openCouponViewer() {
+  buildCouponOverlay();
+
+  // Show overlay using display:flex inline style
+  couponOverlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const listEl = document.getElementById('couponListInner');
+  listEl.innerHTML = `
+    <div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:10px;display:block;"></i>
+      Loading coupons…
+    </div>`;
+
+  try {
+    const res     = await fetch('/api/available-coupons');
+    const coupons = await res.json();
+
+    if (!coupons || coupons.length === 0) {
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+          😕 No coupons available right now<br>
+          <span style="font-size:.82rem;">Check back later for special deals!</span>
+        </div>`;
+      return;
+    }
+
+    listEl.innerHTML = coupons.map(c => {
+      const minNote = c.min_order > 0
+        ? `<div style="font-size:.72rem;color:var(--text-muted,#8b7b70);margin-top:4px;">Min. order: ₹${c.min_order}</div>` : '';
+      const scopeNote = (c.scope && c.scope !== 'cart' && c.target)
+        ? `<div style="font-size:.72rem;color:var(--text-muted,#8b7b70);margin-top:2px;">Valid for: ${c.target}</div>` : '';
+      const popular = c.popularity
+        ? `<div style="font-size:.7rem;color:var(--amber,#c8923a);margin-top:4px;">${c.popularity}</div>` : '';
+
+      return `
+        <div style="
+          border:1.5px solid var(--honey-dark,#f5d98a);
+          border-radius:14px;padding:16px;margin-bottom:12px;
+          background:var(--honey,#fef3d8);transition:border-color .2s;
+        ">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+            <div style="min-width:0;">
+              <div style="font-size:.72rem;color:var(--amber-dark,#a87428);font-weight:700;
+                          letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">
+                ${c.discount}
+              </div>
+              <div style="font-family:'Playfair Display',serif;font-size:1rem;
+                          color:var(--maroon,#5c1520);margin-bottom:3px;">
+                ${c.title}
+              </div>
+              ${c.description ? `<div style="font-size:.8rem;color:var(--text-muted,#8b7b70);
+                margin-bottom:8px;line-height:1.5;">${c.description}</div>` : ''}
+              <div style="display:inline-block;background:var(--amber-pale,#fde8a0);
+                          color:var(--maroon,#5c1520);font-weight:800;font-size:.9rem;
+                          letter-spacing:2px;padding:5px 14px;border-radius:8px;">
+                ${c.code}
+              </div>
+              ${minNote}${scopeNote}${popular}
+            </div>
+            <button
+              style="flex-shrink:0;background:var(--maroon,#5c1520);color:#fff;
+                     border:none;padding:9px 16px;border-radius:99px;font-size:.84rem;
+                     font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .2s;"
+              onmouseover="this.style.opacity='.85'"
+              onmouseout="this.style.opacity='1'"
+              onclick="applyCouponFromViewer('${c.code}')">
+              Apply
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch {
+    listEl.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+      Could not load coupons — try again</div>`;
+  }
+}
+
+function closeCouponViewer() {
+  if (couponOverlay) couponOverlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+async function applyCouponFromViewer(code) {
+  closeCouponViewer();
+  const inp = document.getElementById('couponCode');
+  if (inp) {
+    inp.value = code;
+    await applyCoupon();
+  } else {
+    // Coupon field not visible (another coupon already applied) — remove then re-apply
+    showToast('Switching coupon…');
+    await removeCoupon();
+    setTimeout(async () => {
+      const inp2 = document.getElementById('couponCode');
+      if (inp2) { inp2.value = code; await applyCoupon(); }
+    }, 1700);
+  }
+}
+
+// Wire up the View Coupons button and Escape key
+document.getElementById('viewCouponsBtn').addEventListener('click', openCouponViewer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCouponViewer(); });
+</script>
+{% endblock %}
