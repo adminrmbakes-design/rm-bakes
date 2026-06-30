@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Carousels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Carousel Management</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <div class="chip">🛡 {{ admin_role }}</div>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openAddPanel()">+ New Slide</button>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content" id="main-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Homepage Carousels</h2>
+        <p class="page-subtitle">Create and manage promotional slides displayed on the homepage.</p>
+      </div>
+    </div>
+
+    <!-- Add Carousel Form (collapsible) -->
+    <div class="form-card mb-md" id="add-carousel-panel" style="display:none;" aria-hidden="true">
+      <div class="card-header">
+        <span class="card-title">Create New Slide</span>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="closeAddPanel()">✕ Close</button>
+      </div>
+      <form method="POST" action="{{ url_for('admin_carousel.create_carousel') }}"
+        enctype="multipart/form-data" class="form-section" aria-label="New carousel slide form">
+
+        <div class="form-group">
+          <label class="form-label" for="carouselTitle">Slide Title</label>
+          <input type="text" id="carouselTitle" name="carousel_title" class="form-input"
+            placeholder="e.g. Valentine's Day Collection" required aria-required="true">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="carouselDescription">Description</label>
+          <textarea id="carouselDescription" name="carousel_description" class="form-textarea"
+            placeholder="Brief description shown on the slide…"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="carousel_category">Category</label>
+            <select name="carousel_category" id="carousel_category" class="form-select">
+              <option value="">Select category</option>
+              <option value="Cakes">Cakes</option>
+              <option value="Pastries">Pastries</option>
+              <option value="Cookies">Cookies</option>
+              <option value="Celebration">Celebration</option>
+              <option value="Seasonal">Seasonal</option>
+              <option value="Custom">Custom</option>
+              <option value="All">All Products</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="carousel_visibility">Visibility</label>
+            <select name="carousel_visibility" id="carousel_visibility" class="form-select">
+              <option value="all">All Users</option>
+              <option value="logged_in">Logged In Only</option>
+              <option value="guests">Guests Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="carousel_action_text">Button Text</label>
+            <input type="text" id="carousel_action_text" name="carousel_action_text" class="form-input" placeholder="e.g. Shop Now">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="carousel_action_link">Button Link</label>
+            <input type="url" id="carousel_action_link" name="carousel_action_link" class="form-input" placeholder="https://…">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="carousel_starts_at">Starts At</label>
+            <input type="datetime-local" id="carousel_starts_at" name="carousel_starts_at" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="carousel_expires_at">Expires At</label>
+            <input type="datetime-local" id="carousel_expires_at" name="carousel_expires_at" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="carousel_priority">Display Priority</label>
+          <input type="number" id="carousel_priority" name="carousel_priority" class="form-input" placeholder="e.g. 1 (lower = higher priority)" min="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="carousel_banner">Banner Image</label>
+          <div class="file-upload-area" onclick="document.getElementById('carousel_banner').click();">
+            <div class="upload-icon" aria-hidden="true">🖼</div>
+            <p id="carouselBannerLabel">Click to select banner image</p>
+          </div>
+          <input type="file" id="carousel_banner" name="carousel_banner" accept="image/*" required
+            style="display:none;"
+            onchange="document.getElementById('carouselBannerLabel').textContent = this.files[0]?.name || 'Click to select banner image'">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full">Create Slide</button>
+      </form>
+    </div>
+
+    <!-- Carousels Grid -->
+    {% if carousels %}
+      <div class="carousel-grid stagger" role="list" aria-label="Carousel slides">
+        {% for carousel in carousels %}
+          <article class="carousel-card" role="listitem" aria-label="{{ carousel.carousel_title }}">
+            {% if carousel.carousel_banner_image %}
+              <img src="{{ carousel.carousel_banner_image }}" alt="{{ carousel.carousel_title }}" class="carousel-banner-img" loading="lazy">
+            {% endif %}
+            <div class="carousel-body">
+              {% if carousel.carousel_is_active %}
+                <span class="badge-active" style="margin-bottom:8px;display:inline-flex;">● Active</span>
+              {% else %}
+                <span class="badge-inactive" style="margin-bottom:8px;display:inline-flex;">— Inactive</span>
+              {% endif %}
+              <div class="carousel-category">{{ carousel.carousel_category }}</div>
+              <h3 class="carousel-title-text">{{ carousel.carousel_title }}</h3>
+              <p class="carousel-desc-text">{{ carousel.carousel_description }}</p>
+              <div class="carousel-meta-text">
+                Visibility: {{ carousel.carousel_visibility }}<br>
+                Priority: {{ carousel.carousel_priority }}<br>
+                {% if carousel.carousel_action_text %}
+                  CTA: {{ carousel.carousel_action_text }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="carousel-footer">
+              <button type="button" class="btn btn-secondary btn-sm edit-btn"
+                data-id="{{ carousel.carousel_id }}"
+                data-title="{{ carousel.carousel_title }}"
+                data-description="{{ carousel.carousel_description }}"
+                data-category="{{ carousel.carousel_category }}"
+                data-visibility="{{ carousel.carousel_visibility }}"
+                data-action-text="{{ carousel.carousel_action_text }}"
+                data-action-link="{{ carousel.carousel_action_link }}"
+                data-priority="{{ carousel.carousel_priority }}"
+                aria-label="Edit {{ carousel.carousel_title }}">
+                ✏️ Edit
+              </button>
+              <form method="POST"
+                action="{{ url_for('admin_carousel.toggle_carousel', carousel_id=carousel.carousel_id) }}"
+                style="display:contents;">
+                <button type="submit" class="btn btn-warn btn-sm">
+                  {% if carousel.carousel_is_active %}⏸ Deactivate{% else %}▶ Activate{% endif %}
+                </button>
+              </form>
+              <form method="POST"
+                action="{{ url_for('admin_carousel.delete_carousel', carousel_id=carousel.carousel_id) }}"
+                onsubmit="return confirm('Delete this carousel slide?');"
+                style="display:contents;">
+                <button type="submit" class="btn btn-danger btn-sm">🗑</button>
+              </form>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🖼</div>
+        <h2>No Carousel Slides Yet</h2>
+        <p>Create your first homepage banner to showcase your products.</p>
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="editModal" role="dialog" aria-modal="true" aria-label="Edit carousel slide" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Edit Slide</h2>
+        <button type="button" class="modal-close" id="closeModal" aria-label="Close modal">✕</button>
+      </div>
+      <form id="editForm" method="POST" enctype="multipart/form-data" class="form-section">
+        <div class="form-group">
+          <label class="form-label" for="editTitle">Title</label>
+          <input type="text" id="editTitle" name="carousel_title" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editDescription">Description</label>
+          <textarea id="editDescription" name="carousel_description" class="form-textarea"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="editCategory">Category</label>
+            <select id="editCategory" name="carousel_category" class="form-select">
+              <option value="Cakes">Cakes</option>
+              <option value="Pastries">Pastries</option>
+              <option value="Cookies">Cookies</option>
+              <option value="Celebration">Celebration</option>
+              <option value="Seasonal">Seasonal</option>
+              <option value="Custom">Custom</option>
+              <option value="All">All Products</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editVisibility">Visibility</label>
+            <select id="editVisibility" name="carousel_visibility" class="form-select">
+              <option value="all">All Users</option>
+              <option value="logged_in">Logged In Only</option>
+              <option value="guests">Guests Only</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="editActionText">Button Text</label>
+            <input type="text" id="editActionText" name="carousel_action_text" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editActionLink">Button Link</label>
+            <input type="url" id="editActionLink" name="carousel_action_link" class="form-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editPriority">Priority</label>
+          <input type="number" id="editPriority" name="carousel_priority" class="form-input" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Replace Banner <span class="form-hint" style="display:inline;">(optional)</span></label>
+          <input type="file" name="carousel_banner" accept="image/*" class="form-input">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="submit" class="btn btn-primary btn-lg" style="flex:1;">💾 Save Changes</button>
+          <button type="button" class="btn btn-ghost btn-lg" id="cancelModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => document.getElementById('pageLoader').classList.add('loaded'));
+
+    function openAddPanel() {
+      const p = document.getElementById('add-carousel-panel');
+      p.style.display = 'block'; p.setAttribute('aria-hidden','false');
+      p.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+    function closeAddPanel() {
+      const p = document.getElementById('add-carousel-panel');
+      p.style.display = 'none'; p.setAttribute('aria-hidden','true');
+    }
+
+    const modal = document.getElementById('editModal');
+    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
+    document.getElementById('cancelModal').addEventListener('click', () => modal.classList.remove('open'));
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('editForm').action = '/admin/carousels/update/' + btn.dataset.id;
+        document.getElementById('editTitle').value = btn.dataset.title;
+        document.getElementById('editDescription').value = btn.dataset.description;
+        document.getElementById('editCategory').value = btn.dataset.category;
+        document.getElementById('editVisibility').value = btn.dataset.visibility;
+        document.getElementById('editActionText').value = btn.dataset.actionText;
+        document.getElementById('editActionLink').value = btn.dataset.actionLink;
+        document.getElementById('editPriority').value = btn.dataset.priority;
+        modal.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>

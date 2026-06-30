@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Order Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to orders</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Order Operations</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <div class="chip">🛡 {{ admin_role }}</div>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Sticky Filter Bar -->
+  <div class="sticky-bar" role="navigation" aria-label="Filter orders by status">
+    <div class="sticky-bar-inner">
+      {% set filters = [
+        ('all',              'All'),
+        ('custom',           'Custom Orders'),
+        ('queued',           'Queued'),
+        ('approved',         'Approved'),
+        ('preparing',        'Preparing'),
+        ('baking',           'Baking'),
+        ('packed',           'Packed'),
+        ('out_for_delivery', 'Out for Delivery'),
+        ('delivered',        'Delivered'),
+        ('cancelled',        'Cancelled')
+      ] %}
+      <div class="filter-bar">
+        {% for value, label in filters %}
+          <a
+            href="{{ url_for('admin.admin_orders', status=value) }}"
+            class="filter-tab {% if status_filter == value %}active{% endif %}"
+            aria-current="{% if status_filter == value %}page{% endif %}"
+          >{{ label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <main class="content" id="main-content">
+
+    {% if orders %}
+      <div class="order-grid stagger" role="list" aria-label="Orders">
+        {% for order in orders %}
+          <article class="order-card" role="listitem" aria-label="Order {{ order.order_number }}">
+
+            <!-- Head -->
+            <div class="order-head">
+              <div>
+                <div class="order-number">{{ order.order_number }}</div>
+                {% if order.is_custom_order %}
+                  <div class="custom-badge" style="margin-top:8px;">🎨 Custom Dessert</div>
+                {% endif %}
+              </div>
+              <div class="status-pill {{ order.order_status }}" aria-label="Status: {{ order.order_status }}">
+                {{ order.order_status.replace('_', ' ') }}
+              </div>
+            </div>
+
+            <!-- Customer -->
+            <div class="order-field">
+              <div class="field-label">Customer</div>
+              <div class="field-value">{{ order.full_name }}</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="order-field">
+              <div class="field-label">Phone</div>
+              <div class="field-value">{{ order.phone_number }}</div>
+            </div>
+
+            <!-- Address -->
+            <div class="order-field">
+              <div class="field-label">Delivery Address</div>
+              <div class="field-value">{{ order.delivery_address }}</div>
+            </div>
+
+            <!-- Products (non-custom) -->
+            {% if not order.is_custom_order %}
+              <div class="order-field">
+                <div class="field-label">Products</div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+                  {% for item in order.products_data %}
+                    <div class="order-product-item">
+                      <div class="order-product-name">🍰 {{ item.product_name }}</div>
+                      <div class="order-product-info">
+                        Qty: {{ item.product_quantity }} {{ item.product_unit }}<br>
+                        Price: ₹{{ item.product_price }}<br>
+                        Total: ₹{{ item.total_price }}
+                      </div>
+                      {% if item.note %}
+                        <div class="order-product-note">✨ Note: {{ item.note }}</div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <div class="order-field">
+                <div class="field-label">Order Summary</div>
+                <div class="field-value">
+                  Subtotal: ₹{{ order.subtotal }}<br>
+                  Delivery: ₹{{ order.delivery_fee }}
+                  {% if order.discount_amount and order.discount_amount > 0 %}
+                    <br><span class="coupon-highlight">🎁 Discount: −₹{{ order.discount_amount }}</span>
+                    <br><span class="coupon-highlight">Coupon: {{ order.coupon_code }}</span>
+                  {% endif %}
+                  <br>
+                  <span class="grand-total-value">Grand Total: ₹{{ order.grand_total }}</span>
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Ordered At -->
+            <div class="order-field">
+              <div class="field-label">Ordered At</div>
+              <div class="field-value">{{ order.ordered_at }}</div>
+            </div>
+
+            <!-- Custom Dessert Panel -->
+            {% if order.is_custom_order %}
+              <div class="dessert-panel">
+                <div class="dessert-panel-header">Dessert Studio Details</div>
+                <div class="dessert-panel-body">
+                  {% if order.custom_inspiration_image %}
+                    <img src="{{ order.custom_inspiration_image }}" class="dessert-img" alt="Inspiration image" loading="lazy">
+                  {% endif %}
+                  <div class="dessert-info-grid">
+                    <div class="order-field">
+                      <div class="field-label">Request Code</div>
+                      <div class="field-value">{{ order.custom_request_code }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Category</div>
+                      <div class="field-value">{{ order.custom_dessert_category }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Flavor</div>
+                      <div class="field-value">{{ order.custom_flavor }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Quantity</div>
+                      <div class="field-value">{{ order.custom_quantity }}</div>
+                    </div>
+                  </div>
+                  <div class="order-field">
+                    <div class="field-label">Dessert Vision</div>
+                    <div class="field-value">{{ order.custom_description }}</div>
+                  </div>
+                  {% if order.custom_message %}
+                    <div class="order-field">
+                      <div class="field-label">Custom Message</div>
+                      <div class="field-value">{{ order.custom_message }}</div>
+                    </div>
+                  {% endif %}
+                  {% if order.custom_special_notes %}
+                    <div class="order-field">
+                      <div class="field-label">Special Notes</div>
+                      <div class="field-value">{{ order.custom_special_notes }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="order-actions">
+              {% if order.order_status == "queued" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Approve this order?')">
+                  <input type="hidden" name="new_status" value="approved">
+                  <button type="submit" class="btn btn-success btn-sm">✓ Approve</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "approved" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Move order to preparing?')">
+                  <input type="hidden" name="new_status" value="preparing">
+                  <button type="submit" class="btn btn-ghost btn-sm">Preparing →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "preparing" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Move order to baking?')">
+                  <input type="hidden" name="new_status" value="baking">
+                  <button type="submit" class="btn btn-ghost btn-sm">Baking →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "baking" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Mark order as packed?')">
+                  <input type="hidden" name="new_status" value="packed">
+                  <button type="submit" class="btn btn-ghost btn-sm">Packed →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "packed" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Send order for delivery?')">
+                  <input type="hidden" name="new_status" value="out_for_delivery">
+                  <button type="submit" class="btn btn-ghost btn-sm">Out for Delivery →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "out_for_delivery" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Mark order as delivered?')">
+                  <input type="hidden" name="new_status" value="delivered">
+                  <button type="submit" class="btn btn-success btn-sm">✓ Delivered</button>
+                </form>
+              {% endif %}
+              {% if order.order_status in ["queued", "approved"] %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Cancel this order?')">
+                  <input type="hidden" name="new_status" value="cancelled">
+                  <button type="submit" class="btn btn-danger btn-sm">✕ Cancel</button>
+                </form>
+              {% endif %}
+            </div>
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">📦</div>
+        <h2>No Orders Found</h2>
+        <p>No orders match the selected filter.</p>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pageLoader').classList.add('loaded');
+    });
+  </script>
+</body>
+</html>

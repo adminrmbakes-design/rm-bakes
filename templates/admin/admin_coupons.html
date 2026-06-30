@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Coupons</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to coupons</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Coupon Management</span>
+      </div>
+      <div class="topbar-meta">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openAddPanel()">+ New Coupon</button>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content" id="main-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Coupons</h2>
+        <p class="page-subtitle">Manage discount codes, usage limits, and promotional scope.</p>
+      </div>
+    </div>
+
+    <!-- Add Coupon Form (collapsible) -->
+    <div class="form-card mb-md" id="add-coupon-panel" style="display:none;" aria-hidden="true">
+      <div class="card-header">
+        <span class="card-title">Create New Coupon</span>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="closeAddPanel()">✕ Close</button>
+      </div>
+      <form method="POST" action="{{ url_for('admin_coupon.add_coupon') }}"
+        enctype="multipart/form-data" class="form-section" aria-label="Add coupon form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="coupon_code">Coupon Code</label>
+            <input type="text" id="coupon_code" name="coupon_code" class="form-input" placeholder="e.g. SAVE20" required aria-required="true">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="coupon_title">Title</label>
+            <input type="text" id="coupon_title" name="coupon_title" class="form-input" placeholder="e.g. 20% Off Your Order" required aria-required="true">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="coupon_description">Description</label>
+          <textarea id="coupon_description" name="coupon_description" class="form-textarea" placeholder="Describe the coupon offer…" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="coupon_banner_add">Banner Image <span class="form-hint" style="display:inline;">(optional)</span></label>
+          <input type="file" id="coupon_banner_add" name="coupon_banner" accept="image/*" class="form-input">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="discount_type">Discount Type</label>
+            <select id="discount_type" name="discount_type" class="form-select">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed_amount">Fixed Amount (₹)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="discount_value">Discount Value</label>
+            <input type="number" id="discount_value" name="discount_value" class="form-input" step="0.01" placeholder="e.g. 20" required aria-required="true">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="minimum_order_amount">Minimum Order (₹)</label>
+            <input type="number" id="minimum_order_amount" name="minimum_order_amount" class="form-input" step="0.01" placeholder="e.g. 500">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="usage_limit">Usage Limit</label>
+            <input type="number" id="usage_limit" name="usage_limit" class="form-input" placeholder="Leave blank for unlimited">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="maximum_discount">Max Discount (₹)</label>
+            <input type="number" id="maximum_discount" name="maximum_discount" class="form-input" step="0.01" placeholder="Optional cap">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="expiry_date">Expiry Date</label>
+            <input type="datetime-local" id="expiry_date" name="expiry_date" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="scope">Coupon Scope</label>
+          <select id="scope" name="scope" class="form-select" onchange="updateScope()">
+            <option value="cart">Entire Cart</option>
+            <option value="product">Specific Product</option>
+            <option value="category">Specific Category</option>
+          </select>
+        </div>
+
+        <div id="product-section" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" for="target_product">Target Product</label>
+            <select name="target_product" id="target_product" class="form-select">
+              <option value="">Select Product</option>
+              {% for product in products %}
+                <option value="{{ product.product_name }}">{{ product.product_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div id="category-section" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" for="target_category">Target Category</label>
+            <select name="target_category" id="target_category" class="form-select">
+              <option value="">Select Category</option>
+              {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="popularity_text">Popularity Label</label>
+          <input type="text" id="popularity_text" name="popularity_text" class="form-input" placeholder="e.g. 🔥 Used 50+ times">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full">Create Coupon</button>
+      </form>
+    </div>
+
+    <!-- Coupons Grid -->
+    {% if coupons %}
+      <div class="coupon-grid stagger" role="list" aria-label="Coupon list">
+        {% for coupon in coupons %}
+          <article class="coupon-card" role="listitem" aria-label="Coupon {{ coupon.coupon_code }}"
+            data-coupon-banner="{{ coupon.coupon_banner or '' }}"
+            data-coupon-id="{{ coupon.coupon_id }}"
+            data-coupon-code="{{ coupon.coupon_code }}"
+            data-coupon-title="{{ coupon.coupon_title }}"
+            data-coupon-description="{{ coupon.coupon_description or '' }}"
+            data-discount-type="{{ coupon.discount_type }}"
+            data-discount-value="{{ coupon.discount_value }}"
+            data-minimum-order="{{ coupon.minimum_order_amount or 0 }}"
+            data-usage-limit="{{ coupon.usage_limit or '' }}"
+            data-maximum-discount="{{ coupon.maximum_discount or '' }}"
+            data-scope="{{ coupon.scope }}"
+            data-target-product="{{ coupon.target_product or '' }}"
+            data-target-category="{{ coupon.target_category or '' }}"
+            data-popularity-text="{{ coupon.popularity_text or '' }}"
+            data-expiry-date="{{ coupon.expiry_date or '' }}"
+          >
+            {% if coupon.coupon_banner %}
+              <img src="{{ coupon.coupon_banner }}" alt="{{ coupon.coupon_title }}" class="coupon-banner-img" loading="lazy">
+            {% endif %}
+            <div class="coupon-body">
+              <div class="coupon-code">{{ coupon.coupon_code }}</div>
+              <div class="coupon-title-text">{{ coupon.coupon_title }}</div>
+              <div class="coupon-meta">
+                Type: {{ coupon.discount_type }}<br>
+                Value: {{ coupon.discount_value }}<br>
+                {% if coupon.coupon_description %}Desc: {{ coupon.coupon_description }}<br>{% endif %}
+                Min. Order: ₹{{ coupon.minimum_order_amount or 0 }}<br>
+                Limit: {{ coupon.usage_limit or "Unlimited" }}<br>
+                {% if coupon.maximum_discount %}Max Discount: {{ coupon.maximum_discount }}<br>{% endif %}
+                Scope: {{ coupon.scope }}<br>
+                {% if coupon.target_product %}Product: {{ coupon.target_product }}<br>{% endif %}
+                {% if coupon.target_category %}Category: {{ coupon.target_category }}<br>{% endif %}
+                {{ coupon.display_popularity }}<br>
+                Expires: {{ coupon.expiry_date or "No expiry" }}<br>
+                Used: {{ coupon.times_used }}×
+              </div>
+            </div>
+            <div class="coupon-footer">
+              {% if coupon.is_active %}
+                <span class="coupon-active badge-active" aria-label="Coupon is active">✓ Active</span>
+              {% else %}
+                <span class="coupon-inactive badge-inactive" aria-label="Coupon is inactive">— Inactive</span>
+              {% endif %}
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <form method="POST" action="{{ url_for('admin_coupon.toggle_coupon', coupon_id=coupon.coupon_id) }}" style="display:contents;">
+                  <button type="submit" class="btn btn-warn btn-sm" aria-label="Toggle coupon status">🔄</button>
+                </form>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="openEditModal('{{ coupon.coupon_id }}')" aria-label="Edit coupon">✏️</button>
+                <form method="POST" action="{{ url_for('admin_coupon.delete_coupon', coupon_id=coupon.coupon_id) }}"
+                  onsubmit="return confirm('Delete coupon {{ coupon.coupon_code }}?');" style="display:contents;">
+                  <button type="submit" class="btn btn-danger btn-sm" aria-label="Delete coupon">🗑</button>
+                </form>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🎟</div>
+        <h2>No Coupons Yet</h2>
+        <p>Create your first discount coupon to attract and reward customers.</p>
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="edit-modal" role="dialog" aria-modal="true" aria-label="Edit coupon" onclick="if(event.target===this)closeEditModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Edit Coupon</h2>
+        <button type="button" class="modal-close" onclick="closeEditModal()" aria-label="Close modal">✕</button>
+      </div>
+
+      <img id="edit_coupon_banner_preview" src="" alt="Banner preview"
+        style="width:100%;height:110px;object-fit:cover;border-radius:var(--r);margin-bottom:20px;display:none;border:1px solid var(--border);">
+
+      <form id="edit-form" method="POST" enctype="multipart/form-data" class="form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="edit_coupon_code">Coupon Code</label>
+            <input type="text" id="edit_coupon_code" name="coupon_code" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_coupon_title">Title</label>
+            <input type="text" id="edit_coupon_title" name="coupon_title" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_coupon_description">Description</label>
+          <textarea id="edit_coupon_description" name="coupon_description" class="form-textarea" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Replace Banner <span class="form-hint" style="display:inline;">(optional)</span></label>
+          <input type="file" name="coupon_banner" accept="image/*" class="form-input">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="edit_discount_type">Discount Type</label>
+            <select id="edit_discount_type" name="discount_type" class="form-select">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed_amount">Fixed Amount (₹)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_discount_value">Discount Value</label>
+            <input type="number" id="edit_discount_value" name="discount_value" class="form-input" step="0.01">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="edit_minimum_order">Min. Order (₹)</label>
+            <input type="number" id="edit_minimum_order" name="minimum_order_amount" class="form-input" step="0.01">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_usage_limit">Usage Limit</label>
+            <input type="number" id="edit_usage_limit" name="usage_limit" class="form-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="edit_maximum_discount">Max Discount (₹)</label>
+            <input type="number" id="edit_maximum_discount" name="maximum_discount" class="form-input" step="0.01">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_expiry_date">Expiry Date</label>
+            <input type="datetime-local" id="edit_expiry_date" name="expiry_date" class="form-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_scope">Scope</label>
+          <select id="edit_scope" name="scope" class="form-select" onchange="updateEditScope()">
+            <option value="cart">Entire Cart</option>
+            <option value="product">Specific Product</option>
+            <option value="category">Specific Category</option>
+          </select>
+        </div>
+        <div id="edit-product-section" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" for="edit_target_product">Target Product</label>
+            <select id="edit_target_product" name="target_product" class="form-select">
+              <option value="">Select Product</option>
+              {% for product in products %}
+                <option value="{{ product.product_name }}">{{ product.product_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div id="edit-category-section" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" for="edit_target_category">Target Category</label>
+            <select id="edit_target_category" name="target_category" class="form-select">
+              <option value="">Select Category</option>
+              {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_popularity_text">Popularity Label</label>
+          <input type="text" id="edit_popularity_text" name="popularity_text" class="form-input">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="submit" class="btn btn-primary btn-lg" style="flex:1;">💾 Save Changes</button>
+          <button type="button" class="btn btn-ghost btn-lg" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => document.getElementById('pageLoader').classList.add('loaded'));
+
+    function openAddPanel() {
+      const p = document.getElementById('add-coupon-panel');
+      p.style.display = 'block'; p.setAttribute('aria-hidden','false');
+      p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function closeAddPanel() {
+      const p = document.getElementById('add-coupon-panel');
+      p.style.display = 'none'; p.setAttribute('aria-hidden','true');
+    }
+
+    function updateScope() {
+      const scope = document.getElementById('scope').value;
+      document.getElementById('product-section').style.display = scope === 'product' ? 'block' : 'none';
+      document.getElementById('category-section').style.display = scope === 'category' ? 'block' : 'none';
+    }
+    updateScope();
+
+    function updateEditScope() {
+      const scope = document.getElementById('edit_scope').value;
+      document.getElementById('edit-product-section').style.display = scope === 'product' ? 'block' : 'none';
+      document.getElementById('edit-category-section').style.display = scope === 'category' ? 'block' : 'none';
+    }
+
+    function openEditModal(couponId) {
+      const card = document.querySelector(`[data-coupon-id="${couponId}"]`);
+      document.getElementById('edit_coupon_code').value = card.dataset.couponCode;
+      document.getElementById('edit_coupon_title').value = card.dataset.couponTitle;
+      document.getElementById('edit_coupon_description').value = card.dataset.couponDescription;
+      document.getElementById('edit_discount_type').value = card.dataset.discountType;
+      document.getElementById('edit_discount_value').value = card.dataset.discountValue;
+      document.getElementById('edit_minimum_order').value = card.dataset.minimumOrder;
+      document.getElementById('edit_usage_limit').value = card.dataset.usageLimit;
+      document.getElementById('edit_maximum_discount').value = card.dataset.maximumDiscount;
+      document.getElementById('edit_scope').value = card.dataset.scope;
+      updateEditScope();
+      document.getElementById('edit_target_product').value = card.dataset.targetProduct;
+      document.getElementById('edit_target_category').value = card.dataset.targetCategory;
+      document.getElementById('edit_popularity_text').value = card.dataset.popularityText;
+      if (card.dataset.expiryDate) {
+        document.getElementById('edit_expiry_date').value = card.dataset.expiryDate.substring(0,16);
+      }
+      const preview = document.getElementById('edit_coupon_banner_preview');
+      if (card.dataset.couponBanner) {
+        preview.src = card.dataset.couponBanner; preview.style.display = 'block';
+      } else { preview.style.display = 'none'; }
+      document.getElementById('edit-form').action = `/admin/coupons/update/${couponId}`;
+      document.getElementById('edit-modal').classList.add('open');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+    }
+
+    document.getElementById('edit_scope').addEventListener('change', updateEditScope);
+  </script>
+</body>
+</html>

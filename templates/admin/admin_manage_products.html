@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Manage Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to products</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Manage Products</span>
+      </div>
+      <div class="topbar-meta">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+        <a href="{{ url_for('admin_product.add_product') }}" class="btn btn-primary btn-sm">+ Add Product</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content" id="main-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Products</h2>
+        <p class="page-subtitle">All desserts on the menu. Edit, delete, or add new items.</p>
+      </div>
+      <!-- Search -->
+      <div class="page-actions">
+        <form method="GET" role="search" aria-label="Search products">
+          <div class="search-wrap">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              name="search"
+              value="{{ search_query }}"
+              class="form-input search-input"
+              placeholder="Search products…"
+              aria-label="Search products by name, category, or tag"
+              style="min-width:240px;"
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if products %}
+      <div class="product-list stagger" role="list" aria-label="Product list">
+        {% for product in products %}
+          <article class="product-card-admin" role="listitem" aria-label="{{ product.product_name }}">
+
+            <!-- Image -->
+            <div class="product-img-wrap">
+              <img
+                src="{{ get_product_image(product.product_image) }}"
+                alt="{{ product.product_name }}"
+                loading="lazy"
+              >
+            </div>
+
+            <!-- Body -->
+            <div class="product-card-body">
+              <h3 class="product-name">{{ product.product_name }}</h3>
+              <div class="product-meta">
+                💰 ₹{{ product.product_price }}<br>
+                📦 {{ product.product_unit }}<br>
+                🏷 {{ product.product_category }}<br>
+                {% if product.product_tags %}
+                  ✨ {{ product.product_tags }}
+                {% endif %}
+              </div>
+
+              <!-- Marketing Badge -->
+              <div style="margin-top:10px;">
+                {% if product.product_is_launching %}
+                  <span class="marketing-badge badge-launch">🚀 New Launch</span>
+                {% elif product.product_is_seasonal %}
+                  <span class="marketing-badge badge-seasonal">🍂 Seasonal</span>
+                {% elif product.product_is_festive %}
+                  <span class="marketing-badge badge-festive">🎉 Festive</span>
+                {% else %}
+                  <span class="marketing-badge badge-regular">Regular</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="product-actions">
+              <a
+                href="{{ url_for('admin_product.edit_product', product_id=product.product_id) }}"
+                class="btn btn-secondary btn-sm"
+                aria-label="Edit {{ product.product_name }}"
+              >✏️ Edit</a>
+              <form method="POST"
+                action="{{ url_for('admin_product.delete_product', product_id=product.product_id) }}"
+                onsubmit="return confirm('Permanently delete {{ product.product_name }}?');"
+                style="display:contents;">
+                <button type="submit" class="btn btn-danger btn-sm"
+                  aria-label="Delete {{ product.product_name }}">🗑 Delete</button>
+              </form>
+            </div>
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🍰</div>
+        <h2>No Products Found</h2>
+        <p>
+          {% if search_query %}
+            No products match "{{ search_query }}". Try a different search.
+          {% else %}
+            Start by adding your first product to the menu.
+          {% endif %}
+        </p>
+        <div style="margin-top:20px;">
+          <a href="{{ url_for('admin_product.add_product') }}" class="btn btn-primary">+ Add First Product</a>
+        </div>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pageLoader').classList.add('loaded');
+    });
+  </script>
+</body>
+</html>
