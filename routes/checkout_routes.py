@@ -27,6 +27,15 @@ from utils.notification_utils import (
 
 import json
 import random
+import razorpay
+import os
+
+client = razorpay.Client(
+    auth=(
+        os.getenv("RAZORPAY_KEY_ID"),
+        os.getenv("RAZORPAY_KEY_SECRET")
+    )
+)
 
 
 # =========================================
