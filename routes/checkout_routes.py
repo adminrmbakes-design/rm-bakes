@@ -543,6 +543,229 @@ def remove_coupon():
     })
 
 # =========================================
+# CREATE RAZORPAY PAYMENT
+# =========================================
+
+@checkout_bp.route(
+    "/create-payment",
+    methods=["POST"]
+)
+@login_required
+def create_payment():
+
+    try:
+
+        # =================================
+        # PROFILE VALIDATION
+        # =================================
+
+        required_fields = [
+
+            current_user.full_name,
+
+            current_user.phone_number,
+
+            current_user.delivery_address
+
+        ]
+
+        if not all(required_fields):
+
+            return jsonify({
+
+                "success": False,
+
+                "message":
+                "Fill your profile with sweetness first. 🧁"
+
+            })
+
+
+        # =================================
+        # GET CART
+        # =================================
+
+        cart_items = Cart.query.filter_by(
+
+            user_id=current_user.user_id
+
+        ).all()
+
+        if not cart_items:
+
+            return jsonify({
+
+                "success": False,
+
+                "message":
+                "Your cart feels lonely... 🚶"
+
+            })
+
+
+        # =================================
+        # CALCULATE SUBTOTAL
+        # =================================
+
+        subtotal = 0
+
+        for item in cart_items:
+
+            product = Product.query.get(
+
+                item.product_id
+
+            )
+
+            if not product:
+
+                continue
+
+            subtotal += (
+
+                product.product_price *
+
+                item.product_quantity
+
+            )
+
+
+        # =================================
+        # DELIVERY FEE
+        # =================================
+
+        delivery_fee = calculate_delivery_fee(
+
+            subtotal
+
+        )
+
+
+        # =================================
+        # COUPON
+        # =================================
+
+        discount_amount = session.get(
+
+            "discount_amount",
+
+            0
+
+        )
+
+
+        # =================================
+        # GRAND TOTAL
+        # =================================
+
+        grand_total = (
+
+            subtotal +
+
+            delivery_fee -
+
+            discount_amount
+
+        )
+
+        if grand_total < 0:
+
+            grand_total = 0
+
+
+        # =================================
+        # CREATE RAZORPAY ORDER
+        # =================================
+
+        razorpay_order = client.order.create({
+
+            "amount": int(grand_total * 100),
+
+            "currency": "INR",
+
+            "payment_capture": 1
+
+        })
+
+
+        # =================================
+        # SAVE ORDER ID IN SESSION
+        # =================================
+
+        session["razorpay_order_id"] = (
+
+            razorpay_order["id"]
+
+        )
+
+
+        # =================================
+        # RETURN DATA
+        # =================================
+
+        return jsonify({
+
+            "success": True,
+
+            "key": os.getenv(
+
+                "RAZORPAY_KEY_ID"
+
+            ),
+
+            "amount": int(
+
+                grand_total * 100
+
+            ),
+
+            "currency": "INR",
+
+            "order_id":
+
+                razorpay_order["id"],
+
+            "name":
+
+                "RM Bakes",
+
+            "description":
+
+                "Bakery Order",
+
+            "prefill": {
+
+                "name":
+                    current_user.full_name,
+
+                "email":
+                    current_user.email,
+
+                "contact":
+                    current_user.phone_number
+
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print("\nCREATE PAYMENT ERROR:")
+        print(error)
+        print()
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+
+                str(error)
+
+        })
+
+# =========================================
 # PLACE ORDER
 # =========================================
 
