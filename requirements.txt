@@ -14,3 +14,4 @@ Pillow
 requests
 psycopg2-binary
 cloudinary
+razorpay
