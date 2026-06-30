@@ -102,6 +102,7 @@
      so position:fixed is ALWAYS relative to the viewport — no parent
      stacking-context can trap it.
 ════════════════════════════════════════ -->
+
 <script>
 /* ── Coupon operations ── */
 async function applyCoupon() {
@@ -128,36 +129,190 @@ async function removeCoupon() {
 }
 
 /* ── Place order ── */
-document.getElementById('placeOrderBtn').addEventListener('click', async () => {
-  const btn     = document.getElementById('placeOrderBtn');
-  const overlay = document.getElementById('orderOverlay');
-  const video   = document.getElementById('orderVideo');
-  btn.disabled    = true;
-  btn.textContent = '⏳ Preparing your order…';
-  showToast('Sending your order to RM Bakes…');
-  try {
-    const res  = await fetch('/place-order', { method:'POST' });
-    const data = await res.json();
-    if (data.success) {
-      overlay.classList.add('active');
-      video.currentTime = 0; video.play().catch(() => {});
-      showToast('🎉 Order placed successfully!');
-      let gone = false;
-      const go = () => { if (!gone) { gone=true; window.location.href=data.redirect; } };
-      video.onended = go; setTimeout(go, 7000);
-    } else {
-      overlay.classList.remove('active');
-      btn.disabled    = false;
-      btn.textContent = '🎂 Place Order';
-      showToast('❌ ' + (data.message || "Couldn't place order — try again"));
-      setTimeout(() => window.location.href='/cart', 2000);
+document.getElementById("placeOrderBtn").addEventListener("click", async () => {
+
+    const btn = document.getElementById("placeOrderBtn");
+
+    btn.disabled = true;
+
+    btn.classList.add("loading-payment");
+
+    btn.innerHTML = "Preparing Payment...";
+
+    try {
+
+        const response = await fetch("/create-payment", {
+
+            method: "POST"
+
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+
+            showToast("❌ " + data.message);
+
+            btn.disabled = false;
+          
+            btn.classList.remove("loading-payment");
+
+            btn.innerHTML = "🎂 Place Order";
+
+            return;
+
+        }
+
+        const options = {
+
+            key: data.key,
+
+            amount: data.amount,
+
+            currency: data.currency,
+
+            name: data.name,
+
+            description: data.description,
+
+            order_id: data.order_id,
+
+            prefill: data.prefill,
+
+            theme: {
+
+                color: "#7A1F2B"
+
+            },
+
+            handler: async function (response) {
+
+                verifyPayment(response);
+
+            },
+
+            modal: {
+
+                ondismiss: function () {
+
+                    btn.disabled = false;
+
+                    btn.classList.remove("loading-payment");
+
+                    btn.innerHTML = "🎂 Place Order";
+
+                }
+
+            }
+
+        };
+
+        const rzp = new Razorpay(options);
+
+        rzp.open();
+
     }
-  } catch {
-    overlay.classList.remove('active');
-    btn.disabled    = false; btn.textContent = '🎂 Place Order';
-    showToast('❌ Network error — please try again');
-  }
+
+    catch (error) {
+
+        console.log(error);
+
+        showToast("Payment could not be started.");
+
+        btn.disabled = false;
+      
+
+        btn.innerHTML = "🎂 Place Order";
+
+    }
+
 });
+
+async function verifyPayment(payment){
+
+    try{
+
+        const response = await fetch("/verify-payment",{
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                razorpay_payment_id:payment.razorpay_payment_id,
+
+                razorpay_order_id:payment.razorpay_order_id,
+
+                razorpay_signature:payment.razorpay_signature
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        if(data.success){
+
+            showToast("🎉 Payment Successful!");
+
+            document.getElementById("orderOverlay").classList.add("active");
+
+            const video=document.getElementById("orderVideo");
+
+            video.currentTime=0;
+
+            video.play().catch(()=>{});
+
+            let redirected=false;
+
+            const go=()=>{
+
+                if(!redirected){
+
+                    redirected=true;
+
+                    window.location.href=data.redirect;
+
+                }
+
+            };
+
+            video.onended=go;
+
+            setTimeout(go,7000);
+
+        }
+
+        else{
+
+            showToast("❌ "+data.message);
+
+            document.getElementById("placeOrderBtn").disabled=false;
+
+            document.getElementById("placeOrderBtn").innerHTML="🎂 Place Order";
+
+        }
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        showToast("Verification failed.");
+
+        document.getElementById("placeOrderBtn").disabled=false;
+
+        document.getElementById("placeOrderBtn").innerHTML="🎂 Place Order";
+
+    }
+
+}
 
 /* ════════════════════════════════════════
    FIX #1: COUPON VIEWER
@@ -336,4 +491,18 @@ async function applyCouponFromViewer(code) {
 document.getElementById('viewCouponsBtn').addEventListener('click', openCouponViewer);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCouponViewer(); });
 </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+.loading-payment{
+
+    opacity:.8;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+    transition:.3s;
+
+}
+</style>
 {% endblock %}
