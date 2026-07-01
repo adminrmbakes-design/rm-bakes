@@ -556,6 +556,14 @@ class Order(db.Model):
 
     )
 
+    payment_verified = db.Column(
+
+        db.Boolean,
+
+        default=False
+
+    )
+
 
     # =====================================
     # HELPER PROPERTY
