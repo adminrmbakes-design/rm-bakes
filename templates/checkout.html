@@ -75,7 +75,7 @@
       {% if current_user.landmark %}<div class="delivery-detail-line"><span class="delivery-detail-label">Landmark</span><span class="delivery-detail-value">{{ current_user.landmark }}</span></div>{% endif %}
       {% if current_user.city    %}<div class="delivery-detail-line"><span class="delivery-detail-label">City</span><span class="delivery-detail-value">{{ current_user.city }}</span></div>{% endif %}
       {% if current_user.pincode %}<div class="delivery-detail-line"><span class="delivery-detail-label">Pincode</span><span class="delivery-detail-value">{{ current_user.pincode }}</span></div>{% endif %}
-      <div class="delivery-detail-line" style="border:none;"><span class="delivery-detail-label">Payment</span><span class="delivery-detail-value">{{ current_user.preferred_payment_method or 'Cash on Delivery' }}</span></div>
+      <div class="delivery-detail-line" style="border:none;"><span class="delivery-detail-label">Payment</span><span class="delivery-detail-value">{{ current_user.preferred_payment_method or 'Online' }}</span></div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
       <a href="{{ url_for('profile.profile') }}" class="btn btn-outline btn-sm">Edit Profile</a>
