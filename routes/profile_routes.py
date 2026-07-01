@@ -91,7 +91,7 @@ def save_profile_details():
 
         current_user.preferred_payment_method = data.get(
             "preferred_payment_method",
-            "Cash on Delivery"
+            "Online"
         )
 
 
