@@ -500,59 +500,15 @@ class Order(db.Model):
 
     )
 
-    # ====================================
-    # AFTER PAYMENTS
-    # ====================================
+    # =========================================
+    # PAYMENT INFORMATION
+    # =========================================
 
     payment_status = db.Column(
-        
+
         db.String(30),
-        
+
         default="Pending"
-
-    )
-    
-    payment_completed_at = db.Column(
-
-        db.DateTime
-
-    )
-    
-    payment_gateway = db.Column(
-
-        db.String(30),
-
-        default="None"
-
-    )
-    
-    payment_mode = db.Column(
-
-        db.String(50)
-
-    )
-    
-    razorpay_order_id = db.Column(
-
-        db.String(100)
-
-    )
-    
-    razorpay_payment_id = db.Column(
-        
-        db.String(100)
-
-    )
-    
-    transaction_reference = db.Column(
-
-        db.String(100)
-    
-    )
-
-    payment_failure_reason = db.Column(
-
-        db.Text
 
     )
 
@@ -564,6 +520,54 @@ class Order(db.Model):
 
     )
 
+
+    payment_gateway = db.Column(
+
+        db.String(30),
+
+        default="None"
+
+    )
+
+
+    payment_mode = db.Column(
+
+        db.String(50)
+
+    )
+
+    payment_completed_at = db.Column(
+
+        db.DateTime
+
+    )
+
+
+    razorpay_order_id = db.Column(
+
+        db.String(100)
+
+    )
+
+
+    razorpay_payment_id = db.Column(
+
+        db.String(100)
+
+    )
+
+
+    transaction_reference = db.Column(
+
+        db.String(100)
+
+    )
+
+    payment_failure_reason = db.Column(
+
+        db.Text
+
+    )
 
     # =====================================
     # HELPER PROPERTY
