@@ -550,6 +550,11 @@ class Order(db.Model):
     
     )
 
+    payment_failure_reason = db.Column(
+
+        db.Text
+
+    )
 
 
     # =====================================
