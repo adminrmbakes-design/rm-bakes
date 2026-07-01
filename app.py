@@ -5,6 +5,7 @@ from flask_login import current_user
 import os
 
 from sqlalchemy import text
+from sqlalchemy import inspect
 
 # =========================================
 # DATABASE IMPORTS
@@ -224,7 +225,80 @@ with app.app_context():
     
     
     db.create_all()
-    create_featured_product_slots()
+    #create_featured_product_slots()
+    # =========================================
+    # UPDATE ORDERS TABLE (PAYMENT COLUMNS)
+    # =========================================
+
+    
+
+    try:
+        inspector = inspect(db.engine)
+        existing_columns = [
+            column["name"]
+            for column in inspector.get_columns("orders")
+        ]
+        columns_to_add = [
+            (
+                "payment_status",
+                "ALTER TABLE orders ADD COLUMN payment_status VARCHAR(30) DEFAULT 'Pending'"
+            ),
+
+            (
+                "payment_verified",
+                "ALTER TABLE orders ADD COLUMN payment_verified BOOLEAN DEFAULT 0"
+            ),
+
+            (
+                "payment_gateway",
+                "ALTER TABLE orders ADD COLUMN payment_gateway VARCHAR(30) DEFAULT 'None'"
+            ),
+
+            (
+                "payment_mode",
+                "ALTER TABLE orders ADD COLUMN payment_mode VARCHAR(50)"
+            ),
+
+            (
+                "payment_completed_at",
+                "ALTER TABLE orders ADD COLUMN payment_completed_at DATETIME"
+            ),
+
+            (
+                "razorpay_order_id",
+                "ALTER TABLE orders ADD COLUMN razorpay_order_id VARCHAR(100)"
+            ),
+
+            (
+                "razorpay_payment_id",
+                "ALTER TABLE orders ADD COLUMN razorpay_payment_id VARCHAR(100)"
+            ),
+
+            (
+                "transaction_reference",
+                "ALTER TABLE orders ADD COLUMN transaction_reference VARCHAR(100)"
+            ),
+
+            (
+                "payment_failure_reason",
+                "ALTER TABLE orders ADD COLUMN payment_failure_reason TEXT"
+            )
+
+        ]
+
+        for column_name, sql in columns_to_add:
+            if column_name not in existing_columns:
+                db.session.execute(text(sql))
+                print(f"✅ Added column: {column_name}")           
+            else:
+                print(f"ℹ️ Column already exists: {column_name}")
+                db.session.commit()
+                print("\n🎉 Orders table payment columns checked successfully.\n")
+    except Exception as error:
+        db.session.rollback()
+        print("\n❌ Orders table payment upgrade failed!")
+        print(error)
+        print()
     
 # =========================================
 # RUN APP
