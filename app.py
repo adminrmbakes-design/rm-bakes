@@ -220,25 +220,28 @@ app.register_blueprint(admin_carousel_bp)
 # CREATE DATABASE TABLES
 # =========================================
 
-
 with app.app_context():
-    
-    
+
     db.create_all()
-    #create_featured_product_slots()
+
     # =========================================
     # UPDATE ORDERS TABLE (PAYMENT COLUMNS)
     # =========================================
 
-    
-
     try:
+
         inspector = inspect(db.engine)
+
         existing_columns = [
+
             column["name"]
+
             for column in inspector.get_columns("orders")
+
         ]
+
         columns_to_add = [
+
             (
                 "payment_status",
                 "ALTER TABLE orders ADD COLUMN payment_status VARCHAR(30) DEFAULT 'Pending'"
@@ -246,7 +249,7 @@ with app.app_context():
 
             (
                 "payment_verified",
-                "ALTER TABLE orders ADD COLUMN payment_verified BOOLEAN DEFAULT 0"
+                "ALTER TABLE orders ADD COLUMN payment_verified BOOLEAN DEFAULT FALSE"
             ),
 
             (
@@ -261,7 +264,7 @@ with app.app_context():
 
             (
                 "payment_completed_at",
-                "ALTER TABLE orders ADD COLUMN payment_completed_at DATETIME"
+                "ALTER TABLE orders ADD COLUMN payment_completed_at TIMESTAMP"
             ),
 
             (
@@ -286,19 +289,44 @@ with app.app_context():
 
         ]
 
+        print("\n========== ORDERS TABLE PAYMENT UPGRADE ==========\n")
+
         for column_name, sql in columns_to_add:
-            if column_name not in existing_columns:
+
+            try:
+
+                if column_name in existing_columns:
+
+                    print(f"ℹ️ Column already exists : {column_name}")
+
+                    continue
+
                 db.session.execute(text(sql))
-                print(f"✅ Added column: {column_name}")           
-            else:
-                print(f"ℹ️ Column already exists: {column_name}")
+
                 db.session.commit()
-                print("\n🎉 Orders table payment columns checked successfully.\n")
+
+                print(f"✅ Added column : {column_name}")
+
+            except Exception as column_error:
+
+                db.session.rollback()
+
+                print(f"❌ Failed to add : {column_name}")
+
+                print(column_error)
+
+                print()
+
+        print("\n🎉 Orders table payment columns check completed.\n")
+
     except Exception as error:
-        db.session.rollback()
-        print("\n❌ Orders table payment upgrade failed!")
+
+        print("\n❌ Could not inspect orders table!")
+
         print(error)
+
         print()
+        
     
 # =========================================
 # RUN APP
