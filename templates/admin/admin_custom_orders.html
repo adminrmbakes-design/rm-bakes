@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Dessert Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to custom orders</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Dessert Studio — Custom Requests</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Sticky Filter Bar -->
+  <div class="sticky-bar" role="navigation" aria-label="Filter custom orders">
+    <div class="sticky-bar-inner">
+      {% set filters = [
+        ('all',                 'All'),
+        ('pending',             'Pending'),
+        ('reviewing',           'Reviewing'),
+        ('quoted',              'Quoted'),
+        ('quotation_accepted',  'Accepted'),
+        ('quotation_rejected',  'Rejected'),
+        ('cancel_requested',    'Cancel Requested'),
+        ('converted',           'Converted'),
+        ('cancelled',           'Cancelled')
+      ] %}
+      <div class="filter-bar">
+        {% for value, label in filters %}
+          <a href="{{ url_for('custom_order.admin_custom_orders', status=value) }}"
+            class="filter-tab {% if status_filter == value %}active{% endif %}"
+            aria-current="{% if status_filter == value %}page{% endif %}">
+            {{ label }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <main class="content" id="main-content">
+
+    {% if custom_orders %}
+      <div class="custom-order-list stagger" role="list" aria-label="Custom dessert orders">
+        {% for order in custom_orders %}
+          <article class="custom-order-card" role="listitem" aria-label="Custom order {{ order.request_code }}">
+
+            <!-- Head -->
+            <div class="custom-order-head">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div class="custom-order-id">🎨 {{ order.request_code }}</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                  <span class="status-pill {{ order.status }}">{{ order.custom_status }}</span>
+                  <span class="custom-badge">{{ order.dessert_category }}</span>
+                </div>
+              </div>
+              <time style="font-size:0.76rem;color:var(--cream-dim);">
+                {{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}
+              </time>
+            </div>
+
+            <!-- Body: Two columns on wide, single on mobile -->
+            <div class="custom-order-body">
+
+              <!-- Main Details -->
+              <div class="custom-order-main">
+
+                {% if order.inspiration_image %}
+                  <img src="{{ order.inspiration_image }}" alt="Customer's inspiration" class="custom-insp-img" loading="lazy">
+                {% endif %}
+
+                <div class="order-field">
+                  <div class="field-label">Customer</div>
+                  <div class="field-value">{{ order.username }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Email</div>
+                  <div class="field-value">{{ order.email }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Flavor</div>
+                  <div class="field-value">{{ order.flavor }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Quantity</div>
+                  <div class="field-value">{{ order.quantity }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Occasion</div>
+                  <div class="field-value">{{ order.occasion or "Not specified" }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Budget</div>
+                  <div class="field-value">₹{{ order.budget or "Flexible" }}</div>
+                </div>
+                <div class="order-field">
+                  <div class="field-label">Delivery Date</div>
+                  <div class="field-value">{{ order.delivery_date or "Flexible" }}</div>
+                </div>
+                {% if order.custom_message %}
+                  <div class="order-field">
+                    <div class="field-label">Custom Message</div>
+                    <div class="field-value">{{ order.custom_message }}</div>
+                  </div>
+                {% endif %}
+                <div class="order-field">
+                  <div class="field-label">Dessert Vision</div>
+                  <div class="field-value">{{ order.description }}</div>
+                </div>
+                {% if order.special_notes %}
+                  <div class="order-field">
+                    <div class="field-label">Special Notes</div>
+                    <div class="field-value">{{ order.special_notes }}</div>
+                  </div>
+                {% endif %}
+
+              </div><!-- /main -->
+
+              <!-- Sidebar: Delivery + Admin -->
+              <div class="custom-order-sidebar">
+
+                <!-- Delivery Toggle -->
+                <div>
+                  {% if order.full_name and order.phone_number and order.delivery_address %}
+                    <button type="button" class="btn btn-ghost btn-sm"
+                      onclick="toggleDelivery('{{ order.custom_order_id }}')"
+                      aria-expanded="false" aria-controls="delivery-{{ order.custom_order_id }}">
+                      📍 Show Delivery Details
+                    </button>
+                  {% else %}
+                    <div class="order-field">
+                      <div class="field-label">Delivery</div>
+                      <div class="field-value text-muted">Not yet provided</div>
+                    </div>
+                  {% endif %}
+
+                  <div class="delivery-details" id="delivery-{{ order.custom_order_id }}">
+                    <div class="order-field">
+                      <div class="field-label">Name</div>
+                      <div class="field-value">{{ order.full_name or "N/A" }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Phone</div>
+                      <div class="field-value">{{ order.phone_number or "N/A" }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">City</div>
+                      <div class="field-value">{{ order.city or "N/A" }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Pincode</div>
+                      <div class="field-value">{{ order.pincode or "N/A" }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Address</div>
+                      <div class="field-value">{{ order.delivery_address or "N/A" }}</div>
+                    </div>
+                    {% if order.google_maps_link %}
+                      <a href="{{ order.google_maps_link }}" target="_blank" rel="noopener"
+                        class="btn btn-secondary btn-sm">📍 Maps</a>
+                    {% endif %}
+                    {% if order.profile_snapshot_updated_at %}
+                      <div class="form-hint">Profile snapped: {{ order.profile_snapshot_updated_at.strftime('%d %b %Y • %I:%M %p') }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Admin Workflow Form -->
+                <form method="POST"
+                  action="{{ url_for('custom_order.update_custom_order', custom_order_id=order.custom_order_id) }}"
+                  class="custom-order-admin">
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin_price_{{ order.custom_order_id }}">Admin Price (₹)</label>
+                    <input type="number" id="admin_price_{{ order.custom_order_id }}" name="admin_price"
+                      class="form-input" step="0.01" value="{{ order.admin_price or '' }}" placeholder="Set quoted price">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin_notes_{{ order.custom_order_id }}">Admin Notes</label>
+                    <textarea id="admin_notes_{{ order.custom_order_id }}" name="admin_notes"
+                      class="form-textarea" rows="3"
+                      placeholder="Internal notes about this order…">{{ order.admin_notes or '' }}</textarea>
+                  </div>
+
+                  <!-- Status Actions -->
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+                    {% if order.custom_status == "pending" %}
+                      <button type="submit" name="status" value="reviewing" class="btn btn-success btn-sm">
+                        ▶ Start Review
+                      </button>
+                      <button type="submit" name="status" value="rejected" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Reject this request?')">
+                        ✕ Reject
+                      </button>
+                    {% endif %}
+
+                    {% if order.custom_status == "reviewing" %}
+                      <button type="submit" name="status" value="quoted" class="btn btn-success btn-sm">
+                        💰 Send Quotation
+                      </button>
+                      <button type="submit" name="status" value="rejected" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Reject this request?')">
+                        ✕ Reject
+                      </button>
+                    {% endif %}
+
+                    {% if order.custom_status == "quoted" %}
+                      <div class="chip">⏳ Awaiting customer response</div>
+                    {% endif %}
+
+                  </div>
+                </form>
+
+                <!-- Quotation Accepted → Convert -->
+                {% if order.custom_status == "quotation_accepted" %}
+                  <div class="order-field">
+                    <div class="field-label">Status</div>
+                    <div class="field-value text-success fw-700">🔥 Ready for Production</div>
+                  </div>
+                  <form method="POST"
+                    action="{{ url_for('custom_order_conversion.convert_custom_order', custom_order_id=order.custom_order_id) }}"
+                    onsubmit="return confirm('Convert to a live production order?')">
+                    <button type="submit" class="btn btn-primary btn-sm btn-full">
+                      🔥 Convert to Production
+                    </button>
+                  </form>
+                {% endif %}
+
+                <!-- Quotation Rejected -->
+                {% if order.custom_status == "quotation_rejected" %}
+                  <div class="chip text-danger">Customer rejected the quotation.</div>
+                {% endif %}
+
+                <!-- Cancel Requested -->
+                {% if order.custom_status == "cancel_requested" %}
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div class="chip text-warn">⚠ Customer requested cancellation</div>
+                    <form method="POST"
+                      action="{{ url_for('custom_order_cancellation.approve_custom_cancellation', custom_order_id=order.custom_order_id) }}"
+                      onsubmit="return confirm('Approve cancellation request?')"
+                      style="display:contents;">
+                      <button type="submit" class="btn btn-danger btn-sm">✓ Approve Cancellation</button>
+                    </form>
+                    <form method="POST"
+                      action="{{ url_for('custom_order_cancellation.reject_custom_cancellation', custom_order_id=order.custom_order_id) }}"
+                      onsubmit="return confirm('Reject cancellation request?')"
+                      style="display:contents;">
+                      <input type="hidden" name="rejection_reason" value="Production already initiated.">
+                      <button type="submit" class="btn btn-success btn-sm">✕ Reject Cancellation</button>
+                    </form>
+                  </div>
+                {% endif %}
+
+                <!-- Cancelled -->
+                {% if order.custom_status == "cancelled" %}
+                  <div class="chip text-danger">💔 Dessert request cancelled.</div>
+                {% endif %}
+
+                <!-- Converted -->
+                {% if order.custom_status == "converted" %}
+                  <div class="chip text-success">✅ Production order created.</div>
+                {% endif %}
+
+              </div><!-- /sidebar -->
+
+            </div><!-- /body -->
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🎨</div>
+        <h2>No Custom Requests</h2>
+        <p>Custom dessert requests from customers will appear here when submitted.</p>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <script>
+    window.addEventListener('load', () => document.getElementById('pageLoader').classList.add('loaded'));
+
+    function toggleDelivery(orderId) {
+      const el = document.getElementById('delivery-' + orderId);
+      if (!el) return;
+      el.classList.toggle('open');
+    }
+
+    function confirmProductionConversion() {
+      return confirm('This will convert the custom request into a live production order. Continue?');
+    }
+
+    function confirmApproveCancellation() {
+      return confirm('Approve the cancellation request?');
+    }
+
+    function confirmRejectCancellation() {
+      return confirm('Reject the cancellation and continue production?');
+    }
+  </script>
+  <script>
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
