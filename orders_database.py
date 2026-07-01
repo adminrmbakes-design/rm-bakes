@@ -500,6 +500,56 @@ class Order(db.Model):
 
     )
 
+    # ====================================
+    # AFTER PAYMENTS
+    # ====================================
+
+    payment_status = db.Column(
+        
+        db.String(30),
+        
+        default="Pending"
+
+    )
+    
+    payment_completed_at = db.Column(
+
+        db.DateTime
+
+    )
+    
+    payment_gateway = db.Column(
+
+        db.String(30),
+
+        default="None"
+
+    )
+    
+    payment_mode = db.Column(
+
+        db.String(50)
+
+    )
+    
+    razorpay_order_id = db.Column(
+
+        db.String(100)
+
+    )
+    
+    razorpay_payment_id = db.Column(
+        
+        db.String(100)
+
+    )
+    
+    transaction_reference = db.Column(
+
+        db.String(100)
+    
+    )
+
 
 
     # =====================================
