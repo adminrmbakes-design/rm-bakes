@@ -168,7 +168,7 @@ document.getElementById('placeOrderBtn').addEventListener('click', async functio
   const btn = this;
   btn.disabled = true;
 
-  if (PAYMENT_METHOD === 'COD') {
+  if (PAYMENT_METHOD === 'Cash On Delivery') {
     /* ── COD path ── */
     btn.textContent = 'Placing Order…';
     await handlePlaceOrder(btn);
@@ -308,7 +308,7 @@ async function verifyPayment(payment, btn) {
 ═══════════════════════════════════════════════ */
 function resetBtn(btn) {
   btn.disabled = false;
-  if (PAYMENT_METHOD === 'COD') {
+  if (PAYMENT_METHOD === 'Cash On Delivery') {
     btn.textContent = '🎂 Place Order (Pay on Delivery)';
   } else {
     btn.textContent = '🔒 Proceed to Payment';
