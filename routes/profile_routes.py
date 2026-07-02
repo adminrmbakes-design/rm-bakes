@@ -35,7 +35,7 @@ PINCODE_REGEX = re.compile(r"^[1-9]\d{5}$")
 
 PAYMENT_METHODS = (
     "Online",
-    "COD"
+    "Cash On Delivery"
 )
 
 # Max length is capped to comfortably fit the matching
