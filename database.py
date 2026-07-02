@@ -166,7 +166,7 @@ class User(UserMixin, db.Model):
 
         db.String(50),
 
-        default="Cash on Delivery"
+        default="Online"
 
     )
 
