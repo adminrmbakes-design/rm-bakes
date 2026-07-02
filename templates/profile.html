@@ -77,7 +77,7 @@ document.getElementById('saveProfileBtn').addEventListener('click', async () => 
   btn.textContent = 'Saving…';
   showToast('Saving your details…');
   try {
-    const res  = await fetch('/profile/update', {
+    const res  = await fetch('/profile/save-details', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -107,7 +107,7 @@ document.getElementById('savePaymentBtn').addEventListener('click', async () => 
   btn.textContent = 'Saving…';
   showToast('Updating payment preference…');
   try {
-    const res  = await fetch('/profile/update-payment', {
+    const res  = await fetch('/profile/save-details', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ preferred_payment_method: document.getElementById('paymentMethod').value })
