@@ -53,8 +53,8 @@
       <div class="section-title">Payment Preference</div>
       <label class="rm-label">Preferred Method</label>
       <select id="paymentMethod" class="rm-input">
-        <option value="Online"  {% if current_user.preferred_payment_method != "COD"  %}selected{% endif %}>Online</option>
-        <option value="COD" {% if current_user.preferred_payment_method == "COD" %}selected{% endif %}>Cash On Delivery</option>
+        <option value="Online"  {% if current_user.preferred_payment_method != "Cash On Delivery"  %}selected{% endif %}>Online</option>
+        <option value="Cash On Delivery" {% if current_user.preferred_payment_method == "Cash On Delivery" %}selected{% endif %}>Cash On Delivery</option>
       </select>
       <button class="btn btn-amber" id="savePaymentBtn">Save Preference</button>
     </div>
