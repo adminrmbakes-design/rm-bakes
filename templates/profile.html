@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Profile Hero -->
+<div class="profile-hero">
+  <h1>{{ current_user.username }}</h1>
+  <p>Welcome back — your sweet corner awaits</p>
+  <div class="member-badge">★ RM Bakes Member</div>
+</div>
+
+<!-- Quick Actions -->
+<div class="profile-quick-grid">
+  <a href="{{ url_for('order.my_orders') }}" class="quick-btn">
+    <span class="quick-btn-icon"><i class="fa-solid fa-box"></i></span><span>My Orders</span>
+  </a>
+  <a href="{{ url_for('cart.cart') }}" class="quick-btn">
+    <span class="quick-btn-icon"><i class="fa-solid fa-bag-shopping"></i></span><span>Cart</span>
+  </a>
+  <a href="{{ url_for('profile.account_settings') }}" class="quick-btn">
+    <span class="quick-btn-icon"><i class="fa-solid fa-gear"></i></span><span>Settings</span>
+  </a>
+  <button class="quick-btn" onclick="confirmLogout()">
+    <span class="quick-btn-icon"><i class="fa-solid fa-right-from-bracket"></i></span><span>Sign Out</span>
+  </button>
+</div>
+
+<!-- Profile Grid -->
+<div class="profile-grid">
+
+  <!-- Delivery Details -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delivery Details</div>
+    <label class="rm-label">Full Name</label>
+    <input type="text" id="fullName" class="rm-input" placeholder="Your full name" maxlength="120" value="{{ current_user.full_name or '' }}">
+    <label class="rm-label">Phone Number</label>
+    <input type="tel" id="phoneNumber" class="rm-input" placeholder="10-digit number" maxlength="10" inputmode="numeric" pattern="[0-9]*" value="{{ current_user.phone_number or '' }}">
+    <label class="rm-label">Delivery Address</label>
+    <textarea id="deliveryAddress" class="rm-input" placeholder="Full delivery address" maxlength="1000">{{ current_user.delivery_address or '' }}</textarea>
+    <label class="rm-label">Landmark</label>
+    <input type="text" id="landmark" class="rm-input" placeholder="Nearby landmark" maxlength="200" value="{{ current_user.landmark or '' }}">
+    <label class="rm-label">City</label>
+    <input type="text" id="city" class="rm-input" placeholder="City" maxlength="100" value="{{ current_user.city or '' }}">
+    <label class="rm-label">Pincode</label>
+    <input type="text" id="pincode" class="rm-input" placeholder="6-digit pincode" maxlength="6" inputmode="numeric" pattern="[0-9]*" value="{{ current_user.pincode or '' }}">
+    <label class="rm-label">Google Maps Share Link</label>
+    <input type="text" id="googleMapsLink" class="rm-input" placeholder="Paste Maps link (https://...)" maxlength="500" inputmode="url" value="{{ current_user.google_maps_link or '' }}">
+    <button class="btn btn-primary" id="saveProfileBtn">Save Delivery Details</button>
+  </div>
+
+  <!-- Payment + Account -->
+  <div>
+    <div class="rm-card section-card">
+      <div class="section-title">Payment Preference</div>
+      <label class="rm-label">Preferred Method</label>
+      <select id="paymentMethod" class="rm-input">
+        <option value="Online"  {% if current_user.preferred_payment_method != "COD"  %}selected{% endif %}>Online</option>
+        <option value="COD" {% if current_user.preferred_payment_method == "COD" %}selected{% endif %}>Cash On Delivery</option>
+      </select>
+      <button class="btn btn-amber" id="savePaymentBtn">Save Preference</button>
+    </div>
+
+    <div class="rm-card section-card" style="margin-top:22px;">
+      <div class="section-title">Account Info</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:.9rem;color:var(--text-body);">
+        <div><strong>Username:</strong> {{ current_user.username }}</div>
+        <div><strong>Email:</strong> {{ current_user.email }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   PROFILE SAVE — single shared function.
+   Both buttons below always send the FULL current form
+   state (delivery fields + payment method) in one POST,
+   so there is only ever one save happening at a time and
+   neither button can blank out fields owned by the other.
+   The backend also independently refuses to let a blank
+   field erase an already-saved value (defense in depth).
+   ══════════════════════════════════════════════════════ */
+
+function getProfilePayload() {
+  return {
+    full_name:        document.getElementById('fullName').value.trim(),
+    phone_number:      document.getElementById('phoneNumber').value.trim(),
+    delivery_address:  document.getElementById('deliveryAddress').value.trim(),
+    landmark:          document.getElementById('landmark').value.trim(),
+    city:              document.getElementById('city').value.trim(),
+    pincode:           document.getElementById('pincode').value.trim(),
+    google_maps_link:  document.getElementById('googleMapsLink').value.trim(),
+    preferred_payment_method: document.getElementById('paymentMethod').value
+  };
+}
+
+function validateProfilePayload(payload) {
+  if (payload.phone_number && !/^[6-9]\d{9}$/.test(payload.phone_number)) {
+    return 'Enter a valid 10-digit mobile number 📵';
+  }
+  if (payload.pincode && !/^[1-9]\d{5}$/.test(payload.pincode)) {
+    return 'Enter a valid 6-digit pincode 📍';
+  }
+  if (payload.google_maps_link && !/^https?:\/\//i.test(payload.google_maps_link)) {
+    return 'Maps link must start with http:// or https:// 🔗';
+  }
+  return null;
+}
+
+async function saveProfile(btn, savingLabel, idleLabel, startMessage) {
+  const payload = getProfilePayload();
+
+  const validationError = validateProfilePayload(payload);
+  if (validationError) {
+    showToast('⚠️ ' + validationError);
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = savingLabel;
+  showToast(startMessage);
+
+  try {
+    const res = await fetch('/profile/save-details', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    /* Session expired: Flask-Login silently redirects to the
+       login page instead of returning JSON — fetch follows it
+       and would otherwise look like a confusing "network error". */
+    if (res.redirected) {
+      showToast('🔐 Session expired — please log in again');
+      setTimeout(() => { window.location.href = res.url; }, 1200);
+      return;
+    }
+
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {
+      showToast('❌ Unexpected response from server — please try again');
+      return;
+    }
+
+    if (res.ok && data.success) {
+      showToast('✅ ' + (data.message || 'Saved!'));
+    } else if (res.status === 400) {
+      showToast('⚠️ ' + (data.message || 'Please check your details'));
+    } else if (res.status === 401 || res.status === 403) {
+      showToast('🔐 ' + (data.message || 'Please log in again'));
+    } else if (res.status >= 500) {
+      showToast('❌ ' + (data.message || 'Server error — please try again shortly'));
+    } else {
+      showToast('❌ ' + (data.message || 'Could not save'));
+    }
+  } catch {
+    showToast('❌ Network error — check your connection and try again');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = idleLabel;
+  }
+}
+
+document.getElementById('saveProfileBtn').addEventListener('click', () => {
+  saveProfile(
+    document.getElementById('saveProfileBtn'),
+    'Saving…',
+    'Save Delivery Details',
+    'Saving your details…'
+  );
+});
+
+document.getElementById('savePaymentBtn').addEventListener('click', () => {
+  saveProfile(
+    document.getElementById('savePaymentBtn'),
+    'Saving…',
+    'Save Preference',
+    'Updating payment preference…'
+  );
+});
+</script>
+{% endblock %}
