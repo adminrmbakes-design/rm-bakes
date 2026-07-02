@@ -86,7 +86,7 @@
         <span class="delivery-detail-label">Payment</span>
         <span class="delivery-detail-value">
           {% set pm = current_user.preferred_payment_method or 'Online' %}
-          {% if pm == 'COD' %}
+          {% if pm == 'Cash On Delivery' %}
             💵 Cash on Delivery
           {% else %}
             🔒 Online (Razorpay)
@@ -102,7 +102,7 @@
 
   <!-- ── Place Order Button ── -->
   <button class="btn btn-primary btn-full btn-lg" id="placeOrderBtn" style="margin-top:8px;">
-    {% if (current_user.preferred_payment_method or 'Online') == 'COD' %}
+    {% if (current_user.preferred_payment_method or 'Online') == 'Cash On Delivery' %}
       🎂 Place Order (Pay on Delivery)
     {% else %}
       🔒 Proceed to Payment
