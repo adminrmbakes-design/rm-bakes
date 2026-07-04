@@ -1,0 +1,31 @@
+/* =========================================
+   RM BAKES — PLATFORM SETTINGS
+   Loaded together with admin.css.
+   Only adds what admin.css doesn't already
+   provide — spacing, cards, buttons, tables,
+   forms, and the auth-page shell are all
+   reused as-is from admin.css.
+   ========================================= */
+
+/* Spacing utility missing from admin.css */
+.mb-lg { margin-bottom: 24px; }
+
+/* Feature status pill colours — same visual
+   language as the order status-pill modifiers
+   already defined in admin.css. */
+.live         { background: rgba(80,160,110,0.12);  border: 1px solid rgba(80,160,110,0.22);  color: #80c89a; }
+.coming_soon  { background: rgba(190,140,50,0.12);   border: 1px solid rgba(190,140,50,0.22);   color: #ccaa60; }
+.disabled     { background: rgba(190,60,60,0.12);    border: 1px solid rgba(190,60,60,0.22);    color: #d88888; }
+
+/* Inline status dropdown + save button per table row */
+.feature-update-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.feature-update-form .form-select {
+  width: auto;
+  min-width: 160px;
+  padding: 8px 32px 8px 12px;
+}
