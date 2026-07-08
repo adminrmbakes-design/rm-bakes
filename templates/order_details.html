@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="{{ url_for('order.my_orders') }}" class="detail-back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Orders</a>
+
+<div class="rm-page-hero">
+  <h1>Order Details</h1>
+  <p>Sweetness prepared with care</p>
+</div>
+
+<div style="max-width:780px;margin:0 auto;">
+
+  <!-- Header -->
+  <div class="rm-card section-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;">
+      <div>
+        <div class="order-num">#{{ order.order_number }}</div>
+        {% if order.is_custom_order %}<div class="studio-tag" style="margin-top:8px;">✨ Dessert Studio Production</div>{% endif %}
+        <div class="order-date" style="margin-top:8px;">Ordered {{ order.ordered_at | ist('%d %b %Y · %I:%M %p') }}</div>
+      </div>
+      <span class="status-badge status-{{ order.order_status }}">{{ order.order_status.replace('_',' ').title() }}</span>
+    </div>
+  </div>
+
+  <!-- FIX #1: Custom Order — prominent image with robust fallback -->
+  {% if order.is_custom_order %}
+  <div class="rm-card-amber rm-card section-card">
+    <div class="section-title" style="border-color:rgba(200,146,58,.25);">✨ Dessert Studio Creation</div>
+
+    <!-- Inspiration image — FIX #1: proper sizing, click-to-expand, onerror fallback -->
+    {% if order.custom_inspiration_image %}
+    <div style="width:100%;border-radius:var(--r-lg);overflow:hidden;margin-bottom:14px;background:var(--honey-2);position:relative;cursor:pointer;"
+         onclick="openGlobalModal('{{ order.custom_inspiration_image }}')"
+         title="Tap to expand">
+      <img src="{{ order.custom_inspiration_image }}"
+           alt="Inspiration Image"
+           id="detailInspImg"
+           style="width:100%;height:auto;max-height:340px;min-height:160px;object-fit:cover;display:block;transition:transform .3s ease;"
+           onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"
+           onerror="this.closest('div').outerHTML='<div style=width:100%;height:180px;background:var(--honey-2);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:14px>🍰</div>'">
+      <!-- Expand hint overlay -->
+      <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;padding:5px 10px;border-radius:99px;font-size:.72rem;font-weight:600;pointer-events:none;">
+        🔍 Tap to expand
+      </div>
+    </div>
+    {% else %}
+    <div style="width:100%;height:180px;background:var(--honey-2);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:14px;">🍰</div>
+    {% endif %}
+
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:.9rem;color:var(--text-body);line-height:1.8;">
+      <div><strong>Request Code:</strong> {{ order.custom_request_code }}</div>
+      <div><strong>Category:</strong> {{ order.custom_dessert_category }}</div>
+      <div><strong>Flavor:</strong> {{ order.custom_flavor }}</div>
+      <div><strong>Quantity:</strong> {{ order.custom_quantity }}</div>
+      {% if order.custom_description %}<div style="margin-top:6px;"><strong>Vision:</strong><br>{{ order.custom_description }}</div>{% endif %}
+      {% if order.custom_message %}<div><strong>Message:</strong> {{ order.custom_message }}</div>{% endif %}
+      {% if order.custom_special_notes %}<div><strong>Notes:</strong> {{ order.custom_special_notes }}</div>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Production Timeline -->
+  <div class="rm-card section-card">
+    <div class="section-title">Production Journey</div>
+    {% set status_order = ["queued","approved","preparing","baking","packaging","out_for_delivery","delivered"] %}
+    {% set current_index = status_order.index(order.order_status) if order.order_status in status_order else 0 %}
+    <div class="production-timeline">
+      {% for icon, title, desc in [
+        ("🧾","Order Confirmed","Your dessert entered the production queue."),
+        ("✅","Production Approved","Ingredients and preparation finalised."),
+        ("👨‍🍳","Preparation","Your handcrafted dessert is being prepared."),
+        ("🔥","Baking","Fresh baking magic happening in the kitchen."),
+        ("📦","Packaging","Final touches and beautiful packaging."),
+        ("🛵","Out for Delivery","Your dessert is on its way."),
+        ("🎉","Delivered","Dessert journey completed.")
+      ] %}
+      <div class="timeline-step {% if loop.index0 < current_index %}completed{% elif loop.index0 == current_index %}active{% endif %}">
+        <div class="timeline-icon">{{ icon }}</div>
+        <div class="timeline-body">
+          <div class="timeline-title">{{ title }}</div>
+          <div class="timeline-desc">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Delivery Details -->
+  <div class="rm-card section-card">
+    <div class="section-title">Delivery Details</div>
+    <div class="checkout-totals" style="border-top:none;padding-top:0;margin-top:0;">
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Name</span><span class="delivery-detail-value">{{ order.full_name }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Phone</span><span class="delivery-detail-value">{{ order.phone_number }}</span></div>
+      <div class="delivery-detail-line"><span class="delivery-detail-label">Address</span><span class="delivery-detail-value">{{ order.delivery_address }}</span></div>
+      {% if order.landmark %}<div class="delivery-detail-line"><span class="delivery-detail-label">Landmark</span><span class="delivery-detail-value">{{ order.landmark }}</span></div>{% endif %}
+      {% if order.city    %}<div class="delivery-detail-line"><span class="delivery-detail-label">City</span><span class="delivery-detail-value">{{ order.city }}</span></div>{% endif %}
+      {% if order.pincode %}<div class="delivery-detail-line"><span class="delivery-detail-label">Pincode</span><span class="delivery-detail-value">{{ order.pincode }}</span></div>{% endif %}
+      <div class="delivery-detail-line" style="border:none;flex-wrap:wrap;">
+        <span class="delivery-detail-label">Payment</span>
+        <span class="delivery-detail-value" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <!-- Payment pill: Prepaid (Online) / Cash on Delivery -->
+          {% if order.payment_method == 'Online' %}
+          <span class="payment-pill payment-pill-prepaid"><i class="fa-solid fa-circle-check"></i> Prepaid</span>
+          {% elif order.payment_method == 'Cash On Delivery' %}
+          <span class="payment-pill payment-pill-cod"><i class="fa-solid fa-hand-holding-dollar"></i> Cash on Delivery</span>
+          {% else %}
+          <span class="delivery-detail-value">{{ order.payment_method }}</span>
+          {% endif %}
+
+          <!-- Verification badge — only meaningful for Online payments,
+               driven directly by the payment_verified column. -->
+          {% if order.payment_method == 'Online' %}
+            {% if order.payment_verified %}
+            <span class="payment-verify-badge verify-ok"><i class="fa-solid fa-shield-halved"></i> Payment Complete</span>
+            {% else %}
+            <span class="payment-verify-badge verify-bad">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              Payment not verified!{% if order.payment_failure_reason %} {{ order.payment_failure_reason }}{% endif %}
+            </span>
+            {% endif %}
+          {% endif %}
+        </span>
+      </div>
+
+      <!-- View Transaction Details — Online orders only (COD has no gateway transaction) -->
+      {% if order.payment_method == 'Online' %}
+      <div style="padding:10px 0 0;text-align:right;">
+        <button class="btn btn-outline btn-sm" id="viewTxnBtn" onclick="openTransactionOverlay({{ order.order_id }})">
+          <i class="fa-solid fa-receipt"></i> View Transaction Details
+        </button>
+      </div>
+      {% endif %}
+    </div>
+    {% if order.google_maps_link %}<a href="{{ order.google_maps_link }}" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:12px;">Open Maps</a>{% endif %}
+  </div>
+
+  <!-- Items + Totals (menu orders only) -->
+  {% if not order.is_custom_order %}
+  <div class="rm-card section-card">
+    <div class="section-title">Ordered Items</div>
+    {% for item in order.products %}
+    <div class="checkout-item">
+      {% if item.product_image %}
+      <img src="{{ get_product_image(item.product_image) }}" class="checkout-item-img" alt="{{ item.product_name }}"
+           onerror="this.parentElement.innerHTML='<div class=checkout-item-img-placeholder>🍰</div>'">
+      {% else %}
+      <div class="checkout-item-img-placeholder">🍰</div>
+      {% endif %}
+      <div style="flex:1;min-width:0;">
+        <div class="checkout-item-name">{{ item.product_name }}</div>
+        <div class="checkout-item-meta">₹{{ item.product_price }} × {{ item.product_quantity }} {{ item.product_unit }}</div>
+        {% if item.note %}<div class="checkout-item-note">Note: {{ item.note }}</div>{% endif %}
+      </div>
+      <div class="checkout-item-total">₹{{ item.total_price }}</div>
+    </div>
+    {% endfor %}
+    <div class="checkout-totals">
+      <div class="total-line"><span>Subtotal</span><strong>₹{{ order.subtotal }}</strong></div>
+      <div class="total-line"><span>Delivery Fee</span><strong>₹{{ order.delivery_fee }}</strong></div>
+      {% if order.discount_amount and order.discount_amount > 0 %}
+      <div class="total-line total-savings"><span>Sweet Deal ({{ order.coupon_code }})</span><strong>−₹{{ order.discount_amount }}</strong></div>
+      {% endif %}
+      <div class="total-line grand"><span>Grand Total</span><strong>₹{{ order.grand_total }}</strong></div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Actions -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+    {% if not order.is_custom_order %}
+    <button class="btn btn-outline" onclick="orderAgain({{ order.order_id }}, this)">Order Again</button>
+    {% endif %}
+    {% if order.order_status in ["queued","approved"] %}
+    <button class="btn btn-danger" onclick="cancelOrder({{ order.order_id }})">Cancel Order</button>
+    {% endif %}
+    {% if order.order_status == "delivered" %}
+      {% if order.has_review %}
+      <a href="{{ url_for('review.my_review', order_id=order.order_id) }}" class="btn btn-ghost">My Review</a>
+      {% else %}
+      <a href="{{ url_for('review.leave_review', order_id=order.order_id) }}" class="btn btn-amber">Leave Review</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+async function cancelOrder(orderId) {
+  if (!confirm('Cancel this order?')) return;
+  const res  = await fetch(`/cancel-order/${orderId}`, { method:'POST' });
+  const data = await res.json();
+  showToast(data.success ? '✅ ' + data.message : '❌ ' + data.message);
+  if (data.success) setTimeout(() => location.reload(), 1200);
+}
+async function orderAgain(orderId, btn) {
+  btn.disabled = true;
+  showToast('Adding items to cart…');
+  const res  = await fetch(`/order-again/${orderId}`, { method:'POST' });
+  const data = await res.json();
+  showToast(data.success ? '🛒 ' + data.message : '❌ ' + data.message);
+  if (data.success) setTimeout(() => window.location.href = data.redirect, 1400);
+  else btn.disabled = false;
+}
+
+/* ═══════════════════════════════════════════════
+   TRANSACTION DETAILS OVERLAY  (body-appended,
+   blurred backdrop — same pattern as the coupon
+   viewer overlay in checkout.html)
+═══════════════════════════════════════════════ */
+let txnOverlay = null;
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = (str === null || str === undefined) ? '' : String(str);
+  return div.innerHTML;
+}
+
+function buildTxnOverlay() {
+  if (txnOverlay && document.body.contains(txnOverlay)) return;
+
+  txnOverlay = document.createElement('div');
+  txnOverlay.id = 'txnDetailsOverlay';
+  Object.assign(txnOverlay.style, {
+    position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+    zIndex: '9999999', background: 'rgba(0,0,0,0.65)',
+    display: 'none', alignItems: 'center', justifyContent: 'center',
+    padding: '16px', backdropFilter: 'blur(3px)'
+  });
+
+  txnOverlay.innerHTML = `
+    <div style="background:var(--card,#fff);border-radius:24px;padding:24px;
+      max-width:440px;width:100%;max-height:82vh;overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="font-family:'Playfair Display',serif;font-size:1.2rem;
+          color:var(--maroon,#5c1520);font-weight:700;">🧾 Transaction Details</span>
+        <button id="closeTxnBtn" style="background:none;border:none;font-size:1.4rem;
+          cursor:pointer;color:var(--grey,#9b8e86);padding:4px 8px;border-radius:50%;">✕</button>
+      </div>
+      <div id="txnDetailsInner">
+        <div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:10px;display:block;"></i>
+          Loading transaction details…
+        </div>
+      </div>
+    </div>`;
+
+  txnOverlay.addEventListener('click', e => {
+    if (e.target === txnOverlay) closeTxnOverlay();
+  });
+  txnOverlay.querySelector('#closeTxnBtn').addEventListener('click', closeTxnOverlay);
+  document.body.appendChild(txnOverlay);
+}
+
+async function openTransactionOverlay(orderId) {
+  buildTxnOverlay();
+  txnOverlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const inner = document.getElementById('txnDetailsInner');
+  inner.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+    <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:10px;display:block;"></i>
+    Loading transaction details…</div>`;
+
+  try {
+    const res  = await fetch(`/order/${orderId}/transaction-details`);
+    const data = await res.json();
+
+    if (!data.success) {
+      inner.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+        😕 ${escapeHtml(data.message || 'Could not load transaction details')}</div>`;
+      return;
+    }
+
+    const rows = [
+      ['Order Number',          data.order_number],
+      ['Payment Gateway',       data.payment_gateway],
+      ['Payment Mode',          data.payment_mode || '—'],
+      ['Payment Status',        data.payment_status],
+      ['Verified',              data.payment_verified ? '✅ Yes' : '❌ No'],
+      ['Amount Paid',           '₹' + data.grand_total],
+      ['Razorpay Order ID',     data.razorpay_order_id || '—'],
+      ['Razorpay Payment ID',   data.razorpay_payment_id || '—'],
+      ['Transaction Reference', data.transaction_reference || '—'],
+      ['Completed At',          data.payment_completed_at || '—'],
+    ];
+    if (data.payment_failure_reason) {
+      rows.push(['Failure Reason', data.payment_failure_reason]);
+    }
+
+    inner.innerHTML = rows.map(([label, value]) => `
+      <div class="txn-detail-row">
+        <span class="txn-detail-label">${escapeHtml(label)}</span>
+        <span class="txn-detail-value">${escapeHtml(value)}</span>
+      </div>`).join('');
+
+  } catch {
+    inner.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-muted,#8b7b70);">
+      ⚠️ Could not load transaction details — try again</div>`;
+  }
+}
+
+function closeTxnOverlay() {
+  if (txnOverlay) txnOverlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTxnOverlay(); });
+</script>
+{% endblock %}

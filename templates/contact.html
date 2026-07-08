@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — RM Bakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="contact-page">
+  <div class="contact-wrap">
+
+    <!-- HERO -->
+    <div class="contact-hero">
+      <h1>GET IN TOUCH</h1>
+      <div class="rm-divider" style="margin:0 auto 20px;"></div>
+      <p>Questions, custom orders, or just want to say hi? We'd love to hear from you.</p>
+    </div>
+
+    <!-- CONTACT + MAP -->
+    <div class="contact-grid">
+
+      <!-- Reach Us -->
+      <div class="contact-card">
+        <h2>Reach Us</h2>
+
+        <a href="https://wa.me/918147777938" target="_blank" rel="noopener" class="contact-btn contact-btn-whatsapp">
+          <div class="contact-btn-icon"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <strong>WhatsApp</strong>
+            <span>Chat with us instantly</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/rmbakesss/" target="_blank" rel="noopener" class="contact-btn contact-btn-instagram">
+          <div class="contact-btn-icon"><i class="fab fa-instagram"></i></div>
+          <div>
+            <strong>Instagram</strong>
+            <span>@rmbakesss</span>
+          </div>
+        </a>
+
+        <a href="https://facebook.com/" target="_blank" rel="noopener" class="contact-btn contact-btn-facebook">
+          <div class="contact-btn-icon"><i class="fab fa-facebook-f"></i></div>
+          <div>
+            <strong>Facebook</strong>
+            <span>Follow our page</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Locate Us -->
+      <div class="contact-card">
+        <h2>Locate Us</h2>
+        <p class="contact-address"><i class="fa-solid fa-location-dot"></i> Chennai, Tamil Nadu, India</p>
+        <div class="map-embed-wrap">
+          <iframe
+            src="https://www.google.com/maps?q=Chennai,Tamil+Nadu,India&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="RM Bakes location"
+          ></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BACK -->
+    <div class="about-back">
+      <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg">Back to Home</a>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
