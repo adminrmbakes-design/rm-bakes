@@ -1,1 +1,1 @@
-RM BAKES stylesheets
+Style sheets
