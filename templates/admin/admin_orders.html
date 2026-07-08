@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Order Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to orders</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Order Operations</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <div class="chip">🛡 {{ admin_role }}</div>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Sticky Filter Bar -->
+  <div class="sticky-bar" role="navigation" aria-label="Filter orders by status">
+    <div class="sticky-bar-inner">
+      {% set filters = [
+        ('all',              'All'),
+        ('custom',           'Custom Orders'),
+        ('queued',           'Queued'),
+        ('approved',         'Approved'),
+        ('preparing',        'Preparing'),
+        ('baking',           'Baking'),
+        ('packed',           'Packed'),
+        ('out_for_delivery', 'Out for Delivery'),
+        ('delivered',        'Delivered'),
+        ('cancelled',        'Cancelled')
+      ] %}
+      <div class="filter-bar">
+        {% for value, label in filters %}
+          <a
+            href="{{ url_for('admin.admin_orders', status=value) }}"
+            class="filter-tab {% if status_filter == value %}active{% endif %}"
+            aria-current="{% if status_filter == value %}page{% endif %}"
+          >{{ label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <main class="content" id="main-content">
+
+    {% if orders %}
+      <div class="order-grid stagger" role="list" aria-label="Orders">
+        {% for order in orders %}
+          <article class="order-card" role="listitem" aria-label="Order {{ order.order_number }}">
+
+            <!-- Head -->
+            <div class="order-head">
+              <div>
+                <div class="order-number">{{ order.order_number }}</div>
+                {% if order.is_custom_order %}
+                  <div class="custom-badge" style="margin-top:8px;">🎨 Custom Dessert</div>
+                {% endif %}
+              </div>
+              <div class="status-pill {{ order.order_status }}" aria-label="Status: {{ order.order_status }}">
+                {{ order.order_status.replace('_', ' ') }}
+              </div>
+            </div>
+
+            <!-- FIX #2: Prepaid / Cash on Delivery pill (custom orders excluded — payment_method is "Pending" until an admin quote is accepted) -->
+            {% if not order.is_custom_order %}
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                {% if order.payment_method == 'Online' %}
+                  <span class="payment-pill prepaid">💳 Prepaid</span>
+                {% elif order.payment_method == 'Cash On Delivery' %}
+                  <span class="payment-pill cod">💵 Cash on Delivery</span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <!-- Customer -->
+            <div class="order-field">
+              <div class="field-label">Customer</div>
+              <div class="field-value">{{ order.full_name }}</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="order-field">
+              <div class="field-label">Phone</div>
+              <div class="field-value">{{ order.phone_number }}</div>
+            </div>
+
+            <!-- Address -->
+            <div class="order-field">
+              <div class="field-label">Delivery Address</div>
+              <div class="field-value">{{ order.delivery_address }}</div>
+            </div>
+
+            <!-- Products (non-custom) -->
+            {% if not order.is_custom_order %}
+              <div class="order-field">
+                <div class="field-label">Products</div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+                  {% for item in order.products_data %}
+                    <div class="order-product-item">
+                      <div class="order-product-name">🍰 {{ item.product_name }}</div>
+                      <div class="order-product-info">
+                        Qty: {{ item.product_quantity }} {{ item.product_unit }}<br>
+                        Price: ₹{{ item.product_price }}<br>
+                        Total: ₹{{ item.total_price }}
+                      </div>
+                      {% if item.note %}
+                        <div class="order-product-note">✨ Note: {{ item.note }}</div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <div class="order-field">
+                <div class="field-label">Order Summary</div>
+                <div class="field-value">
+                  Subtotal: ₹{{ order.subtotal }}<br>
+                  Delivery: ₹{{ order.delivery_fee }}
+                  {% if order.discount_amount and order.discount_amount > 0 %}
+                    <br><span class="coupon-highlight">🎁 Discount: −₹{{ order.discount_amount }}</span>
+                    <br><span class="coupon-highlight">Coupon: {{ order.coupon_code }}</span>
+                  {% endif %}
+                  <br>
+                  <span class="grand-total-value">Grand Total: ₹{{ order.grand_total }}</span>
+                </div>
+              </div>
+
+              <!-- FIX #2: Payment status + transaction details accordion (Online orders only get verification + transaction details; COD gets a collection hint) -->
+              <div class="order-field">
+                <div class="field-label">Payment</div>
+
+                {% if order.payment_method == 'Online' %}
+
+                  {% if order.payment_verified %}
+                    <span class="payment-verify-badge verify-ok">✅ Payment Complete</span>
+                  {% else %}
+                    <span class="payment-verify-badge verify-bad">
+                      ⚠️ Payment not verified!{% if order.payment_failure_reason %} {{ order.payment_failure_reason }}{% endif %}
+                    </span>
+                  {% endif %}
+
+                  <div style="margin-top:11px;">
+                    <button
+                      type="button"
+                      class="btn btn-ghost btn-sm txn-toggle-btn"
+                      id="txnBtn-{{ order.order_id }}"
+                      onclick="toggleTxnDetails({{ order.order_id }})"
+                    >
+                      🧾 View Transaction Details <span class="txn-chevron">▾</span>
+                    </button>
+                  </div>
+
+                  <div class="txn-details-panel" id="txnPanel-{{ order.order_id }}">
+                    <div class="txn-details-inner">
+                      <div class="txn-row"><span class="txn-row-label">Payment Gateway</span><span class="txn-row-value">{{ order.payment_gateway or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Payment Mode</span><span class="txn-row-value">{{ order.payment_mode or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Payment Status</span><span class="txn-row-value">{{ order.payment_status or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Verified</span><span class="txn-row-value">{{ '✅ Yes' if order.payment_verified else '❌ No' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Amount Paid</span><span class="txn-row-value">₹{{ order.grand_total }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Razorpay Order ID</span><span class="txn-row-value">{{ order.razorpay_order_id or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Razorpay Payment ID</span><span class="txn-row-value">{{ order.razorpay_payment_id or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Transaction Reference</span><span class="txn-row-value">{{ order.transaction_reference or '—' }}</span></div>
+                      <div class="txn-row"><span class="txn-row-label">Completed At</span><span class="txn-row-value">{{ order.payment_completed_at or '—' }}</span></div>
+                      {% if order.payment_failure_reason %}
+                        <div class="txn-row"><span class="txn-row-label">Failure Reason</span><span class="txn-row-value">{{ order.payment_failure_reason }}</span></div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                {% elif order.payment_method == 'Cash On Delivery' %}
+                  <span class="payment-pill cod">💵 Cash on Delivery</span>
+                  <div class="cod-collect-hint">💰 Collect ₹{{ order.grand_total }} from customer on delivery</div>
+                {% else %}
+                  <span class="field-value">{{ order.payment_method or '—' }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <!-- Ordered At -->
+            <div class="order-field">
+              <div class="field-label">Ordered At</div>
+              <div class="field-value">{{ order.ordered_at | ist('%d %b %Y, %I:%M %p') }} IST</div>
+            </div>
+
+            <!-- Custom Dessert Panel -->
+            {% if order.is_custom_order %}
+              <div class="dessert-panel">
+                <div class="dessert-panel-header">Dessert Studio Details</div>
+                <div class="dessert-panel-body">
+                  {% if order.custom_inspiration_image %}
+                    <img src="{{ order.custom_inspiration_image }}" class="dessert-img" alt="Inspiration image" loading="lazy">
+                  {% endif %}
+                  <div class="dessert-info-grid">
+                    <div class="order-field">
+                      <div class="field-label">Request Code</div>
+                      <div class="field-value">{{ order.custom_request_code }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Category</div>
+                      <div class="field-value">{{ order.custom_dessert_category }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Flavor</div>
+                      <div class="field-value">{{ order.custom_flavor }}</div>
+                    </div>
+                    <div class="order-field">
+                      <div class="field-label">Quantity</div>
+                      <div class="field-value">{{ order.custom_quantity }}</div>
+                    </div>
+                  </div>
+                  <div class="order-field">
+                    <div class="field-label">Dessert Vision</div>
+                    <div class="field-value">{{ order.custom_description }}</div>
+                  </div>
+                  {% if order.custom_message %}
+                    <div class="order-field">
+                      <div class="field-label">Custom Message</div>
+                      <div class="field-value">{{ order.custom_message }}</div>
+                    </div>
+                  {% endif %}
+                  {% if order.custom_special_notes %}
+                    <div class="order-field">
+                      <div class="field-label">Special Notes</div>
+                      <div class="field-value">{{ order.custom_special_notes }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="order-actions">
+              {% if order.order_status == "queued" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Approve this order?')">
+                  <input type="hidden" name="new_status" value="approved">
+                  <button type="submit" class="btn btn-success btn-sm">✓ Approve</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "approved" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Move order to preparing?')">
+                  <input type="hidden" name="new_status" value="preparing">
+                  <button type="submit" class="btn btn-ghost btn-sm">Preparing →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "preparing" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Move order to baking?')">
+                  <input type="hidden" name="new_status" value="baking">
+                  <button type="submit" class="btn btn-ghost btn-sm">Baking →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "baking" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Mark order as packed?')">
+                  <input type="hidden" name="new_status" value="packed">
+                  <button type="submit" class="btn btn-ghost btn-sm">Packed →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "packed" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Send order for delivery?')">
+                  <input type="hidden" name="new_status" value="out_for_delivery">
+                  <button type="submit" class="btn btn-ghost btn-sm">Out for Delivery →</button>
+                </form>
+              {% endif %}
+              {% if order.order_status == "out_for_delivery" %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Mark order as delivered?')">
+                  <input type="hidden" name="new_status" value="delivered">
+                  <button type="submit" class="btn btn-success btn-sm">✓ Delivered</button>
+                </form>
+              {% endif %}
+              {% if order.order_status in ["queued", "approved"] %}
+                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.order_id, status=status_filter) }}"
+                  onsubmit="return confirm('Cancel this order?')">
+                  <input type="hidden" name="new_status" value="cancelled">
+                  <button type="submit" class="btn btn-danger btn-sm">✕ Cancel</button>
+                </form>
+              {% endif %}
+            </div>
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">📦</div>
+        <h2>No Orders Found</h2>
+        <p>No orders match the selected filter.</p>
+      </div>
+    {% endif %}
+
+  </main>
+
+
+  <script>
+    /* =============================================
+       FIX #2 — TRANSACTION DETAILS ACCORDION
+       Expands/collapses the pre-rendered transaction
+       panel for an order. No AJAX needed — the data is
+       already in the page, so toggling is instant.
+    ============================================= */
+    function toggleTxnDetails(orderId) {
+      var panel = document.getElementById('txnPanel-' + orderId);
+      var btn   = document.getElementById('txnBtn-' + orderId);
+      if (!panel || !btn) return;
+
+      var isOpen = panel.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.innerHTML = isOpen
+        ? '🧾 Hide Transaction Details <span class="txn-chevron">▾</span>'
+        : '🧾 View Transaction Details <span class="txn-chevron">▾</span>';
+    }
+
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

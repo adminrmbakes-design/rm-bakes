@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Verify OTP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#otp-form" class="skip-link">Skip to OTP form</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <main class="auth-page">
+    <div class="auth-card">
+
+      <div class="auth-brand">
+        <div class="auth-badge">2-Step Verification</div>
+        <h1>Verify OTP</h1>
+        <p>A one-time verification code has been sent to the administrative security channel.</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}" role="alert">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" class="auth-form" id="otp-form">
+
+        <div class="form-group">
+          <label class="form-label" for="otp">One-Time Code</label>
+          <input
+            type="text"
+            id="otp"
+            name="otp"
+            class="form-input otp-input"
+            placeholder="• • • • • •"
+            maxlength="6"
+            required
+            autocomplete="off"
+            aria-required="true"
+            aria-label="6-digit OTP code"
+            inputmode="numeric"
+          >
+        </div>
+
+        <div class="otp-timer-display" aria-live="polite">
+          OTP expires in <span class="otp-timer-value" id="otpTimer">05:00</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full">
+          Verify Access
+        </button>
+
+      </form>
+
+      <div class="security-note" role="note">
+        Multiple failed attempts may temporarily restrict access.
+        Administrative sessions are monitored and time-restricted for security.
+      </div>
+
+      <div class="auth-footer">
+        RM Bakes Administrative Network<br>
+        Secure Verification Gateway
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pageLoader').classList.add('loaded');
+    });
+
+    let seconds = 300;
+    const timerEl = document.getElementById('otpTimer');
+
+    function tick() {
+      if (seconds <= 0) {
+        timerEl.textContent = 'Expired';
+        timerEl.classList.add('expired');
+        return;
+      }
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (seconds <= 30) timerEl.classList.add('expired');
+      seconds--;
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+  <script>
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
