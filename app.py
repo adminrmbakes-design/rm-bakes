@@ -331,11 +331,6 @@ with app.app_context():
 
     db.create_all()
 
-    # Seed FeaturedProduct slots 1-6 if they don't exist yet.
-    # (Previously imported but never actually called — homepage
-    # featured section would silently stay empty without this.)
-    create_featured_product_slots()
-
     # Seed the Platform Settings feature flags if they don't exist yet.
     ensure_default_features()
 
@@ -348,84 +343,6 @@ with app.app_context():
     # module), this adds it in-place so older databases (Postgres or
     # local SQLite) stay in sync without a manual migration step.
     # =========================================
-
-    try:
-
-        inspector = inspect(db.engine)
-
-        existing_user_columns = {
-            column["name"]
-            for column in inspector.get_columns("users")
-        }
-
-        missing_user_columns = {
-            "created_at": "TIMESTAMP",
-            "last_login": "TIMESTAMP"
-        }
-
-        for column_name, column_type in missing_user_columns.items():
-
-            if column_name not in existing_user_columns:
-
-                db.session.execute(
-                    text(
-                        f"ALTER TABLE users ADD COLUMN {column_name} {column_type}"
-                    )
-                )
-
-        db.session.commit()
-
-    except Exception as sync_error:
-
-        db.session.rollback()
-
-        print(f"schema sync skipped: {sync_error}")
-
-    # =========================================
-    # PRODUCT REVIEWS: NULLABLE ORDER COLUMNS
-    # Leave a Review (standalone "Overall Experience" reviews with no
-    # order attached) needs order_id/order_number to accept NULL.
-    # Postgres requires an explicit ALTER COLUMN ... DROP NOT NULL for
-    # a column that already exists — db.create_all() can't do this on
-    # a table that's already there. SQLite doesn't support DROP NOT
-    # NULL at all, so this only runs against Postgres (fine — that's
-    # what production uses; local SQLite dev just skips it).
-    # =========================================
-
-    try:
-
-        inspector = inspect(db.engine)
-
-        review_columns = {
-            column["name"]: column["nullable"]
-            for column in inspector.get_columns("product_reviews")
-        }
-
-        columns_to_make_nullable = [
-            column_name
-            for column_name in ("order_id", "order_number")
-            if column_name in review_columns and not review_columns[column_name]
-        ]
-
-        if columns_to_make_nullable and db.engine.dialect.name == "postgresql":
-
-            for column_name in columns_to_make_nullable:
-
-                db.session.execute(
-                    text(
-                        f"ALTER TABLE product_reviews ALTER COLUMN {column_name} DROP NOT NULL"
-                    )
-                )
-
-            db.session.commit()
-
-            print(f"product_reviews: made nullable -> {columns_to_make_nullable}")
-
-    except Exception as sync_error:
-
-        db.session.rollback()
-
-        print(f"product_reviews schema sync skipped: {sync_error}")
 
         
     
