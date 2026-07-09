@@ -1,1 +1,1 @@
-RM Bakes route files
+RM BAKES app routes
