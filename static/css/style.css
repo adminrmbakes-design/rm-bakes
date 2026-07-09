@@ -589,6 +589,8 @@ select.rm-input   { appearance:none; cursor:pointer; }
   font-size:1.05rem; color:var(--maroon); margin-bottom:12px;
 }
 .quick-panel-actions { display:flex; flex-direction:column; gap:10px; }
+.quick-access-card { justify-content:flex-start; }
+.quick-access-card .quick-panel-actions { margin-top:auto; margin-bottom:auto; }
 .studio-card { background:var(--maroon); color:rgba(255,255,255,.85); border:none; }
 .studio-card h3 { color:#fff; }
 .studio-card p { font-size:.84rem; margin-bottom:14px; opacity:.8; line-height:1.65; }
