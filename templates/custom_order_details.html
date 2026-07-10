@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+<!-- (+) --> <div class="studio-page">
 <!-- TOPBAR -->
 <div class="studio-topbar">
   <a href="{{ url_for('custom_order.my_custom_orders') }}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Studio Orders</a>
@@ -184,8 +185,8 @@
     </div>
   </div>
   {% endif %}
-
 </div>
+<!-- (+) --> </div>
 
 <!-- Image Modal -->
 <div class="img-modal" id="imgModal" onclick="closeModal()">
