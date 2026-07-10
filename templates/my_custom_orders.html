@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" id="rmHtml">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dessert Studio — RM Bakes</title>
+  <!-- Apply saved theme before render (prevents flash) -->
+  <script>
+    (function(){
+      var darkModeStatus = "{{ 'COMING_SOON' if is_feature_coming_soon('dark_mode') else ('DISABLED' if is_feature_disabled('dark_mode') else 'LIVE') }}";
+      if (darkModeStatus === 'LIVE' && localStorage.getItem('rmTheme') === 'dark')
+        document.getElementById('rmHtml').classList.add('dark-mode');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="studio-page">
+<!-- TOPBAR -->
+<div class="studio-topbar">
+  <a href="{{ url_for('main.home') }}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="rm-logo" style="font-size:1.1rem;letter-spacing:2px;">RM BAKES</div>
+    {% if not is_feature_disabled('dark_mode') %}
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle dark/light mode">🎨</button>
+    {% endif %}
+  </div>
+  <a href="{{ url_for('custom_order.dessert_studio') }}" class="btn btn-primary btn-sm">New Request</a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+<div style="padding:16px clamp(16px,4vw,48px);">
+  {% for cat, msg in messages %}<div style="padding:12px 16px;background:var(--amber-pale);border-radius:var(--radius-md);margin-bottom:8px;font-size:0.9rem;color:var(--text-body);">{{ msg }}</div>{% endfor %}
+</div>
+{% endif %}{% endwith %}
+
+<div class="my-studio-page">
+  <div style="margin-bottom:32px;">
+    <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--maroon);margin-bottom:6px;">Dessert Studio</h1>
+    <p style="color:var(--text-muted);">Your personalized dessert creations and quotation journey</p>
+  </div>
+
+  {% if custom_orders %}
+  <div class="studio-orders-grid">
+    {% for order in custom_orders %}
+    <div class="studio-order-card">
+      {% if order.inspiration_image %}
+      <img src="{{ order.inspiration_image }}" class="studio-order-img" alt="Inspiration" onclick="openModal(this.src)">
+      {% else %}
+      <div class="studio-order-no-img">🍰</div>
+      {% endif %}
+      <div class="studio-order-body">
+        <div class="studio-order-code">{{ order.request_code }}</div>
+        <div class="studio-order-title">{{ order.dessert_category }}</div>
+        <div style="margin-bottom:12px;"><span class="status-badge status-{{ order.status }}">{{ order.status }}</span></div>
+        <div class="studio-order-meta">
+          {{ order.flavor }} · Qty {{ order.quantity }}<br>
+          Submitted {{ order.created_at | ist('%d %b %Y') }}
+        </div>
+        <a href="{{ url_for('custom_order.custom_order_details', custom_order_id=order.custom_order_id) }}" class="btn btn-amber btn-full">View Details →</a>
+        <div class="studio-order-date">Submitted {{ order.created_at | ist('%d %b %Y, %I:%M %p') }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:80px 20px;background:var(--cream-card);border:1px solid var(--cream-2);border-radius:var(--radius-xl);">
+    <div style="font-size:3rem;margin-bottom:16px;">✨</div>
+    <h2 style="font-family:'Playfair Display',serif;color:var(--maroon);margin-bottom:8px;">No Studio Requests Yet</h2>
+    <p style="color:var(--text-muted);margin-bottom:24px;">Your dream desserts haven't entered the kitchen universe yet.</p>
+    <a href="{{ url_for('custom_order.dessert_studio') }}" class="btn btn-primary btn-lg">Create Your First Request</a>
+  </div>
+  {% endif %}
+</div>
+</div>
+
+<!-- Image Modal -->
+<div class="img-modal" id="imgModal" onclick="closeModal()">
+  <button class="img-modal-close" onclick="closeModal()">✕</button>
+  <img id="modalImg" src="" alt="Preview">
+</div>
+
+<script>
+function openModal(src) {
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('imgModal').style.display = 'none';
+}
+
+function showToast(msg) {
+  const t = document.createElement('div'); t.className='custom-toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},2500);
+}
+
+/* ══════════════════════════════════════════
+   THEME TOGGLE (standalone page — no base.html)
+   Shares the same 'rmTheme' localStorage key as
+   the rest of the site, so the choice made here
+   persists everywhere else too.
+   ══════════════════════════════════════════ */
+window.DARK_MODE_STATUS = "{{ 'COMING_SOON' if is_feature_coming_soon('dark_mode') else ('DISABLED' if is_feature_disabled('dark_mode') else 'LIVE') }}";
+
+const htmlEl   = document.getElementById('rmHtml');
+const themeBtn = document.getElementById('themeToggleBtn');
+
+function isDark() { return htmlEl.classList.contains('dark-mode'); }
+
+function applyThemeUI() {
+  if (themeBtn) themeBtn.textContent = isDark() ? '☀️' : '🎨';
+}
+
+function toggleTheme() {
+  if (window.DARK_MODE_STATUS === 'COMING_SOON') {
+    showToast('🌙 Dark mode is coming soon');
+    return;
+  }
+  htmlEl.classList.toggle('dark-mode');
+  localStorage.setItem('rmTheme', isDark() ? 'dark' : 'light');
+  applyThemeUI();
+  showToast(isDark() ? '🌙 Dark mode on' : '☀️ Light mode on');
+}
+
+if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+applyThemeUI();
+</script>
+</body>
+</html>
