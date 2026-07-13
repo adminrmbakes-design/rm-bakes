@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — {{ user.full_name or user.username }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to profile</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Customer Profile</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <div class="chip">🛡 {{ admin_role }}</div>
+        <a href="{{ url_for('admin_user.admin_users') }}" class="btn btn-secondary btn-sm">← Customer Network</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content" id="main-content">
+
+    <!-- Profile Header -->
+    <div class="page-header">
+      <div class="user-header-block">
+        <div class="avatar-circle avatar-circle-lg" aria-hidden="true">{{ user.avatar_initial }}</div>
+        <div>
+          <h2 class="page-title" style="margin-bottom:2px;">{{ user.full_name or user.username }}</h2>
+          <p class="page-subtitle" style="margin:0;">@{{ user.username }} · Customer #{{ user.user_id }}</p>
+          <div class="user-header-badges">
+            {% if user.is_deleted %}
+              <span class="badge-inactive">🚫 Deleted</span>
+            {% else %}
+              <span class="badge-active">🟢 Active</span>
+            {% endif %}
+            {% if user.is_admin %}
+              <span class="marketing-badge badge-launch">🛡 Administrator{% if user.admin_role %} · {{ user.admin_role }}{% endif %}</span>
+            {% else %}
+              <span class="marketing-badge badge-regular">🍰 Customer</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="page-actions">
+        {% if user.is_deleted %}
+          <form
+            method="POST"
+            action="{{ url_for('admin_user.admin_recover_user', user_id=user.user_id) }}"
+            onsubmit="return confirm('Recover this customer account?');"
+          >
+            <input type="hidden" name="redirect_to" value="{{ url_for('admin_user.admin_user_details', user_id=user.user_id) }}">
+            <button type="submit" class="btn btn-success">♻ Recover Account</button>
+          </form>
+        {% else %}
+          <form
+            method="POST"
+            action="{{ url_for('admin_user.admin_delete_user', user_id=user.user_id) }}"
+            onsubmit="{% if user.user_id == 1 %}showAccessDeniedToast(); return false;{% else %}return confirm('Are you sure you want to deactivate this customer? They will no longer be able to access RM BAKES until the account is recovered.');{% endif %}"
+          >
+            <input type="hidden" name="redirect_to" value="{{ url_for('admin_user.admin_user_details', user_id=user.user_id) }}">
+            <button type="submit" class="btn btn-danger" {{ "disabled" if is_self or not can_delete else "" }}>🚫 Deactivate Account</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if is_self %}
+      <div class="flash warning" style="margin-bottom:20px;">You're viewing your own admin account — it can't be deactivated from here.</div>
+    {% elif user.is_admin and not can_delete %}
+      <div class="flash warning" style="margin-bottom:20px;">This is the only active administrator — deactivation is disabled until another admin exists.</div>
+    {% endif %}
+
+    <!-- Customer Analytics -->
+    <div class="stat-grid stagger mb-md" aria-label="Customer analytics">
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">💰</div>
+        <div class="stat-label">Lifetime Value</div>
+        <div class="stat-value" style="font-size:1.3rem;">₹{{ "%.2f"|format(total_spending) }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">🧾</div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ total_orders }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">🏆</div>
+        <div class="stat-label">Highest Order</div>
+        <div class="stat-value" style="font-size:1.3rem;">₹{{ "%.2f"|format(highest_order_value) }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">📊</div>
+        <div class="stat-label">Avg Order Value</div>
+        <div class="stat-value" style="font-size:1.3rem;">₹{{ "%.2f"|format(average_order_value) }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">🛍️</div>
+        <div class="stat-label">Last Purchase</div>
+        <div class="stat-value" style="font-size:1.1rem;">{{ last_purchase_date.strftime("%d %b %Y") if last_purchase_date else "—" }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">⏱️</div>
+        <div class="stat-label">Days Since Login</div>
+        <div class="stat-value">{{ days_since_last_login if days_since_last_login is not none else "—" }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">🔔</div>
+        <div class="stat-label">Notifications</div>
+        <div class="stat-value">{{ notification_count }}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-icon" aria-hidden="true">🏷️</div>
+        <div class="stat-label">Coupons Used</div>
+        <div class="stat-value">{{ coupon_usage_count }}</div>
+      </div>
+    </div>
+
+    <div class="grid-auto">
+
+      <!-- Basic Information -->
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Basic Information</h3></div>
+        <div class="grid-2">
+          <div class="order-field">
+            <div class="field-label">Full Name</div>
+            <div class="field-value">{{ user.full_name or "—" }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Username</div>
+            <div class="field-value">@{{ user.username }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">User ID</div>
+            <div class="field-value">#{{ user.user_id }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Account Type</div>
+            <div class="field-value">{{ "Administrator" if user.is_admin else "Customer" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Contact Information</h3></div>
+        <div class="grid-2">
+          <div class="order-field">
+            <div class="field-label">Email</div>
+            <div class="field-value">{{ user.email }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Phone Number</div>
+            <div class="field-value">{{ user.phone_number or "—" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Status & Activity -->
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Account Status &amp; Activity</h3></div>
+        <div class="grid-2">
+          <div class="order-field">
+            <div class="field-label">Registration Date</div>
+            <div class="field-value">{{ user.created_at.strftime("%d %b %Y, %I:%M %p") if user.created_at else "Not recorded" }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Last Login</div>
+            <div class="field-value">{{ user.last_login.strftime("%d %b %Y, %I:%M %p") if user.last_login else "Never logged in" }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Soft Delete Status</div>
+            <div class="field-value">{{ "Deleted (is_deleted = True)" if user.is_deleted else "Active (is_deleted = False)" }}</div>
+          </div>
+          <div class="order-field">
+            <div class="field-label">Administrator Status</div>
+            <div class="field-value">{{ "Yes — " ~ (user.admin_role or "Admin") if user.is_admin else "No" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Address -->
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Saved Address</h3></div>
+        {% if user.delivery_address %}
+          <div class="grid-2">
+            <div class="order-field" style="grid-column: 1 / -1;">
+              <div class="field-label">Address</div>
+              <div class="field-value">{{ user.delivery_address }}</div>
+            </div>
+            <div class="order-field">
+              <div class="field-label">Landmark</div>
+              <div class="field-value">{{ user.landmark or "—" }}</div>
+            </div>
+            <div class="order-field">
+              <div class="field-label">City</div>
+              <div class="field-value">{{ user.city or "—" }}</div>
+            </div>
+            <div class="order-field">
+              <div class="field-label">Pincode</div>
+              <div class="field-value">{{ user.pincode or "—" }}</div>
+            </div>
+            {% if user.google_maps_link %}
+              <div class="order-field">
+                <div class="field-label">Google Maps</div>
+                <div class="field-value"><a href="{{ user.google_maps_link }}" target="_blank" rel="noopener">Open Location ↗</a></div>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <p class="text-muted">No saved address on file.</p>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <h3 class="card-title">Recent Orders</h3>
+      </div>
+
+      {% if recent_orders %}
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+                <tr>
+                  <td>{{ order.order_number or ("#" ~ order.order_id) }}</td>
+                  <td class="tabular">{{ order.created_at.strftime("%d %b %Y") if order.created_at else "—" }}</td>
+                  <td><span class="status-pill {{ (order.order_status or '')|lower }}">{{ order.order_status or "Unknown" }}</span></td>
+                  <td class="tabular">₹{{ "%.2f"|format(order.grand_total or 0) }}</td>
+                  <td><a href="{{ url_for('admin.admin_order_details', order_id=order.order_id) }}" class="btn btn-secondary btn-sm">View</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state" style="padding:32px 20px;">
+          <div class="empty-icon" aria-hidden="true">🧾</div>
+          <h2>No Orders Yet</h2>
+          <p>This customer hasn't placed an order yet.</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </main>
+
+  <script>
+    (function () {
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+    })();
+
+    /* Quick toast for blocked actions (e.g. deactivating user_id=1) */
+    function showAccessDeniedToast() {
+      let t = document.getElementById('quickToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'quickToast';
+        t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#8a1f1f;color:#fff;padding:12px 22px;border-radius:10px;font-weight:600;font-size:.85rem;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transition:opacity .3s;';
+        document.body.appendChild(t);
+      }
+      t.textContent = 'Access Denied for this account!';
+      t.style.opacity = '1';
+      clearTimeout(t._hideTimer);
+      t._hideTimer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+    }
+  </script>
+
+</body>
+</html>
