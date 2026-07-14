@@ -1677,16 +1677,6 @@ html.dark-mode {
   --shadow-lg:  0 16px 52px rgba(0,0,0,.55);
 }
 html.dark-mode body { background: var(--honey); color: var(--text-body); }
-
-/* FIX: --maroon (#5C1520) isn't redefined for dark mode, so maroon text
-   (headings, prices, names, etc. — 50+ selectors use it) goes nearly
-   invisible against the dark background. Rather than touching every
-   selector, a thin white stroke inherits down from here to all of
-   them at once, keeping maroon text legible without changing its
-   colour or adding a glow/shadow look. */
-html.dark-mode {
-  -webkit-text-stroke: 0.4px rgba(255,255,255,.6);
-}
 html.dark-mode .rm-navbar {
   background: rgba(28,21,16,.97);
   border-bottom-color: var(--honey-dark);
