@@ -84,6 +84,9 @@ from utils.timezone_utils import (
     to_ist,
     format_ist
 )
+from utils.monitoring_utils import (
+    health
+)
 
 # =========================================
 # CREATE APP
@@ -267,6 +270,8 @@ app.register_blueprint(admin_carousel_bp)
 
 app.register_blueprint(admin_user_bp)
 
+app.register_blueprint(monitoring_bp)
+
 # Not linked from the Admin Dashboard — reachable only by URL.
 app.register_blueprint(site_settings_bp)
 
@@ -330,141 +335,6 @@ def check_full_site_maintenance():
 with app.app_context():
 
     db.create_all()
-
-    # Seed FeaturedProduct slots 1-6 if they don't exist yet.
-    # (Previously imported but never actually called — homepage
-    # featured section would silently stay empty without this.)
-    create_featured_product_slots()
-
-    # Seed the Platform Settings feature flags if they don't exist yet.
-    ensure_default_features()
-
-    # =========================================
-    # LIGHTWEIGHT SCHEMA SYNC
-    # db.create_all() only creates tables that don't exist yet — it
-    # never alters a table that's already there. Any time a new
-    # column is added to an existing model (e.g. the User.created_at
-    # / User.last_login fields added for the Customer Network
-    # module), this adds it in-place so older databases (Postgres or
-    # local SQLite) stay in sync without a manual migration step.
-    # =========================================
-
-    try:
-
-        inspector = inspect(db.engine)
-
-        existing_user_columns = {
-            column["name"]
-            for column in inspector.get_columns("users")
-        }
-
-        missing_user_columns = {
-            "created_at": "TIMESTAMP",
-            "last_login": "TIMESTAMP"
-        }
-
-        for column_name, column_type in missing_user_columns.items():
-
-            if column_name not in existing_user_columns:
-
-                db.session.execute(
-                    text(
-                        f"ALTER TABLE users ADD COLUMN {column_name} {column_type}"
-                    )
-                )
-
-        db.session.commit()
-
-    except Exception as sync_error:
-
-        db.session.rollback()
-
-        print(f"schema sync skipped: {sync_error}")
-
-    # =========================================
-    # PRODUCT REVIEWS: NULLABLE ORDER COLUMNS
-    # Leave a Review (standalone "Overall Experience" reviews with no
-    # order attached) needs order_id/order_number to accept NULL.
-    # Postgres requires an explicit ALTER COLUMN ... DROP NOT NULL for
-    # a column that already exists — db.create_all() can't do this on
-    # a table that's already there. SQLite doesn't support DROP NOT
-    # NULL at all, so this only runs against Postgres (fine — that's
-    # what production uses; local SQLite dev just skips it).
-    # =========================================
-
-    try:
-
-        inspector = inspect(db.engine)
-
-        review_columns = {
-            column["name"]: column["nullable"]
-            for column in inspector.get_columns("product_reviews")
-        }
-
-        columns_to_make_nullable = [
-            column_name
-            for column_name in ("order_id", "order_number")
-            if column_name in review_columns and not review_columns[column_name]
-        ]
-
-        if columns_to_make_nullable and db.engine.dialect.name == "postgresql":
-
-            for column_name in columns_to_make_nullable:
-
-                db.session.execute(
-                    text(
-                        f"ALTER TABLE product_reviews ALTER COLUMN {column_name} DROP NOT NULL"
-                    )
-                )
-
-            db.session.commit()
-
-            print(f"product_reviews: made nullable -> {columns_to_make_nullable}")
-
-    except Exception as sync_error:
-
-        db.session.rollback()
-
-        print(f"product_reviews schema sync skipped: {sync_error}")
-
-    # =========================================
-    # PRODUCTS: created_at COLUMN
-    # Needed for "Newly Launched" (last 10 days). Existing rows are
-    # backfilled with an old date so they don't all suddenly show up
-    # as "new" the moment this column is added — only products
-    # created from here on get a real timestamp.
-    # =========================================
-
-    try:
-
-        inspector = inspect(db.engine)
-
-        product_columns = {
-            column["name"]
-            for column in inspector.get_columns("products")
-        }
-
-        if "created_at" not in product_columns:
-
-            if db.engine.dialect.name == "postgresql":
-
-                db.session.execute(
-                    text(
-                        "ALTER TABLE products ADD COLUMN created_at "
-                        "TIMESTAMP DEFAULT '2000-01-01 00:00:00'"
-                    )
-                )
-
-                db.session.commit()
-
-                print("products: added created_at column")
-
-    except Exception as sync_error:
-
-        db.session.rollback()
-
-        print(f"products schema sync skipped: {sync_error}")
-
         
     
 # =========================================
