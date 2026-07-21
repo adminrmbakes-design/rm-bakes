@@ -1,0 +1,565 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if active_carousels %}
+<div class="home-hero-grid">
+  <div class="rm-carousel-shell">
+    <div id="rmCarousel" style="position:relative;overflow:hidden;border-radius:inherit;">
+      {% for carousel in active_carousels %}
+      <div class="rm-carousel-item" style="display:{% if loop.first %}block{% else %}none{% endif %};">
+        <img src="{{ carousel.carousel_banner_image }}" alt="{{ carousel.carousel_title }}" class="rm-carousel-img">
+        <div class="rm-carousel-overlay">
+          <div class="rm-carousel-text">
+            <div class="rm-carousel-category">{{ carousel.carousel_category|replace('_',' ')|title }}</div>
+            <h2 class="rm-carousel-title">{{ carousel.carousel_title }}</h2>
+            {% if carousel.carousel_description %}<p class="rm-carousel-desc">{{ carousel.carousel_description }}</p>{% endif %}
+          </div>
+          {% if carousel.carousel_action_link %}
+          <a href="{{ carousel.carousel_action_link }}" class="btn btn-amber rm-carousel-cta">{{ carousel.carousel_action_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="rm-carousel-dots">
+      {% for carousel in active_carousels %}
+      <button class="rm-carousel-dot {% if loop.first %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></button>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="hero-combo-card">
+    <div class="combo-zone combo-zone-quick">
+      <h3>Quick Access</h3>
+      <div class="combo-actions">
+        <a href="{{ url_for('product.products') }}" class="btn btn-primary btn-full">Browse the Menu</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('order.my_orders') }}" class="btn btn-outline btn-full">My Orders</a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-full">Login to Order</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="combo-zone combo-zone-studio">
+      <h3>Dessert Studio</h3>
+      <p>Design something deeply personal — handcrafted desserts made exclusively for your moments.</p>
+      <div class="combo-actions">
+        <a href="{{ url_for('custom_order.dessert_studio') }}" class="studio-btn-main">Open Dessert Studio</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('custom_order.my_custom_orders') }}" class="studio-btn-sec">My Studio Orders</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Mobile Explore Card -->
+<div class="explore-menu-wrap" id="exploreMenuWrap">
+  <div class="explore-menu-card">
+    <div class="explore-card-info">
+      <div class="explore-card-title">🍰 Our Dessert Menu</div>
+      <div class="explore-card-desc">Cakes, brownies, cheesecakes & more — handcrafted daily</div>
+    </div>
+    <a href="{{ url_for('product.products') }}" class="btn btn-primary btn-sm" style="flex-shrink:0;">Explore →</a>
+  </div>
+</div>
+
+<!-- Featured Delights -->
+<div class="rm-section-header">
+  <h2>Featured Delights</h2>
+  <p>Handpicked favourites from our café collection</p>
+  <div class="rm-divider"></div>
+</div>
+
+<div class="featured-grid">
+  {% for product in featured_products %}
+  <a href="{{ url_for('product.product_details', product_id=product.product_id) }}" class="featured-card">
+    <img src="{{ get_product_image(product.product_image) }}" alt="{{ product.product_name }}" class="featured-card-img" loading="lazy">
+    <div class="featured-card-body">
+      <div class="featured-badge-pill">✦ Featured</div>
+      <div class="featured-card-tag">{{ product.product_tags }}</div>
+      <div class="featured-card-name">{{ product.product_name }}</div>
+      <div class="featured-card-desc">{{ product.product_description[:60] }}…</div>
+      <div class="featured-card-footer">
+        <div>
+          <div class="featured-card-price">₹{{ product.product_price }}</div>
+          <div style="font-size:.73rem;color:var(--grey);">{{ product.product_unit }}</div>
+        </div>
+        <span class="featured-card-link">View →</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% if launching_products %}
+<div class="featured-scroll-section">
+  <div class="featured-scroll-title">🚀 Launching Soon</div>
+  <div class="featured-scroll-row">
+    {% for p in launching_products %}
+    <div class="fscroll-card">
+      <img src="{{ get_product_image(p.product_image) }}" class="fscroll-img" alt="{{ p.product_name }}" loading="lazy">
+      <div class="fscroll-body">
+        <div class="fscroll-name">{{ p.product_name }}</div>
+        <div class="fscroll-footer">
+          <span class="fscroll-price">₹{{ p.product_price }}</span>
+          <a href="{{ url_for('product.product_details', product_id=p.product_id) }}" class="fscroll-link">View →</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══════════════════════════
+     CUSTOMER FEEDBACK MARQUEE
+     Only "Overall Experience" reviews.
+     All styling is INLINE so it works regardless of CSS load order.
+     Keyframes injected via <style> tag into <head> at runtime.
+═══════════════════════════ -->
+<div id="testimonialsSection" style="display:none;margin:48px 0 0;">
+  <!-- Section header -->
+  <div style="text-align:center;margin-bottom:32px;">
+    <h2 style="font-family:'Playfair Display',serif;color:var(--maroon,#5c1520);
+               font-size:clamp(1.5rem,3vw,2.1rem);margin-bottom:8px;">
+      Our Customer Feedback
+    </h2>
+    <p style="color:var(--text-muted,#8b7b70);font-size:.95rem;">
+      What our café family says about their experience
+    </p>
+    <div style="width:56px;height:2px;background:var(--amber,#c8923a);
+                border-radius:99px;margin:14px auto 0;"></div>
+  </div>
+  <!-- Marquee container — JS inserts the track here -->
+  <div id="marqueeOuter" style="
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 10px 0 20px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image:          linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  "></div>
+</div>
+
+<!-- ═══════════════════════════
+     LEAVE A REVIEW
+     Standalone "Overall Experience" review — no order required.
+     Always visible (independent of whether any reviews exist yet).
+═══════════════════════════ -->
+<div class="rm-card" style="max-width:560px;margin:40px auto 0;padding:28px 24px;text-align:center;">
+
+  {% if current_user.is_authenticated %}
+
+    {% if my_general_review %}
+    <!-- Already has a standalone review -->
+    <h3 style="font-family:'Playfair Display',serif;color:var(--maroon);font-size:1.3rem;margin-bottom:4px;">
+      Your Review
+    </h3>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:14px;">Thanks for sharing your experience!</p>
+
+    <div class="star-row" style="pointer-events:none;">
+      {% for i in range(1,6) %}
+      <button type="button" class="rv-star {{ 'filled' if i <= my_general_review.rating else '' }}"></button>
+      {% endfor %}
+    </div>
+
+    {% if my_general_review.review_text %}
+    <p style="font-style:italic;color:var(--text-body);margin:14px 0;line-height:1.7;">
+      &ldquo;{{ my_general_review.review_text }}&rdquo;
+    </p>
+    {% endif %}
+
+    {% if my_general_review.admin_reply %}
+    <div class="rv-admin-reply" style="text-align:left;margin-top:12px;">
+      <div class="rv-reply-title"><i class="fa-solid fa-store"></i> Reply from RM Bakes</div>
+      <div class="rv-reply-text">{{ my_general_review.admin_reply }}</div>
+    </div>
+    {% endif %}
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+      <a href="{{ url_for('review.my_standalone_review', review_id=my_general_review.review_id) }}" class="btn btn-ghost btn-sm">View</a>
+      <a href="{{ url_for('review.edit_review', review_id=my_general_review.review_id) }}" class="btn btn-outline btn-sm">Edit</a>
+      <button type="button" class="btn btn-danger btn-sm" onclick="deleteGeneralReview({{ my_general_review.review_id }})">Delete</button>
+    </div>
+
+    {% else %}
+    <!-- Blank submission form -->
+    <h3 style="font-family:'Playfair Display',serif;color:var(--maroon);font-size:1.3rem;margin-bottom:4px;">
+      Leave a Review
+    </h3>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:16px;">
+      Loved something about RM Bakes? Share it here — no order required.
+    </p>
+
+    <div class="star-row" id="generalStarRow">
+      {% for i in range(1,6) %}
+      <button type="button" class="rv-star" data-value="{{ i }}" onclick="setGeneralRating({{ i }})"></button>
+      {% endfor %}
+    </div>
+    <p id="generalRatingLabel" style="font-size:.85rem;color:var(--text-muted);margin:8px 0 14px;">Tap a star to rate</p>
+
+    <textarea id="generalReviewText" class="rm-input" rows="3"
+      placeholder="Tell us about your experience (optional)" style="text-align:left;"></textarea>
+
+    <button type="button" class="btn btn-primary" id="generalReviewSubmitBtn" onclick="submitGeneralReview()">
+      Submit Review
+    </button>
+    {% endif %}
+
+  {% else %}
+  <!-- Guest prompt -->
+  <h3 style="font-family:'Playfair Display',serif;color:var(--maroon);font-size:1.3rem;margin-bottom:4px;">
+    Leave a Review
+  </h3>
+  <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:16px;">
+    Log in to share your experience with RM Bakes.
+  </p>
+  <a href="{{ url_for('auth.login') }}" class="btn btn-amber">Login to Review</a>
+  {% endif %}
+
+</div>
+
+<!-- Mobile Dessert Studio after featured -->
+<div class="home-mobile-studio" style="margin-top:40px;">
+  <h3>✨ Dessert Studio</h3>
+  <p>Dream up a custom dessert — for birthdays, anniversaries, or just because.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <a href="{{ url_for('custom_order.dessert_studio') }}" class="btn btn-amber">Open Studio</a>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('custom_order.my_custom_orders') }}" class="btn btn-ghost"
+       style="color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.22);">My Orders</a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-ghost"
+       style="color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.22);">Login to Order</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+/* ── Carousel ── */
+(function(){
+  let cur=0;
+  const slides=document.querySelectorAll('.rm-carousel-item');
+  const dots=document.querySelectorAll('.rm-carousel-dot');
+  const total=slides.length;
+  window.goToSlide=function(n){
+    slides[cur].style.display='none'; dots[cur].classList.remove('active');
+    cur=(n+total)%total;
+    slides[cur].style.display='block'; dots[cur].classList.add('active');
+  };
+  if(total>1) setInterval(()=>goToSlide(cur+1),5500);
+})();
+
+/* ── Mobile explore card ── */
+(function(){
+  var el=document.getElementById('exploreMenuWrap');
+  function check(){ if(el) el.style.display=window.innerWidth<=900?'flex':'none'; }
+  check(); window.addEventListener('resize',check);
+})();
+
+/* ════════════════════════════════════════
+   LEAVE A REVIEW (standalone, no order needed)
+════════════════════════════════════════ */
+let generalRating = 0;
+const generalLabels = ['', 'Poor', 'Okay', 'Good', 'Great', 'Excellent'];
+
+function setGeneralRating(v) {
+  generalRating = v;
+  document.querySelectorAll('#generalStarRow .rv-star').forEach((b, i) => b.classList.toggle('filled', i < v));
+  const label = document.getElementById('generalRatingLabel');
+  if (label) label.textContent = generalLabels[v] + ' — ' + v + '/5';
+}
+
+async function submitGeneralReview() {
+  if (!generalRating) { showToast('⭐ Please select a star rating first'); return; }
+
+  const textEl = document.getElementById('generalReviewText');
+  const text = textEl ? textEl.value.trim() : '';
+  const btn = document.getElementById('generalReviewSubmitBtn');
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
+
+  try {
+    const res = await fetch('/leave-general-review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: generalRating, review_text: text })
+    });
+    const data = await res.json();
+
+    showToast(data.message || (data.success ? 'Thank you! 💛' : 'Something went wrong'));
+
+    if (data.success) {
+      setTimeout(() => window.location.reload(), 900);
+    } else if (btn) {
+      btn.disabled = false; btn.textContent = 'Submit Review';
+    }
+  } catch (e) {
+    showToast('Something went wrong — please try again');
+    if (btn) { btn.disabled = false; btn.textContent = 'Submit Review'; }
+  }
+}
+
+function deleteGeneralReview(reviewId) {
+  if (!confirm('Delete your review permanently?')) return;
+  showToast('Deleting review…');
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `/delete-review/${reviewId}`;
+  document.body.appendChild(form);
+  form.submit();
+}
+
+/* ════════════════════════════════════════
+   CUSTOMER FEEDBACK MARQUEE
+   Fully inline-styled for guaranteed rendering.
+   Only "Overall Experience" reviews fetched.
+════════════════════════════════════════ */
+(async function buildTestimonials() {
+  try {
+    const res     = await fetch('/homepage-reviews-data');
+    const reviews = await res.json();
+    if (!reviews || reviews.length === 0) return;
+
+    /* Hide scrollbar (container is now natively scrollable/swipeable) */
+    if (!document.getElementById('rmMarqueeStyle')) {
+      const s = document.createElement('style');
+      s.id = 'rmMarqueeStyle';
+      s.textContent = `#marqueeOuter::-webkit-scrollbar { display: none; }`;
+      document.head.appendChild(s);
+    }
+
+    /* Build one card as a DOM element */
+    function makeCard(r) {
+      const card = document.createElement('div');
+
+      /* Premium cafe card — full inline styling */
+      card.style.cssText = `
+        min-width: 272px;
+        max-width: 272px;
+        flex-shrink: 0;
+        background: var(--card, #fffdf5);
+        border: 1.5px solid var(--honey-dark, #f5d98a);
+        border-radius: 20px;
+        padding: 20px 18px;
+        box-shadow: 0 4px 20px rgba(92,21,32,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        cursor: default;
+        transition: box-shadow .25s ease, transform .25s ease;
+      `;
+      card.addEventListener('mouseover', () => {
+        card.style.boxShadow = '0 8px 32px rgba(92,21,32,0.16)';
+        card.style.transform = 'translateY(-3px)';
+      });
+      card.addEventListener('mouseout', () => {
+        card.style.boxShadow = '0 4px 20px rgba(92,21,32,0.08)';
+        card.style.transform = 'translateY(0)';
+      });
+
+      /* Stars */
+      const starRow = document.createElement('div');
+      starRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:10px;';
+      const starEl = document.createElement('span');
+      starEl.style.cssText = 'font-size:1rem;letter-spacing:1px;';
+      starEl.textContent    = '⭐'.repeat(Math.max(0, Math.min(5, r.rating)));
+      const ratingEl = document.createElement('span');
+      ratingEl.style.cssText = 'font-size:.78rem;color:var(--text-muted,#8b7b70);font-weight:600;';
+      ratingEl.textContent    = r.rating + '/5';
+      starRow.appendChild(starEl);
+      starRow.appendChild(ratingEl);
+      card.appendChild(starRow);
+
+      /* Review text OR rating-only placeholder */
+      const textEl = document.createElement('p');
+      textEl.style.cssText = `
+        font-style: italic;
+        font-size: .87rem;
+        color: var(--text-body, #4a3028);
+        line-height: 1.75;
+        flex: 1;
+        margin: 0 0 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      `;
+      if (r.review_text) {
+        textEl.textContent = '\u201C' + r.review_text + '\u201D'; /* curly quotes */
+      } else {
+        textEl.style.color = 'var(--text-muted,#8b7b70)';
+        textEl.textContent  = 'Rated ' + r.rating + ' out of 5 stars';
+      }
+      card.appendChild(textEl);
+
+      /* "Read more" toggle for long reviews (clamp only kicks in
+         visually past ~4 lines, so only show the link when the text
+         is actually long enough to likely be clamped) */
+      if (r.review_text && r.review_text.length > 140) {
+        const readMoreBtn = document.createElement('button');
+        readMoreBtn.type = 'button';
+        readMoreBtn.className = 'rm-read-more-btn';
+        readMoreBtn.textContent = 'Read more…';
+        readMoreBtn.style.cssText = `
+          background:none; border:none; padding:0; margin:-10px 0 12px;
+          font-size:.78rem; font-weight:700; color:var(--amber,#c8923a);
+          cursor:pointer; text-align:left; align-self:flex-start;
+        `;
+        let expanded = false;
+        readMoreBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          expanded = !expanded;
+          if (expanded) {
+            textEl.style.display = 'block';
+            textEl.style.webkitLineClamp = 'unset';
+            textEl.style.overflow = 'visible';
+            readMoreBtn.textContent = 'Read less';
+          } else {
+            textEl.style.display = '-webkit-box';
+            textEl.style.webkitLineClamp = '4';
+            textEl.style.overflow = 'hidden';
+            readMoreBtn.textContent = 'Read more…';
+          }
+        });
+        card.appendChild(readMoreBtn);
+      }
+
+      /* Amber separator line */
+      const sep = document.createElement('div');
+      sep.style.cssText = 'height:1px;background:var(--honey-2,#fdeab8);margin-bottom:12px;';
+      card.appendChild(sep);
+
+      /* Footer: name + date */
+      const footer = document.createElement('div');
+      footer.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-end;gap:8px;';
+
+      const nameWrap = document.createElement('div');
+      const nameEl   = document.createElement('div');
+      nameEl.style.cssText = `
+        font-family: 'Playfair Display', serif;
+        font-size: .88rem; font-weight: 700;
+        color: var(--maroon, #5c1520);
+      `;
+      nameEl.textContent = r.customer_name;
+
+      const subEl = document.createElement('div');
+      subEl.style.cssText = 'font-size:.72rem;color:var(--text-muted,#8b7b70);margin-top:2px;';
+      subEl.textContent    = 'Overall Experience';
+
+      nameWrap.appendChild(nameEl);
+      nameWrap.appendChild(subEl);
+
+      const dateEl = document.createElement('div');
+      dateEl.style.cssText = 'font-size:.7rem;color:var(--grey,#9b8e86);white-space:nowrap;flex-shrink:0;';
+      dateEl.textContent    = r.date;
+
+      footer.appendChild(nameWrap);
+      footer.appendChild(dateEl);
+      card.appendChild(footer);
+
+      /* Owner actions — only for the current user's own review */
+      if (r.is_own) {
+        const ownRow = document.createElement('div');
+        ownRow.style.cssText = 'display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;';
+
+        const mkBtn = (label, href, danger) => {
+          const a = document.createElement('a');
+          a.textContent = label;
+          a.href = href;
+          a.style.cssText = `
+            font-size:.72rem; font-weight:700; text-decoration:none;
+            padding:5px 11px; border-radius:99px; text-align:center;
+            border:1.5px solid ${danger ? 'var(--danger,#b23a3a)' : 'var(--amber,#c8923a)'};
+            color:${danger ? 'var(--danger,#b23a3a)' : 'var(--amber,#c8923a)'};
+          `;
+          return a;
+        };
+
+        ownRow.appendChild(mkBtn('View', `/my-review-standalone/${r.review_id}`));
+        ownRow.appendChild(mkBtn('Edit', `/edit-review/${r.review_id}`));
+
+        const delBtn = mkBtn('Delete', 'javascript:void(0)', true);
+        delBtn.addEventListener('click', (e) => { e.preventDefault(); deleteGeneralReview(r.review_id); });
+        ownRow.appendChild(delBtn);
+
+        card.appendChild(ownRow);
+
+        if (r.has_reply) {
+          const replyTag = document.createElement('div');
+          replyTag.style.cssText = 'margin-top:8px;font-size:.7rem;color:var(--amber,#c8923a);font-weight:600;';
+          replyTag.textContent = '💬 RM Bakes replied';
+          card.appendChild(replyTag);
+        }
+
+        card.style.border = '1.5px solid var(--amber,#c8923a)';
+      }
+
+      return card;
+    }
+
+    /* Build the scrolling track with DUPLICATED cards (seamless loop) */
+    const track = document.createElement('div');
+    track.style.cssText = `
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 18px;
+      width: max-content;
+    `;
+
+    /* First set */
+    reviews.forEach(r => track.appendChild(makeCard(r)));
+    /* Duplicate for seamless infinite loop */
+    reviews.forEach(r => track.appendChild(makeCard(r)));
+
+    const outer = document.getElementById('marqueeOuter');
+    outer.appendChild(track);
+
+    /* ── Auto-scroll that's also natively swipeable ──
+       outer.scrollLeft is nudged forward every frame; because
+       #marqueeOuter is a real overflow-x:auto container (not a CSS
+       transform animation), the user's own touch/mouse-drag scrolling
+       works instantly and natively — no "wait for the animation" lag.
+       Auto-scroll simply pauses while the user is interacting and
+       resumes shortly after they let go. */
+    let autoScrollPaused = false;
+    let resumeTimer = null;
+
+    function pauseAutoScroll() {
+      autoScrollPaused = true;
+      clearTimeout(resumeTimer);
+    }
+    function scheduleResume(delay) {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => { autoScrollPaused = false; }, delay);
+    }
+
+    outer.addEventListener('mouseenter', pauseAutoScroll);
+    outer.addEventListener('mouseleave', () => scheduleResume(300));
+    outer.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+    outer.addEventListener('touchend',   () => scheduleResume(1500), { passive: true });
+    outer.addEventListener('pointerdown', pauseAutoScroll);
+    window.addEventListener('pointerup', () => scheduleResume(1500));
+
+    function autoScrollStep() {
+      if (!autoScrollPaused) {
+        const half = track.scrollWidth / 2;
+        outer.scrollLeft += 0.6;
+        if (outer.scrollLeft >= half) outer.scrollLeft -= half;
+      }
+      requestAnimationFrame(autoScrollStep);
+    }
+    requestAnimationFrame(autoScrollStep);
+
+    /* Reveal the section */
+    document.getElementById('testimonialsSection').style.display = 'block';
+
+  } catch (err) {
+    /* Fail silently — testimonials are decorative */
+  }
+})();
+</script>
+{% endblock %}
