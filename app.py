@@ -270,8 +270,6 @@ app.register_blueprint(admin_carousel_bp)
 
 app.register_blueprint(admin_user_bp)
 
-app.register_blueprint(monitoring_bp)
-
 # Not linked from the Admin Dashboard — reachable only by URL.
 app.register_blueprint(site_settings_bp)
 
