@@ -84,9 +84,6 @@ from utils.timezone_utils import (
     to_ist,
     format_ist
 )
-from utils.monitoring_utils import (
-    health
-)
 
 # =========================================
 # CREATE APP
