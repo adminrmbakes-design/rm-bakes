@@ -728,7 +728,7 @@ select.rm-input   { appearance:none; cursor:pointer; }
 /* ── Launching Soon row (index.html only) — its own classes so
    spacing/typography tweaks here never touch the Festival/Seasonal/
    Newly Launched rows on products.html, and vice versa. ── */
-.launch-soon-section { margin-bottom:80px; }
+.launch-soon-section { margin-top:56px; margin-bottom:80px; }
 .launch-soon-title {
   font-family:'Playfair Display',serif; font-size:clamp(1.3rem,2.6vw,1.8rem);
   font-weight:700; font-style:normal; text-align:center;
