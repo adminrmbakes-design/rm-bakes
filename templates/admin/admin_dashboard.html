@@ -76,7 +76,6 @@
           <a href="{{ url_for('admin.admin_orders') }}" class="btn btn-secondary btn-sm">View Orders</a>
           <a href="{{ url_for('admin.admin_notifications') }}" class="btn btn-secondary btn-sm">Live Alerts</a>
           <a href="{{ url_for('custom_order.admin_custom_orders') }}" class="btn btn-secondary btn-sm">Dessert Studio</a>
-          <a href="{{ url_for('admin_analytics.analytics_dashboard') }}" class="btn btn-secondary btn-sm">Analytics</a>
         </div>
       </div>
 
@@ -126,13 +125,11 @@
 
       <!-- Security (placeholder) -->
       <div class="dash-card">
-        <div class="dash-card-icon" aria-hidden="true">🔒</div>
-        <h3 class="dash-card-title">Administrative Security</h3>
-        <p class="dash-card-desc">Control admin access, password security, and operational protection.</p>
+        <div class="dash-card-icon" aria-hidden="true">💹</div>
+        <h3 class="dash-card-title">Business Analytics</h3>
+        <p class="dash-card-desc">Track sales, customer behavior, and growth with powerful analytics.</p>
         <div class="dash-card-links">
-          <a href="#" class="btn btn-secondary btn-sm">Change Password</a>
-          <a href="#" class="btn btn-secondary btn-sm">OTP Logs</a>
-          <a href="#" class="btn btn-secondary btn-sm">Access Logs</a>
+          <a href="{{ url_for('admin_analytics.analytics_dashboard') }}" class="btn btn-secondary btn-sm">Analytics</a>
         </div>
       </div>
 
