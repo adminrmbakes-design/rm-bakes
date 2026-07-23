@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Featured Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to featured slots</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Featured Products</span>
+      </div>
+      <div class="topbar-meta">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content" id="main-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Featured Slots</h2>
+        <p class="page-subtitle">Curate which desserts are spotlighted on the homepage.</p>
+      </div>
+    </div>
+
+    <div class="featured-grid stagger" role="list" aria-label="Featured product slots">
+      {% for slot in featured_slots %}
+        <article class="featured-slot" role="listitem" aria-label="Featured slot {{ slot.slot_number }}">
+
+          <div class="slot-number">Slot #{{ slot.slot_number }}</div>
+
+          <!-- Current Product Preview -->
+          {% if slot.product_id %}
+            {% set current_product = products | selectattr('product_id', 'equalto', slot.product_id) | first %}
+            {% if current_product %}
+              <div class="slot-preview">
+                <img
+                  src="{{ get_product_image(current_product.product_image) }}"
+                  alt="{{ current_product.product_name }}"
+                  loading="lazy"
+                >
+                <div>
+                  <div class="slot-product-name">{{ current_product.product_name }}</div>
+                  <div class="slot-product-price">₹{{ current_product.product_price }} · {{ current_product.product_unit }}</div>
+                </div>
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="slot-preview">
+              <div style="width:44px;height:44px;border-radius:var(--r-sm);background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎂</div>
+              <span class="slot-empty-text">No product assigned</span>
+            </div>
+          {% endif %}
+
+          <!-- Select & Save Form -->
+          <form method="POST" action="{{ url_for('admin_product.update_featured_product') }}"
+            class="form-section" style="gap:10px;" aria-label="Assign product to slot {{ slot.slot_number }}">
+            <input type="hidden" name="slot_number" value="{{ slot.slot_number }}">
+            <div class="form-group">
+              <label class="form-label" for="product_slot_{{ slot.slot_number }}">Assign Product</label>
+              <select name="product_id" id="product_slot_{{ slot.slot_number }}" class="form-select">
+                <option value="">— No product —</option>
+                {% for product in products %}
+                  <option value="{{ product.product_id }}"
+                    {% if product.product_id == slot.product_id %}selected{% endif %}>
+                    {{ product.product_name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm btn-full">Save Slot</button>
+          </form>
+
+          <!-- Clear Slot -->
+          {% if slot.product_id %}
+            <form method="POST" action="{{ url_for('admin_product.update_featured_product') }}"
+              style="display:contents;">
+              <input type="hidden" name="slot_number" value="{{ slot.slot_number }}">
+              <input type="hidden" name="product_id" value="">
+              <button type="submit" class="btn btn-danger btn-sm btn-full"
+                onclick="return confirm('Clear slot #{{ slot.slot_number }}?')"
+                aria-label="Clear product from slot {{ slot.slot_number }}">
+                Clear Slot
+              </button>
+            </form>
+          {% endif %}
+
+        </article>
+      {% endfor %}
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('load', () => document.getElementById('pageLoader').classList.add('loaded'));
+  </script>
+  <script>
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+<script src="{{ url_for('static', filename='js/admin-image-viewer.js') }}"></script>
+</body>
+</html>

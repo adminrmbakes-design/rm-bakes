@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_analytics.css') }}">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to analytics</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Business Intelligence</span>
+      </div>
+      <div class="topbar-meta">
+        <div class="chip">👤 {{ admin_username }}</div>
+        <div class="chip">🛡 {{ admin_role or "Administrator" }}</div>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="content" id="main-content">
+
+    <!-- Hero -->
+    <div class="analytics-hero">
+      <div class="analytics-hero-badge">📊 Business Intelligence</div>
+      <h1>Analytics Overview</h1>
+      <p>A comprehensive view of sales, customers, and operational performance across your bakery.</p>
+
+      <!-- FIX #4: stats-since indicator + Reset Analytics -->
+      <div class="stats-since-row">
+        <span class="stats-since-badge">
+          🗓 {% if reset_at %}Stats since {{ reset_at | ist('%d %b %Y, %I:%M %p') }} IST{% if reset_by %} (reset by {{ reset_by }}){% endif %}{% else %}All-time stats (never reset){% endif %}
+        </span>
+        <form method="POST" action="{{ url_for('admin_analytics.reset_analytics') }}"
+          onsubmit="return confirm('Reset the analytics dashboard?\n\nThis will start every stat, chart, and revenue figure fresh from right now. Your real orders and customer order history are NOT deleted — only this dashboard\'s view resets.\n\nThis cannot be undone. Continue?')">
+          <button type="submit" class="btn btn-danger btn-sm">♻ Reset Analytics</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         00. UNVERIFIED PAYMENTS ALERT
+    =========================================== -->
+    {% if unverified_online_orders %}
+      <div class="alert-banner">
+        ⚠️ <strong>{{ unverified_online_orders | length }} online order(s)</strong> have unverified payments worth ₹{{ "{:,.0f}".format(unverified_value) }} — worth a manual check.
+        <a href="{{ url_for('admin.admin_orders') }}" class="btn btn-danger btn-sm">Review Orders</a>
+      </div>
+    {% endif %}
+
+    <!-- ==========================================
+         01. INCOME SPLIT (FIX #3 — the core of this rebuild)
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Revenue — Collected vs Pending</div>
+      <div class="income-split-grid stagger">
+        <div class="income-card generated">
+          <div class="income-card-label">💰 Income Generated</div>
+          <div class="income-card-value">₹{{ "{:,.0f}".format(income_generated) }}</div>
+          <div class="income-card-sub">Prepaid (verified) + delivered Cash on Delivery orders — money actually in hand</div>
+        </div>
+        <div class="income-card pending">
+          <div class="income-card-label">⏳ Pending Income</div>
+          <div class="income-card-value">₹{{ "{:,.0f}".format(pending_income) }}</div>
+          <div class="income-card-sub">Cash on Delivery orders still in the pipeline — not yet collected</div>
+        </div>
+        <div class="income-card potential">
+          <div class="income-card-label">📈 Total Potential Revenue</div>
+          <div class="income-card-value">₹{{ "{:,.0f}".format(total_potential_revenue) }}</div>
+          <div class="income-card-sub">Income Generated + Pending Income (excludes cancelled orders)</div>
+        </div>
+      </div>
+      {% if cancelled_value > 0 %}
+        <p style="font-size:0.78rem;color:var(--cream-dim);margin-top:14px;">
+          🗑 ₹{{ "{:,.0f}".format(cancelled_value) }} from cancelled orders is excluded from every figure on this page.
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         01. EXECUTIVE SUMMARY
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Executive Summary</div>
+      <div class="radar-grid stagger">
+        <div class="radar-card">
+          <div class="radar-card-icon">📦</div>
+          <div class="radar-card-label">Total Orders</div>
+          <div class="radar-card-value">{{ total_orders }}</div>
+        </div>
+        <div class="radar-card">
+          <div class="radar-card-icon">👥</div>
+          <div class="radar-card-label">Total Customers</div>
+          <div class="radar-card-value">{{ total_customers }}</div>
+        </div>
+        <div class="radar-card">
+          <div class="radar-card-icon">🎨</div>
+          <div class="radar-card-label">Custom Orders</div>
+          <div class="radar-card-value">{{ total_custom_orders }}</div>
+        </div>
+        <div class="radar-card">
+          <div class="radar-card-icon">🍰</div>
+          <div class="radar-card-label">Total Products</div>
+          <div class="radar-card-value">{{ total_products }}</div>
+        </div>
+        <div class="radar-card">
+          <div class="radar-card-icon">❤️</div>
+          <div class="radar-card-label">Total Favourites</div>
+          <div class="radar-card-value">{{ total_favourites }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         02. BUSINESS HEALTH
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Business Health</div>
+      <div class="health-grid stagger">
+        <div class="health-score-card">
+          <div class="radar-card-label" style="margin-bottom:6px;">Health Score</div>
+          <div class="health-score">{{ health_score }}</div>
+          <div class="health-status">{{ health_status }}</div>
+        </div>
+        <div class="health-metric-card">
+          <h3>Delivery Rate</h3>
+          <p>{{ delivery_rate }}%</p>
+        </div>
+        <div class="health-metric-card">
+          <h3>Cancellation Rate</h3>
+          <p>{{ cancellation_rate }}%</p>
+        </div>
+        <div class="health-metric-card">
+          <h3>Conversion Rate</h3>
+          <p>{{ conversion_rate }}%</p>
+        </div>
+        <div class="health-metric-card">
+          <h3>Revenue Forecast</h3>
+          <p>₹{{ "{:,.0f}".format(forecast_revenue) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         03. REVENUE BREAKDOWN (collected revenue only)
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Collected Revenue Breakdown</div>
+      <div class="revenue-grid stagger">
+        <div class="revenue-mini-card">
+          <span>Collected Today</span>
+          <h3>₹{{ "{:,.0f}".format(today_revenue) }}</h3>
+        </div>
+        <div class="revenue-mini-card">
+          <span>Collected — Last 7 Days</span>
+          <h3>₹{{ "{:,.0f}".format(weekly_revenue) }}</h3>
+        </div>
+        <div class="revenue-mini-card">
+          <span>Collected — Last 30 Days</span>
+          <h3>₹{{ "{:,.0f}".format(monthly_revenue) }}</h3>
+        </div>
+        <div class="revenue-mini-card">
+          <span>Avg Order Value</span>
+          <h3>₹{{ "{:,.2f}".format(average_order_value) }}</h3>
+        </div>
+        <div class="revenue-mini-card">
+          <span>Day-over-Day Growth</span>
+          <h3>{{ revenue_growth }}%</h3>
+        </div>
+        <div class="revenue-mini-card">
+          <span>30-Day Forecast (at current pace)</span>
+          <h3>₹{{ "{:,.0f}".format(forecast_revenue) }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         03B. PAYMENT SPLIT — Prepaid vs COD
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Payment Method Split</div>
+      <div class="payment-split-grid stagger">
+        <div class="payment-split-card">
+          <div class="payment-split-head">
+            <h3>💳 Prepaid (Online)</h3>
+            <span>{{ prepaid_count }} orders · ₹{{ "{:,.0f}".format(prepaid_revenue) }}</span>
+          </div>
+          <div class="payment-split-bar-track">
+            <div class="payment-split-bar-fill" style="width:{{ prepaid_pct }}%;"></div>
+          </div>
+          <div class="payment-split-legend"><span>{{ prepaid_pct }}% of orders</span></div>
+        </div>
+        <div class="payment-split-card">
+          <div class="payment-split-head">
+            <h3>💵 Cash on Delivery</h3>
+            <span>{{ cod_count }} orders · ₹{{ "{:,.0f}".format(cod_revenue) }}</span>
+          </div>
+          <div class="payment-split-bar-track">
+            <div class="payment-split-bar-fill" style="width:{{ cod_pct }}%;background:var(--warn-fg);"></div>
+          </div>
+          <div class="payment-split-legend"><span>{{ cod_pct }}% of orders</span></div>
+        </div>
+      </div>
+
+      {% if payment_mode_breakdown %}
+        <div style="margin-top:18px;">
+          <div class="payment-split-head"><h3 style="font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);">How customers pay online</h3></div>
+          <div class="payment-mode-grid stagger">
+            {% for mode in payment_mode_breakdown %}
+              <div class="payment-mode-card">
+                <div class="payment-mode-icon">{{ mode.icon }}</div>
+                <div class="payment-mode-count">{{ mode.count }}</div>
+                <div class="payment-mode-label">{{ mode.mode }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         04. DESSERT STUDIO
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Dessert Studio Performance</div>
+      <div class="studio-grid stagger">
+        <div class="studio-card">
+          <h3>Avg Budget</h3>
+          <p>₹{{ "{:,.0f}".format(average_budget) }}</p>
+        </div>
+        <div class="studio-card">
+          <h3>Acceptance Rate</h3>
+          <p>{{ quote_acceptance_rate }}%</p>
+        </div>
+        <div class="studio-card">
+          <h3>Studio Success</h3>
+          <p>{{ studio_success_rate }}%</p>
+        </div>
+        <div class="studio-card">
+          <h3>Quotes Accepted</h3>
+          <p>{{ accepted_quotes }}</p>
+        </div>
+        <div class="studio-card">
+          <h3>Quotes Rejected</h3>
+          <p>{{ rejected_quotes }}</p>
+        </div>
+        <div class="studio-card">
+          <h3>Pending Responses</h3>
+          <p>{{ pending_quote_responses }}</p>
+        </div>
+        <div class="studio-card">
+          <h3>Converted to Orders</h3>
+          <p>{{ converted_requests }}</p>
+        </div>
+        <div class="studio-card">
+          <h3>Quoted Requests</h3>
+          <p>{{ quoted_requests }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         05. PRODUCT MARKET BOARD
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Top Performing Products</div>
+      {% if top_products %}
+        <div class="market-board stagger">
+          {% for product_name, quantity in top_products %}
+            <div class="market-card">
+              <div class="market-rank {% if loop.index <= 3 %}top-3{% endif %}">#{{ loop.index }}</div>
+              <div class="market-product">{{ product_name }}</div>
+              <div class="market-metric">{{ quantity }} sold</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" style="padding:32px 0;">
+          <div class="empty-icon">🍰</div>
+          <p>No product sales data yet.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         06. FAVOURITES
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Most Favourited Products</div>
+      {% if top_favourites %}
+        <div class="favourite-grid stagger">
+          {% for product_name, count in top_favourites %}
+            <div class="favourite-card">
+              <div class="favourite-icon">❤️</div>
+              <div class="favourite-name">{{ product_name }}</div>
+              <div class="favourite-count">{{ count }} favourites</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" style="padding:32px 0;">
+          <div class="empty-icon">❤️</div>
+          <p>No favourites data yet.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         07. CUSTOMER INTELLIGENCE
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Customer Intelligence</div>
+      <div class="customer-radar-grid stagger">
+        <div class="customer-stat-card">
+          <div class="cust-stat-icon">👥</div>
+          <div class="cust-stat-value">{{ total_customers }}</div>
+          <div class="cust-stat-label">Total Customers</div>
+        </div>
+        <div class="customer-stat-card">
+          <div class="cust-stat-icon">💵</div>
+          <div class="cust-stat-value">₹{{ average_order_value }}</div>
+          <div class="cust-stat-label">Avg Order Value</div>
+        </div>
+        <div class="customer-stat-card">
+          <div class="cust-stat-icon">❤️</div>
+          <div class="cust-stat-value">{{ total_favourites }}</div>
+          <div class="cust-stat-label">Total Favourites</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         08. VIP BOARD
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">VIP Customers</div>
+      {% if vip_customers %}
+        <div class="vip-board stagger">
+          {% for customer, amount in vip_customers %}
+            <div class="vip-card">
+              <div class="vip-rank">👑 #{{ loop.index }}</div>
+              <div class="vip-name">{{ customer }}</div>
+              <div class="vip-spend">₹{{ "{:,.0f}".format(amount) }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" style="padding:32px 0;">
+          <div class="empty-icon">👑</div>
+          <p>No customer data yet.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         09. ORDER HEATMAP (by time of day)
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Order Activity by Time of Day</div>
+      <div class="heatmap-grid stagger">
+        <div class="heat-cell">
+          <div class="heat-value">{{ heatmap[0] }}</div>
+          <div class="heat-label">Morning (6–12)</div>
+        </div>
+        <div class="heat-cell">
+          <div class="heat-value">{{ heatmap[1] }}</div>
+          <div class="heat-label">Afternoon (12–17)</div>
+        </div>
+        <div class="heat-cell">
+          <div class="heat-value">{{ heatmap[2] }}</div>
+          <div class="heat-label">Evening (17–22)</div>
+        </div>
+        <div class="heat-cell">
+          <div class="heat-value">{{ heatmap[3] }}</div>
+          <div class="heat-label">Night (22–6)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         10. OPERATIONS PIPELINE
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Operations Pipeline</div>
+      <div class="operations-grid stagger">
+        <div class="ops-card">
+          <h2>{{ queued_orders }}</h2>
+          <p>Queued</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ approved_orders }}</h2>
+          <p>Approved</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ preparing_orders }}</h2>
+          <p>Preparing</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ baking_orders }}</h2>
+          <p>Baking</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ packed_orders }}</h2>
+          <p>Packed</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ delivery_orders }}</h2>
+          <p>Out for Delivery</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ delivered_orders }}</h2>
+          <p>Delivered</p>
+        </div>
+        <div class="ops-card">
+          <h2>{{ cancelled_orders }}</h2>
+          <p>Cancelled</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         11. AI INSIGHTS
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">AI Insights</div>
+      {% if insights %}
+        <div class="insights-list stagger">
+          {% for insight in insights %}
+            <div class="insight-card">{{ insight }}</div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" style="padding:32px 0;">
+          <div class="empty-icon">💡</div>
+          <p>Insights will appear as orders and data accumulate.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ==========================================
+         12. FLAVOURS & OCCASIONS
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Flavours & Occasions</div>
+      <div class="flavour-occasion-grid">
+        <div class="fo-card">
+          <h3>Top Flavours</h3>
+          {% if top_flavours %}
+            {% for flavour, count in top_flavours %}
+              <div class="fo-item">
+                <span class="fo-item-name">🍓 {{ flavour }}</span>
+                <span class="fo-item-count">{{ count }}</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p style="font-size:0.82rem;color:var(--cream-dim);margin-top:10px;">No data yet.</p>
+          {% endif %}
+        </div>
+        <div class="fo-card">
+          <h3>Top Occasions</h3>
+          {% if top_occasions %}
+            {% for occasion, count in top_occasions %}
+              <div class="fo-item">
+                <span class="fo-item-name">🎂 {{ occasion }}</span>
+                <span class="fo-item-count">{{ count }}</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p style="font-size:0.82rem;color:var(--cream-dim);margin-top:10px;">No data yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         13. CHARTS
+    =========================================== -->
+    <div class="analytics-section">
+      <div class="analytics-section-title">Visual Charts</div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Revenue Trend — Collected vs Pending (7 Days)</h3>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueChart" aria-label="Revenue trend chart" role="img"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Top Products by Sales</h3>
+          <div class="chart-canvas-wrap">
+            <canvas id="productsChart" aria-label="Top products chart" role="img"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Order Status Distribution</h3>
+          <div class="chart-canvas-wrap">
+            <canvas id="statusChart" aria-label="Order status distribution chart" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pageLoader').classList.add('loaded');
+    });
+
+    Chart.defaults.color = 'rgba(242,239,230,0.55)';
+    Chart.defaults.borderColor = 'rgba(242,239,230,0.08)';
+    Chart.defaults.font.family = 'Inter, sans-serif';
+
+    // --- Revenue Line Chart: Collected vs Pending ---
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'line',
+      data: {
+        labels: {{ revenue_chart_labels | tojson }},
+        datasets: [
+          {
+            label: 'Collected (₹)',
+            data: {{ collected_chart_values | tojson }},
+            borderColor: 'rgba(128,200,154,0.9)',
+            backgroundColor: 'rgba(128,200,154,0.08)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(128,200,154,0.95)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: 'Pending (₹)',
+            data: {{ pending_chart_values | tojson }},
+            borderColor: 'rgba(204,170,96,0.9)',
+            backgroundColor: 'rgba(204,170,96,0.08)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(204,170,96,0.95)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: { color: 'rgba(242,239,230,0.55)', font: { size: 11 }, padding: 14 }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: 'rgba(242,239,230,0.45)', callback: v => '₹' + v },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          },
+          x: {
+            ticks: { color: 'rgba(242,239,230,0.45)' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
+      }
+    });
+
+    // --- Products Bar Chart ---
+    new Chart(document.getElementById('productsChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ product_chart_labels | tojson }},
+        datasets: [{
+          data: {{ product_chart_values | tojson }},
+          backgroundColor: [
+            'rgba(242,239,230,0.85)',
+            'rgba(242,239,230,0.70)',
+            'rgba(242,239,230,0.55)',
+            'rgba(242,239,230,0.42)',
+            'rgba(242,239,230,0.30)'
+          ],
+          borderRadius: 10,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: 'rgba(242,239,230,0.45)' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          },
+          x: {
+            ticks: { color: 'rgba(242,239,230,0.45)', maxRotation: 30, font: { size: 10 } },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    // --- Status Doughnut Chart ---
+    new Chart(document.getElementById('statusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Queued','Approved','Preparing','Baking','Packed','Delivery','Delivered','Cancelled'],
+        datasets: [{
+          data: {{ status_chart_values | tojson }},
+          backgroundColor: [
+            'rgba(204,170,96,0.85)',
+            'rgba(128,200,154,0.85)',
+            'rgba(200,152,96,0.85)',
+            'rgba(204,160,96,0.85)',
+            'rgba(96,160,204,0.85)',
+            'rgba(96,144,204,0.85)',
+            'rgba(96,192,128,0.85)',
+            'rgba(216,136,136,0.85)'
+          ],
+          borderWidth: 1,
+          borderColor: 'rgba(8,8,8,0.6)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 14,
+              font: { size: 11 },
+              color: 'rgba(242,239,230,0.55)'
+            }
+          }
+        }
+      }
+    });
+  </script>
+  <script>
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

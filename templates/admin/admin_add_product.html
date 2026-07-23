@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RM Bakes — Add Product</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <a href="#product-form" class="skip-link">Skip to form</a>
+
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <h1>RM BAKES ADMIN</h1>
+        <span class="brand-sub">Add New Product</span>
+      </div>
+      <div class="topbar-meta">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary btn-sm">← Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone" role="status">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="content content-narrow" id="main-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Add Product</h2>
+        <p class="page-subtitle">Fill in the details below to add a new dessert to the menu.</p>
+      </div>
+    </div>
+
+    <div class="form-card" id="product-form">
+      <form method="POST" enctype="multipart/form-data" class="form-section" aria-label="Add product form">
+
+        <div class="form-group">
+          <label class="form-label" for="product_name">Product Name</label>
+          <input type="text" id="product_name" name="product_name" class="form-input"
+            placeholder="e.g. Chocolate Truffle Cake" required aria-required="true">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="product_description">Description</label>
+          <textarea id="product_description" name="product_description" class="form-textarea"
+            placeholder="Describe the product — flavours, ingredients, serving size…" required aria-required="true"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="product_price">Price (₹)</label>
+            <input type="number" id="product_price" name="product_price" class="form-input"
+              placeholder="e.g. 450" step="0.01" min="0" required aria-required="true">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="product_unit">Unit / Serving</label>
+            <input type="text" id="product_unit" name="product_unit" class="form-input"
+              placeholder="e.g. 500g, 1 kg, 6 pcs" required aria-required="true">
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <div id="categorySelectContainer">
+            <select name="product_category" id="product_category" class="form-select" aria-label="Select product category">
+              <option value="">Select a category</option>
+              {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div id="newCategoryContainer" style="display:none; margin-top:10px;">
+            <input type="text" name="new_category" id="new_category" class="form-input"
+              placeholder="Type new category name">
+          </div>
+          <button type="button" id="showCategoryInput" class="btn btn-ghost btn-sm" style="margin-top:10px;">
+            ➕ Add New Category
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="product_tags">Tags</label>
+          <input type="text" id="product_tags" name="product_tags" class="form-input"
+            placeholder="e.g. chocolate, custom, birthday">
+          <span class="form-hint">Comma-separated tags for search and filtering.</span>
+        </div>
+
+        <!-- Marketing Type -->
+        <div class="form-group">
+          <label class="form-label">Marketing Type</label>
+          <div class="radio-group" role="radiogroup" aria-label="Marketing type">
+            <label class="radio-option">
+              <input type="radio" name="marketing_type" value="regular" checked>
+              Regular Product
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="marketing_type" value="launching">
+              🚀 New Launch
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="marketing_type" value="seasonal">
+              🍂 Seasonal
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="marketing_type" value="festive">
+              🎉 Festive
+            </label>
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label class="form-label" for="product_image">Product Image</label>
+          <div class="file-upload-area" onclick="document.getElementById('product_image').click();">
+            <div class="upload-icon" aria-hidden="true">🖼</div>
+            <p>Click to select an image, or drag and drop here</p>
+            <p style="font-size:0.72rem;opacity:0.7;">PNG, JPG, WEBP — max 5MB recommended</p>
+          </div>
+          <input type="file" id="product_image" name="product_image" accept="image/*"
+            required aria-required="true" style="display:none;"
+            onchange="document.querySelector('.file-upload-area p').textContent = this.files[0]?.name || 'No file selected'">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full">
+          Save Product
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pageLoader').classList.add('loaded');
+    });
+
+    const addCategoryBtn = document.getElementById('showCategoryInput');
+    const categoryContainer = document.getElementById('newCategoryContainer');
+    const categorySelectContainer = document.getElementById('categorySelectContainer');
+    let addingNew = false;
+
+    addCategoryBtn.addEventListener('click', function() {
+      addingNew = !addingNew;
+      categoryContainer.style.display = addingNew ? 'block' : 'none';
+      categorySelectContainer.style.display = addingNew ? 'none' : 'block';
+      addCategoryBtn.textContent = addingNew ? '✕ Cancel New Category' : '➕ Add New Category';
+    });
+  </script>
+  <script>
+    /* =============================================
+       RM BAKES — GLOBAL LOADING MANAGER
+       Handles: page loader, button spinners,
+       form submit states, nav transitions
+    ============================================= */
+    (function () {
+
+      // 1. Page loader fade-out on load
+      window.addEventListener('load', function () {
+        var pl = document.getElementById('pageLoader');
+        if (pl) pl.classList.add('loaded');
+      });
+
+      // 2. Nav loader overlay (for <a> navigations)
+      var navLoader = document.createElement('div');
+      navLoader.className = 'nav-loader';
+      navLoader.innerHTML = '<div class="nav-loader-inner"><div class="nav-loader-ring"></div><div class="nav-loader-text">Loading…</div></div>';
+      document.body.appendChild(navLoader);
+
+      function showNavLoader() {
+        navLoader.classList.add('active');
+      }
+
+      // Attach to plain navigation links (not buttons, not same-page anchors)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+            a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Skip modal-open buttons
+        if (a.hasAttribute('onclick')) return;
+        showNavLoader();
+      });
+
+      // Hide on popstate (back button)
+      window.addEventListener('pageshow', function () {
+        navLoader.classList.remove('active');
+      });
+
+      // 3. Button loading state on form submit
+      function applyBtnLoading(btn, label) {
+        btn.classList.add('btn-loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.setAttribute('aria-label', label || 'Loading…');
+        btn.disabled = true;
+      }
+
+      // 4. Form submit handler — shows spinner, dims form
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form) return;
+
+        // Skip forms with data-no-loader
+        if (form.hasAttribute('data-no-loader')) return;
+
+        var submitBtn = form.querySelector('[type="submit"]:not([data-no-loader])');
+        if (!submitBtn) return;
+
+        var originalLabel = submitBtn.getAttribute('aria-label') || submitBtn.textContent.trim();
+        applyBtnLoading(submitBtn, 'Saving…');
+        form.classList.add('form-submitting');
+
+        // Safety reset — if server returns error within 12s
+        setTimeout(function () {
+          submitBtn.classList.remove('btn-loading');
+          submitBtn.disabled = false;
+          form.classList.remove('form-submitting');
+          submitBtn.setAttribute('aria-label', originalLabel);
+        }, 12000);
+      });
+
+      // 5. Confirm-dialog forms — only apply loader AFTER confirm passes
+      document.querySelectorAll('form[onsubmit*="confirm"]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          // The onsubmit already ran — if we're here, user confirmed
+          // btn-loading already applied by the generic handler above
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
