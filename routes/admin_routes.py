@@ -148,8 +148,8 @@ def admin_login():
 
     if request.method == "POST":
 
-        username = request.form.get(
-            "username"
+        email = request.form.get(
+            "email"
         )
 
         password = request.form.get(
@@ -200,7 +200,7 @@ def admin_login():
 
         admin_user = User.query.filter_by(
 
-            username=username,
+            email=email,
             is_admin=True
 
         ).first()
@@ -742,6 +742,7 @@ def admin_password_page():
 
     methods=["POST"]
 )
+    
 @admin_required
 def admin_change_password():
 
