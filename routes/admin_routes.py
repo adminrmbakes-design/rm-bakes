@@ -150,7 +150,7 @@ def admin_login():
 
         email = request.form.get(
             "email"
-        )
+        ).strip()
 
         password = request.form.get(
             "password"
@@ -217,7 +217,7 @@ def admin_login():
 
 Unknown admin username attempt:
 
-{username}
+{email}
 
 """,
 
@@ -262,7 +262,7 @@ Unknown admin username attempt:
 
 Failed login attempt for:
 
-{username}
+{email}
 
 Reason:
 Incorrect password
