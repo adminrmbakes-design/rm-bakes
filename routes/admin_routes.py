@@ -150,7 +150,7 @@ def admin_login():
 
         email = request.form.get(
             "email"
-        ).strip()
+        )
 
         password = request.form.get(
             "password"
