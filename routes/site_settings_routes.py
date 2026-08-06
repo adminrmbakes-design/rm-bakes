@@ -101,8 +101,8 @@ def site_settings_login():
 
     if request.method == "POST":
 
-        username = request.form.get(
-            "username"
+        email = request.form.get(
+            "email"
         )
 
         password = request.form.get(
@@ -113,7 +113,7 @@ def site_settings_login():
 
         owner_user = User.query.filter_by(
 
-            username=username,
+            email=email,
             is_admin=True
 
         ).first()
