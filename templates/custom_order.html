@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" id="rmHtml">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dessert Studio — RM Bakes</title>
+  <!-- Apply saved theme before render (prevents flash) -->
+  <script>
+    (function(){
+      var darkModeStatus = "{{ 'COMING_SOON' if is_feature_coming_soon('dark_mode') else ('DISABLED' if is_feature_disabled('dark_mode') else 'LIVE') }}";
+      if (darkModeStatus === 'LIVE' && localStorage.getItem('rmTheme') === 'dark')
+        document.getElementById('rmHtml').classList.add('dark-mode');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="studio-page">
+  <!-- TOP BAR -->
+  <div class="studio-topbar">
+    <a href="{{ url_for('main.home') }}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Home</a>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="rm-logo" style="font-size:1.1rem;letter-spacing:2px;">RM BAKES</div>
+      {% if not is_feature_disabled('dark_mode') %}
+      <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle dark/light mode">🎨</button>
+      {% endif %}
+    </div>
+    <a href="{{ url_for('custom_order.my_custom_orders') }}" class="btn btn-outline btn-sm">My Studio Orders</a>
+  </div>
+
+  <div class="studio-page-wrap">
+    <div class="studio-hero">
+      <h1>Dessert <em>Studio</em></h1>
+      <p style="color:var(--text-muted);max-width:560px;margin:0 auto;line-height:1.8;">
+        Not interested in ordinary desserts? Design something deeply personal — handcrafted and emotionally memorable.
+        From dream cakes to artistic kunafa creations, RM Bakes transforms your imagination into sweetness.
+      </p>
+      <div class="studio-quote">"Every custom dessert tells a story."</div>
+    </div>
+
+    <div class="studio-form-card">
+      <h2 class="studio-form-title">Design Your Dream Dessert</h2>
+
+      {% with messages = get_flashed_messages() %}{% if messages %}{% for m in messages %}
+      <div style="padding:12px 16px;background:var(--amber-pale);border:1px solid rgba(200,146,58,0.25);border-radius:var(--radius-md);margin-bottom:16px;color:var(--text-body);font-size:0.9rem;">{{ m }}</div>
+      {% endfor %}{% endif %}{% endwith %}
+
+      <form id="customOrderForm" action="{{ url_for('custom_order.submit_custom_order') }}" method="POST" enctype="multipart/form-data">
+
+        <div class="studio-grid">
+          <div>
+            <label class="rm-label">Dessert Category</label>
+            <select name="dessert_category" class="rm-input" required>
+              <option value="">Select a category</option>
+              <option>Cake</option><option>Kunafa</option><option>Brownie</option>
+              <option>Cupcake</option><option>Cheesecake</option><option>Cookies</option><option>Chocolate Box</option>
+            </select>
+          </div>
+          <div>
+            <label class="rm-label">Flavor</label>
+            <input type="text" name="flavor" class="rm-input" placeholder="e.g. Chocolate Truffle" required>
+          </div>
+          <div>
+            <label class="rm-label">Quantity</label>
+            <input type="text" name="quantity" class="rm-input" placeholder="e.g. 1kg / 12 pcs" required>
+          </div>
+          <div>
+            <label class="rm-label">Occasion</label>
+            <input type="text" name="occasion" class="rm-input" placeholder="Birthday / Wedding / Anniversary">
+          </div>
+          <div>
+            <label class="rm-label">Delivery Date</label>
+            <input type="date" name="delivery_date" class="rm-input">
+          </div>
+          <div>
+            <label class="rm-label">Estimated Budget (₹)</label>
+            <input type="number" name="budget" class="rm-input" placeholder="e.g. 1500">
+          </div>
+        </div>
+
+        <label class="rm-label">Inspiration Image</label>
+        <div class="upload-box" id="uploadBox">
+          <i class="fa-solid fa-image" style="font-size:1.5rem;color:var(--amber);margin-bottom:8px;display:block;"></i>
+          <p>Upload inspiration images, sketches or references</p>
+          <input type="file" name="inspiration_image" id="imgInput" accept="image/*" style="display:none;">
+        </div>
+        <!-- Shown after a file is picked: preview thumbnail, its filename,
+             and an × button to clear it (re-enables uploadBox above) -->
+        <div class="upload-preview" id="uploadPreview">
+          <button type="button" class="upload-remove-btn" id="removeImgBtn" aria-label="Remove image">×</button>
+          <img id="previewImg" src="" alt="Preview">
+          <div class="upload-filename" id="uploadFilename"></div>
+        </div>
+
+        <label class="rm-label" style="margin-top:20px;">Describe Your Dream Dessert</label>
+        <textarea name="description" class="rm-input" placeholder="Describe colors, design, layers, themes, toppings, mood..." required style="min-height:140px;"></textarea>
+
+        <label class="rm-label">Custom Message on Dessert</label>
+        <input type="text" name="custom_message" class="rm-input" placeholder="e.g. Happy Birthday Nila ❤️">
+
+        <label class="rm-label">Special Notes</label>
+        <textarea name="special_notes" class="rm-input" placeholder="Allergies, eggless request, delivery preferences..."></textarea>
+
+        <!-- Hidden until form submit; filled/animated via JS upload.onprogress below -->
+        <div class="submit-progress-wrap" id="submitProgressWrap" style="display:none;">
+          <div class="submit-progress-track"><div class="submit-progress-bar" id="submitProgressBar"></div></div>
+          <div class="submit-progress-label" id="submitProgressLabel">Uploading… 0%</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="submitBtn" style="margin-top:8px;">Submit Dessert Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── Inspiration image preview / remove / disable-duplicate ── */
+  const uploadBox      = document.getElementById('uploadBox');
+  const imgInput       = document.getElementById('imgInput');
+  const previewImgEl   = document.getElementById('previewImg');
+  const uploadPreview  = document.getElementById('uploadPreview');
+  const uploadFilename = document.getElementById('uploadFilename');
+  const removeBtn      = document.getElementById('removeImgBtn');
+
+  function showPreview(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImgEl.src = e.target.result;
+      uploadPreview.style.display = 'block';
+      uploadFilename.textContent = '📎 ' + file.name;
+    };
+    reader.readAsDataURL(file);
+
+    // Disable duplicate uploads until the current image is removed
+    uploadBox.style.pointerEvents = 'none';
+    uploadBox.style.opacity = '0.5';
+  }
+
+  function clearPreview() {
+    imgInput.value = '';
+    previewImgEl.src = '';
+    uploadPreview.style.display = 'none';
+    uploadFilename.textContent = '';
+    uploadBox.style.pointerEvents = 'auto';
+    uploadBox.style.opacity = '1';
+  }
+
+  if (uploadBox && imgInput) {
+    uploadBox.addEventListener('click', function () { imgInput.click(); });
+
+    imgInput.addEventListener('change', function () {
+      if (imgInput.files && imgInput.files[0]) showPreview(imgInput.files[0]);
+    });
+  }
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      clearPreview();
+    });
+  }
+
+  /* ── Submit with a real upload progress bar ──
+     A normal <form> POST gives zero progress feedback, which is why
+     a big inspiration-image upload can look "stuck". XHR exposes
+     upload.onprogress so we can show real percentage movement. */
+  const form          = document.getElementById('customOrderForm');
+  const submitBtn      = document.getElementById('submitBtn');
+  const progressWrap    = document.getElementById('submitProgressWrap');
+  const progressBar     = document.getElementById('submitProgressBar');
+  const progressLabel   = document.getElementById('submitProgressLabel');
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (!confirm('Submit this dessert request?')) return;
+
+      const formData = new FormData(form);
+      const xhr = new XMLHttpRequest();
+      xhr.open(form.method, form.action, true);
+
+      xhr.upload.addEventListener('progress', function (evt) {
+        if (!evt.lengthComputable) return;
+        const pct = Math.round((evt.loaded / evt.total) * 100);
+        progressBar.style.width = pct + '%';
+        progressLabel.textContent = 'Uploading… ' + pct + '%';
+      });
+
+      xhr.addEventListener('load', function () {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          progressBar.style.width = '100%';
+          progressLabel.textContent = 'Done ✓';
+          window.location.href = xhr.responseURL || form.action;
+        } else {
+          progressWrap.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Dessert Request';
+          alert('Something went wrong submitting your request. Please try again.');
+        }
+      });
+
+      xhr.addEventListener('error', function () {
+        progressWrap.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Dessert Request';
+        alert('Network error — please check your connection and try again.');
+      });
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      progressWrap.style.display = 'block';
+      progressBar.style.width = '0%';
+      progressLabel.textContent = 'Uploading… 0%';
+
+      xhr.send(formData);
+    });
+  }
+});
+
+/* ══════════════════════════════════════════
+   THEME TOGGLE (standalone page — no base.html)
+   Shares the same 'rmTheme' localStorage key as
+   the rest of the site, so the choice made here
+   persists everywhere else too.
+   ══════════════════════════════════════════ */
+window.DARK_MODE_STATUS = "{{ 'COMING_SOON' if is_feature_coming_soon('dark_mode') else ('DISABLED' if is_feature_disabled('dark_mode') else 'LIVE') }}";
+
+const htmlEl   = document.getElementById('rmHtml');
+const themeBtn = document.getElementById('themeToggleBtn');
+
+function isDark() { return htmlEl.classList.contains('dark-mode'); }
+
+function applyThemeUI() {
+  if (themeBtn) themeBtn.textContent = isDark() ? '☀️' : '🎨';
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'custom-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
+
+function toggleTheme() {
+  if (window.DARK_MODE_STATUS === 'COMING_SOON') {
+    showToast('🌙 Dark mode is coming soon');
+    return;
+  }
+  htmlEl.classList.toggle('dark-mode');
+  localStorage.setItem('rmTheme', isDark() ? 'dark' : 'light');
+  applyThemeUI();
+  showToast(isDark() ? '🌙 Dark mode on' : '☀️ Light mode on');
+}
+
+if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+applyThemeUI();
+</script>
+</body>
+</html>
